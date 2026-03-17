@@ -754,6 +754,47 @@
       let monData = showdownData[jsonId];
 
       if (!monData) {
+        // This should just be the error message if the API fails
+        content.innerHTML = `
+          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
+          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
+          <p style="color:#ff0000;">Error: Data not found on Showdown API for ID "${jsonId}".</p>
+        `;
+      } else {
+        let stats = monData.baseStats;
+        let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
+        
+        // 1. The Ability Fix (You did this part perfectly!)
+        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
+        let first = true;
+        let initialDesc = "";
+        
+        for(let key in monData.abilities) {
+            let aName = monData.abilities[key];
+            let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
+            
+            if(first) initialDesc = aDesc;
+            
+            let safeDesc = aDesc.replace(/"/g, '&quot;');
+            
+            abilitiesHtml += `
+              <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
+                 <input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} 
+                 data-desc="${safeDesc}" 
+                 onchange="document.getElementById('ability-desc').innerText = this.getAttribute('data-desc')">
+                 ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}
+              </label>
+            `;
+            first = false;
+        }
+        abilitiesHtml += `
+          <div id="ability-desc" style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; min-height:30px; margin-top:5px; color:#ddd; line-height:1.4;">
+            ${initialDesc}
+          </div>
+        `;
+
+        // 2. The Mega Dropdown Logic (Moved to where the data is actually found)
         let megaDropdown = "";
         if (MEGA_MAP[jsonId]) {
             let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
@@ -768,6 +809,9 @@
             `;
         }
 
+        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
+
+        // 3. Final Output Assembly
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
           ${megaDropdown}
@@ -788,7 +832,10 @@
           </div>
           <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
           <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
-        `; else {
+        `;
+      }
+      modal.style.display = 'flex';
+    } else {
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
