@@ -306,6 +306,11 @@
     padding-bottom: 2px;
   }
 </style>
+
+<script>window.exports = {};</script>
+<script src="https://play.pokemonshowdown.com/data/pokedex.js"></script>
+<script src="https://play.pokemonshowdown.com/data/abilities.js"></script>
+
 </head>
 <body>
 
@@ -595,20 +600,25 @@
     let currentTeam = []; 
     let pendingMon = null; 
 
-    // --- DATA FETCHING ---
-    Promise.all([
-      fetch('https://play.pokemonshowdown.com/data/pokedex.json').then(res => res.json()),
-      fetch('https://play.pokemonshowdown.com/data/abilities.json').then(res => res.json())
-    ]).then(([pokedex, abilities]) => {
-      showdownData = pokedex;
-      abilitiesData = abilities;
-      document.getElementById('loading-overlay').style.display = 'none';
-      buildRosterUI();
-      renderTeamUI();
-      renderTypeChart();
-    }).catch(err => {
-      console.error("Error fetching Showdown data:", err);
-      document.getElementById('loading-overlay').innerHTML = `<h2 style="color:#ff0000;">Error Loading API Data</h2><p>Please check your internet connection and refresh.</p>`;
+    // --- INITIALIZATION ---
+    window.addEventListener('load', () => {
+      // Check if the script tags in <head> loaded successfully
+      if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities) {
+          showdownData = window.exports.BattlePokedex;
+          abilitiesData = window.exports.BattleAbilities;
+          
+          document.getElementById('loading-overlay').style.display = 'none';
+          buildRosterUI();
+          renderTeamUI();
+          renderTypeChart();
+      } else {
+          // Fallback if Opera GX Shields or Adblocker blocked the script tags
+          document.getElementById('loading-overlay').innerHTML = `
+            <h2 style="color:#ff0000;">Data Blocked by Browser</h2>
+            <p>Your browser's adblocker or tracking protection blocked the Pokémon Showdown scripts.</p>
+            <p style="color:#ffcc00;">Please turn off the shields for this site and refresh.</p>
+          `;
+      }
     });
 
     // --- DOM PARSING & FIXING SPRITES ---
@@ -616,7 +626,7 @@
       const boxes = document.querySelectorAll('.poke-box');
 
       boxes.forEach(box => {
-        // Safe split by the exact HTML span your document uses
+        // Safe split by the exact HTML span to prevent removing elements
         const htmlContent = box.innerHTML;
         const stages = htmlContent.split(/<span class="arrow">▶<\/span>|▶/i);
         
@@ -624,12 +634,10 @@
           const mons = stage.split('/');
           
           const monHTML = mons.map(monNameHTML => {
-            // Strip tags to get clean name
             let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
             
             // 1. Create strict alphanumeric ID for Showdown JSON lookup
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            // Manual overrides for API keys
             if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
             if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
 
