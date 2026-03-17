@@ -922,7 +922,7 @@
         }
 // Check if the Mega ID exists in your custom list. If yes, use your image. If no, use Showdown's!
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${megaId}.png`;
-
+      
         dynamicArea.innerHTML = `
           <img src="${megaSprite}" style="height:80px; image-rendering:pixelated;" onerror="this.src='${baseSprite}'">
           <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>
