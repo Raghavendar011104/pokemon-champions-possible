@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Art Pokémon Roster - Competitive Edition</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+  body {
+    background-color: #2b5b84; 
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace; 
+    font-size: 10px;
+    line-height: 1.5;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    color: #ffcc00;
+    text-shadow: 3px 3px 0 #333;
+    font-size: 24px;
+    margin-bottom: 40px;
+  }
+
+  h2 {
+    color: #ff9900;
+    text-shadow: 2px 2px 0 #222;
+    border-bottom: 4px solid #fff;
+    padding-bottom: 10px;
+    margin-top: 40px;
+  }
+
+  h3 {
+    color: #aaddff;
+    margin-top: 20px;
+  }
+
+  .grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  .poke-box {
+    background-color: #111111;
+    border: 4px solid #f8f8f8;
+    border-radius: 4px;
+    padding: 15px;
+    box-shadow: 4px 4px 0 #000000;
+    display: flex; 
+    align-items: center;
+    transition: transform 0.2s;
+  }
+
+  .poke-box:hover {
+    transform: translateY(-4px);
+    border-color: #ffcc00;
+  }
+
+  .arrow {
+    color: #ff0000;
+    margin: 0 10px;
+    font-size: 14px;
+  }
+
+  .stage-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .poke-sprite-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 64px;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+
+  .poke-sprite-container:hover {
+    transform: scale(1.1);
+    color: #ffcc00;
+  }
+
+  .poke-sprite {
+    image-rendering: pixelated; 
+    max-height: 60px;
+    margin-bottom: 8px;
+  }
+
+  .branch-divider {
+    color: #666;
+    margin: 0 5px;
+  }
+
+  /* --- NEW COMPETITIVE MODAL STYLES --- */
+  .modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%;
+    background-color: rgba(0,0,0,0.8); 
+    align-items: center; 
+    justify-content: center;
+  }
+
+  .modal-content {
+    background-color: #111111; 
+    border: 4px solid #ffcc00; 
+    padding: 20px;
+    width: 300px; 
+    text-align: center; 
+    border-radius: 8px; 
+    box-shadow: 0 0 15px #ffcc00;
+    position: relative;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #ff0000; 
+    font-size: 16px; 
+    cursor: pointer;
+  }
+
+  .close-btn:hover {
+    color: #fff;
+  }
+
+  .stat-row { 
+    display: flex; 
+    justify-content: space-between; 
+    margin-bottom: 8px; 
+    font-size: 9px;
+  }
+
+  .smogon-link { 
+    display: inline-block; 
+    margin-top: 20px; 
+    color: #aaddff; 
+    text-decoration: none; 
+    border-bottom: 2px solid #aaddff;
+    padding-bottom: 2px;
+  }
+
+  .smogon-link:hover {
+    color: #ffcc00;
+    border-color: #ffcc00;
+  }
+</style>
+</head>
+<body>
+
+  <h1>Pokédex Roster</h1>
+
+  <h2>1. The Confirmed Roster (117)</h2>
+  <h3>Kanto</h3>
+  <div class="grid-container">
+    <div class="poke-box">Bulbasaur <span class="arrow">▶</span> Ivysaur <span class="arrow">▶</span> Venusaur</div>
+    <div class="poke-box">Charmander <span class="arrow">▶</span> Charmeleon <span class="arrow">▶</span> Charizard</div>
+    <div class="poke-box">Squirtle <span class="arrow">▶</span> Wartortle <span class="arrow">▶</span> Blastoise</div>
+    <div class="poke-box">Pichu <span class="arrow">▶</span> Pikachu <span class="arrow">▶</span> Raichu</div>
+    <div class="poke-box">Gastly <span class="arrow">▶</span> Haunter <span class="arrow">▶</span> Gengar</div>
+    <div class="poke-box">Kangaskhan</div>
+    <div class="poke-box">Staryu <span class="arrow">▶</span> Starmie</div>
+    <div class="poke-box">Pinsir</div>
+    <div class="poke-box">Magikarp <span class="arrow">▶</span> Gyarados</div>
+    <div class="poke-box">Dratini <span class="arrow">▶</span> Dragonair <span class="arrow">▶</span> Dragonite</div>
+  </div>
+
+  <h3>Johto</h3>
+  <div class="grid-container">
+    <div class="poke-box">Totodile <span class="arrow">▶</span> Croconaw <span class="arrow">▶</span> Feraligatr</div>
+    <div class="poke-box">Scyther <span class="arrow">▶</span> Scizor</div>
+    <div class="poke-box">Heracross</div>
+    <div class="poke-box">Larvitar <span class="arrow">▶</span> Pupitar <span class="arrow">▶</span> Tyranitar</div>
+  </div>
+
+  <h3>Hoenn</h3>
+  <div class="grid-container">
+    <div class="poke-box">Ralts <span class="arrow">▶</span> Kirlia <span class="arrow">▶</span> Gardevoir/Gallade</div>
+    <div class="poke-box">Feebas <span class="arrow">▶</span> Milotic</div>
+    <div class="poke-box">Beldum <span class="arrow">▶</span> Metang <span class="arrow">▶</span> Metagross</div>
+  </div>
+
+  <h3>Sinnoh</h3>
+  <div class="grid-container">
+    <div class="poke-box">Piplup <span class="arrow">▶</span> Prinplup <span class="arrow">▶</span> Empoleon</div>
+    <div class="poke-box">Gible <span class="arrow">▶</span> Gabite <span class="arrow">▶</span> Garchomp</div>
+    <div class="poke-box">Riolu <span class="arrow">▶</span> Lucario</div>
+  </div>
+
+  <h3>Unova</h3>
+  <div class="grid-container">
+    <div class="poke-box">Snivy <span class="arrow">▶</span> Servine <span class="arrow">▶</span> Serperior</div>
+    <div class="poke-box">Oshawott <span class="arrow">▶</span> Dewott <span class="arrow">▶</span> Samurott</div>
+    <div class="poke-box">Cottonee <span class="arrow">▶</span> Whimsicott</div>
+    <div class="poke-box">Emolga</div>
+    <div class="poke-box">Deino <span class="arrow">▶</span> Zweilous <span class="arrow">▶</span> Hydreigon</div>
+  </div>
+
+  <h3>Kalos</h3>
+  <div class="grid-container">
+    <div class="poke-box">Chespin <span class="arrow">▶</span> Quilladin <span class="arrow">▶</span> Chesnaught</div>
+    <div class="poke-box">Fennekin <span class="arrow">▶</span> Braixen <span class="arrow">▶</span> Delphox</div>
+    <div class="poke-box">Froakie <span class="arrow">▶</span> Frogadier <span class="arrow">▶</span> Greninja</div>
+    <div class="poke-box">Fletchling <span class="arrow">▶</span> Fletchinder <span class="arrow">▶</span> Talonflame</div>
+    <div class="poke-box">Honedge <span class="arrow">▶</span> Doublade <span class="arrow">▶</span> Aegislash</div>
+    <div class="poke-box">Hawlucha</div>
+  </div>
+
+  <h3>Alola</h3>
+  <div class="grid-container">
+    <div class="poke-box">Litten <span class="arrow">▶</span> Torracat <span class="arrow">▶</span> Incineroar</div>
+    <div class="poke-box">Bounsweet <span class="arrow">▶</span> Steenee <span class="arrow">▶</span> Tsareena</div>
+    <div class="poke-box">Oranguru</div>
+    <div class="poke-box">Jangmo-o <span class="arrow">▶</span> Hakamo-o <span class="arrow">▶</span> Kommo-o</div>
+  </div>
+
+  <h3>Galar & Hisui</h3>
+  <div class="grid-container">
+    <div class="poke-box">Hatenna <span class="arrow">▶</span> Hattrem <span class="arrow">▶</span> Hatterene</div>
+    <div class="poke-box">Dreepy <span class="arrow">▶</span> Drakloak <span class="arrow">▶</span> Dragapult</div>
+    <div class="poke-box">Teddiursa <span class="arrow">▶</span> Ursaring <span class="arrow">▶</span> Ursaluna</div>
+    <div class="poke-box">Basculin <span class="arrow">▶</span> Basculegion</div>
+    <div class="poke-box">Hisuian Sneasel <span class="arrow">▶</span> Sneasler</div>
+  </div>
+
+  <h3>Paldea</h3>
+  <div class="grid-container">
+    <div class="poke-box">Tandemaus <span class="arrow">▶</span> Maushold</div>
+    <div class="poke-box">Tinkatink <span class="arrow">▶</span> Tinkatuff <span class="arrow">▶</span> Tinkaton</div>
+    <div class="poke-box">Finizen <span class="arrow">▶</span> Palafin</div>
+    <div class="poke-box">Dondozo</div>
+    <div class="poke-box">Tatsugiri</div>
+    <div class="poke-box">Pawniard <span class="arrow">▶</span> Bisharp <span class="arrow">▶</span> Kingambit</div>
+    <div class="poke-box">Poltchageist <span class="arrow">▶</span> Sinistcha</div>
+    <div class="poke-box">Duraludon <span class="arrow">▶</span> Archaludon</div>
+  </div>
+
+  <h2>2. Completing the Sets (28)</h2>
+  <div class="grid-container">
+    <div class="poke-box">Eevee <span class="arrow">▶</span> Vaporeon/Jolteon/Flareon/Espeon/Umbreon/Glaceon</div>
+    <div class="poke-box">Chikorita <span class="arrow">▶</span> Bayleef <span class="arrow">▶</span> Meganium</div>
+    <div class="poke-box">Cyndaquil <span class="arrow">▶</span> Quilava <span class="arrow">▶</span> Typhlosion</div>
+    <div class="poke-box">Turtwig <span class="arrow">▶</span> Grotle <span class="arrow">▶</span> Torterra</div>
+    <div class="poke-box">Chimchar <span class="arrow">▶</span> Monferno <span class="arrow">▶</span> Infernape</div>
+    <div class="poke-box">Tepig <span class="arrow">▶</span> Pignite <span class="arrow">▶</span> Emboar</div>
+    <div class="poke-box">Rowlet <span class="arrow">▶</span> Dartrix <span class="arrow">▶</span> Decidueye</div>
+    <div class="poke-box">Popplio <span class="arrow">▶</span> Brionne <span class="arrow">▶</span> Primarina</div>
+  </div>
+
+  <h2>3. Candidates & New DLC Megas (93)</h2>
+  <h3>Hoenn Starters & Kanto/Johto Megas</h3>
+  <div class="grid-container">
+    <div class="poke-box">Treecko <span class="arrow">▶</span> Grovyle <span class="arrow">▶</span> Sceptile</div>
+    <div class="poke-box">Torchic <span class="arrow">▶</span> Combusken <span class="arrow">▶</span> Blaziken</div>
+    <div class="poke-box">Mudkip <span class="arrow">▶</span> Marshtomp <span class="arrow">▶</span> Swampert</div>
+    <div class="poke-box">Weedle <span class="arrow">▶</span> Kakuna <span class="arrow">▶</span> Beedrill</div>
+    <div class="poke-box">Pidgey <span class="arrow">▶</span> Pidgeotto <span class="arrow">▶</span> Pidgeot</div>
+    <div class="poke-box">Abra <span class="arrow">▶</span> Kadabra <span class="arrow">▶</span> Alakazam</div>
+    <div class="poke-box">Slowpoke <span class="arrow">▶</span> Slowbro</div>
+    <div class="poke-box">Aerodactyl</div>
+    <div class="poke-box">Mareep <span class="arrow">▶</span> Flaaffy <span class="arrow">▶</span> Ampharos</div>
+    <div class="poke-box">Onix <span class="arrow">▶</span> Steelix</div>
+    <div class="poke-box">Houndour <span class="arrow">▶</span> Houndoom</div>
+    <div class="poke-box">Bellsprout <span class="arrow">▶</span> Weepinbell <span class="arrow">▶</span> Victreebel</div>
+  </div>
+
+  <h3>Hoenn, Sinnoh & Unova Megas</h3>
+  <div class="grid-container">
+    <div class="poke-box">Aron <span class="arrow">▶</span> Lairon <span class="arrow">▶</span> Aggron</div>
+    <div class="poke-box">Meditite <span class="arrow">▶</span> Medicham</div>
+    <div class="poke-box">Electrike <span class="arrow">▶</span> Manectric</div>
+    <div class="poke-box">Carvanha <span class="arrow">▶</span> Sharpedo</div>
+    <div class="poke-box">Numel <span class="arrow">▶</span> Camerupt</div>
+    <div class="poke-box">Swablu <span class="arrow">▶</span> Altaria</div>
+    <div class="poke-box">Shuppet <span class="arrow">▶</span> Banette</div>
+    <div class="poke-box">Absol</div>
+    <div class="poke-box">Snorunt <span class="arrow">▶</span> Glalie/Froslass</div>
+    <div class="poke-box">Bagon <span class="arrow">▶</span> Shelgon <span class="arrow">▶</span> Salamence</div>
+    <div class="poke-box">Mawile</div>
+    <div class="poke-box">Sableye</div>
+    <div class="poke-box">Buneary <span class="arrow">▶</span> Lopunny</div>
+    <div class="poke-box">Snover <span class="arrow">▶</span> Abomasnow</div>
+    <div class="poke-box">Audino</div>
+    <div class="poke-box">Starly <span class="arrow">▶</span> Staravia <span class="arrow">▶</span> Staraptor</div>
+  </div>
+
+  <h3>New DLC Additions</h3>
+  <div class="grid-container">
+    <div class="poke-box">Skarmory</div>
+    <div class="poke-box">Venipede <span class="arrow">▶</span> Whirlipede <span class="arrow">▶</span> Scolipede</div>
+    <div class="poke-box">Skrelp <span class="arrow">▶</span> Dragalge</div>
+    <div class="poke-box">Litleo <span class="arrow">▶</span> Pyroar</div>
+    <div class="poke-box">Crabrawler <span class="arrow">▶</span> Crabominable</div>
+    <div class="poke-box">Capsakid <span class="arrow">▶</span> Scovillain</div>
+    <div class="poke-box">Golett <span class="arrow">▶</span> Golurk</div>
+    <div class="poke-box">Drampa</div>
+    <div class="poke-box">Tynamo <span class="arrow">▶</span> Eelektrik <span class="arrow">▶</span> Eelektross</div>
+    <div class="poke-box">Falinks</div>
+    <div class="poke-box">Binacle <span class="arrow">▶</span> Barbaracle</div>
+    <div class="poke-box">Flabébé <span class="arrow">▶</span> Floette <span class="arrow">▶</span> Florges</div>
+    <div class="poke-box">Chingling <span class="arrow">▶</span> Chimecho</div>
+    <div class="poke-box">Espurr <span class="arrow">▶</span> Meowstic</div>
+    <div class="poke-box">Inkay <span class="arrow">▶</span> Malamar</div>
+  </div>
+
+  <h2>4. VGC "Glue" & Weather Setters (37)</h2>
+  <div class="grid-container">
+    <div class="poke-box">Foongus <span class="arrow">▶</span> Amoonguss</div>
+    <div class="poke-box">Cleffa <span class="arrow">▶</span> Clefairy <span class="arrow">▶</span> Clefable</div>
+    <div class="poke-box">Togepi <span class="arrow">▶</span> Togetic <span class="arrow">▶</span> Togekiss</div>
+    <div class="poke-box">Impidimp <span class="arrow">▶</span> Morgrem <span class="arrow">▶</span> Grimmsnarl</div>
+    <div class="poke-box">Wingull <span class="arrow">▶</span> Pelipper</div>
+    <div class="poke-box">Torkoal</div>
+    <div class="poke-box">Vulpix <span class="arrow">▶</span> Ninetales</div>
+    <div class="poke-box">Porygon <span class="arrow">▶</span> Porygon2 <span class="arrow">▶</span> Porygon-Z</div>
+    <div class="poke-box">Girafarig <span class="arrow">▶</span> Farigiraf</div>
+    <div class="poke-box">Growlithe <span class="arrow">▶</span> Arcanine</div>
+    <div class="poke-box">Mankey <span class="arrow">▶</span> Primeape <span class="arrow">▶</span> Annihilape</div>
+    <div class="poke-box">Gimmighoul <span class="arrow">▶</span> Gholdengo</div>
+    <div class="poke-box">Grookey <span class="arrow">▶</span> Thwackey <span class="arrow">▶</span> Rillaboom</div>
+    <div class="poke-box">Scorbunny <span class="arrow">▶</span> Raboot <span class="arrow">▶</span> Cinderace</div>
+    <div class="poke-box">Sobble <span class="arrow">▶</span> Drizzile <span class="arrow">▶</span> Inteleon</div>
+  </div>
+
+  <h2>5. Regional Favorites & Type Balancing (67)</h2>
+  <div class="grid-container">
+    <div class="poke-box">Charcadet <span class="arrow">▶</span> Armarouge/Ceruledge</div>
+    <div class="poke-box">Paldean Wooper <span class="arrow">▶</span> Clodsire</div>
+    <div class="poke-box">Nacli <span class="arrow">▶</span> Naclstack <span class="arrow">▶</span> Garganacl</div>
+    <div class="poke-box">Frigibax <span class="arrow">▶</span> Arctibax <span class="arrow">▶</span> Baxcalibur</div>
+    <div class="poke-box">Applin <span class="arrow">▶</span> Flapple/Appletun/Dipplin <span class="arrow">▶</span> Hydrapple</div>
+    <div class="poke-box">Munchlax <span class="arrow">▶</span> Snorlax</div>
+    <div class="poke-box">Lapras</div>
+    <div class="poke-box">Ditto</div>
+    <div class="poke-box">Rotom</div>
+    <div class="poke-box">Magnemite <span class="arrow">▶</span> Magneton <span class="arrow">▶</span> Magnezone</div>
+    <div class="poke-box">Koffing <span class="arrow">▶</span> Weezing</div>
+    <div class="poke-box">Grimer <span class="arrow">▶</span> Muk</div>
+    <div class="poke-box">Zorua <span class="arrow">▶</span> Zoroark</div>
+    <div class="poke-box">Wimpod <span class="arrow">▶</span> Golisopod</div>
+    <div class="poke-box">Dewpider <span class="arrow">▶</span> Araquanid</div>
+    <div class="poke-box">Mimikyu</div>
+    <div class="poke-box">Shroomish <span class="arrow">▶</span> Breloom</div>
+    <div class="poke-box">Mareanie <span class="arrow">▶</span> Toxapex</div>
+    <div class="poke-box">Rookidee <span class="arrow">▶</span> Corvisquire <span class="arrow">▶</span> Corviknight</div>
+    <div class="poke-box">Shellos <span class="arrow">▶</span> Gastrodon</div>
+    <div class="poke-box">Drilbur <span class="arrow">▶</span> Excadrill</div>
+    <div class="poke-box">Glimmet <span class="arrow">▶</span> Glimmora</div>
+    <div class="poke-box">Flamigo</div>
+    <div class="poke-box">Smeargle</div>
+    <div class="poke-box">Bronzor <span class="arrow">▶</span> Bronzong</div>
+    <div class="poke-box">Indeedee</div>
+    <div class="poke-box">Makuhita <span class="arrow">▶</span> Hariyama</div>
+    <div class="poke-box">Scraggy <span class="arrow">▶</span> Scrafty</div>
+    <div class="poke-box">Vullaby <span class="arrow">▶</span> Mandibuzz</div>
+    <div class="poke-box">Rufflet <span class="arrow">▶</span> Braviary</div>
+    <div class="poke-box">Gothita <span class="arrow">▶</span> Gothorita <span class="arrow">▶</span> Gothitelle</div>
+    <div class="poke-box">Litwick <span class="arrow">▶</span> Lampent <span class="arrow">▶</span> Chandelure</div>
+  </div>
+
+  <div id="data-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">X</span>
+      <div id="modal-info">Loading...</div>
+    </div>
+  </div>
+
+  <script>
+    // 1. Fetch Showdown Pokedex JSON
+    let showdownData = {};
+    fetch('https://play.pokemonshowdown.com/data/pokedex.json')
+      .then(res => res.json())
+      .then(data => { showdownData = data; })
+      .catch(err => console.error("Error fetching Showdown data:", err));
+
+    // 2. Build the Roster Visuals
+    document.addEventListener("DOMContentLoaded", () => {
+      const boxes = document.querySelectorAll('.poke-box');
+      
+      const nameMap = {
+        "hisuian sneasel": "sneasel-hisui",
+        "paldean wooper": "wooper-paldea",
+        "mime jr.": "mimejr",
+        "mr. mime": "mrmime",
+        "jangmo-o": "jangmoo",
+        "hakamo-o": "hakamoo",
+        "kommo-o": "kommoo",
+        "flabébé": "flabebe",
+        "farigiraf": "farigiraf" 
+      };
+
+      boxes.forEach(box => {
+        const stages = box.innerHTML.split('<span class="arrow">▶</span>');
+        
+        const newStages = stages.map(stage => {
+          const mons = stage.split('/');
+          
+          const monHTML = mons.map(monName => {
+            let cleanName = monName.replace(/<[^>]*>?/gm, '').trim(); 
+            let searchName = cleanName.toLowerCase();
+            
+            if(nameMap[searchName]) {
+                searchName = nameMap[searchName];
+            } else {
+                searchName = searchName.replace(/ /g, '').replace(/[^a-z0-9-]/g, '');
+            }
+
+            // Create strict alphanumeric ID for searching Showdown's JSON
+            let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            // Handle regional forms for the JSON key
+            if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
+            if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
+
+            const spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${searchName}.png`;
+            
+            return `
+              <div class="poke-sprite-container" onclick="showData('${jsonId}', '${cleanName}', '${spriteUrl}')">
+                <img src="${spriteUrl}" alt="${cleanName}" class="poke-sprite" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
+                <span>${cleanName}</span>
+              </div>
+            `;
+          }).join('<div class="branch-divider">/</div>');
+          
+          return `<div class="stage-container">${monHTML}</div>`;
+        });
+
+        box.innerHTML = newStages.join('<span class="arrow">▶</span>');
+      });
+    });
+
+    // 3. Modal Logic
+    function showData(jsonId, displayName, spriteUrl) {
+      const modal = document.getElementById('data-modal');
+      const content = document.getElementById('modal-info');
+      
+      let monData = showdownData[jsonId];
+
+      if (!monData) {
+        content.innerHTML = `
+          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
+          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
+          <p>Data not found on Showdown API for this form.</p>
+        `;
+      } else {
+        let abilities = Object.values(monData.abilities).join(' / ');
+        let stats = monData.baseStats;
+        let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
+        let tier = monData.tier || "Untiered";
+
+        content.innerHTML = `
+          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
+          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
+          <p style="color:#ff9900; margin-bottom: 5px;">Tier: ${tier}</p>
+          <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
+          <p style="margin: 2px 0 15px 0;"><strong>Abilities:</strong> ${abilities}</p>
+          
+          <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px;">
+            <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
+            <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
+            <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
+            <div class="stat-row"><span>Sp. Atk:</span> <span>${stats.spa}</span></div>
+            <div class="stat-row"><span>Sp. Def:</span> <span>${stats.spd}</span></div>
+            <div class="stat-row"><span>Speed:</span> <span>${stats.spe}</span></div>
+            <hr style="border-color:#444; margin: 5px 0;">
+            <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
+          </div>
+          
+          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
+        `;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('data-modal').style.display = 'none';
+    }
+
+    // Close modal if user clicks outside of it
+    window.onclick = function(event) {
+      const modal = document.getElementById('data-modal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
