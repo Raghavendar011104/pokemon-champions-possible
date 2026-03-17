@@ -48,6 +48,9 @@
     border-radius: 8px;
     margin-bottom: 40px;
     box-shadow: 6px 6px 0 #000;
+    position: sticky;
+    top: 10px;
+    z-index: 100;
   }
 
   #team-builder {
@@ -69,8 +72,8 @@
   }
 
   .team-slot {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
     background-color: #111;
     border: 3px dashed #555;
     border-radius: 4px;
@@ -82,12 +85,8 @@
   }
 
   .team-slot img {
-    max-height: 60px;
+    max-height: 45px;
     image-rendering: pixelated;
-  }
-
-  .team-slot:hover {
-    border-color: #ff0000;
   }
 
   .team-slot.filled:hover::after {
@@ -104,17 +103,17 @@
 
   #type-chart-container {
     flex: 2;
-    min-width: 450px;
+    min-width: 400px;
     background-color: #111;
-    padding: 15px;
+    padding: 10px;
     border-radius: 4px;
     border: 2px solid #555;
   }
 
   .type-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 8px;
     margin-top: 10px;
   }
 
@@ -122,47 +121,35 @@
     display: flex;
     align-items: center;
     background: #222;
-    padding: 5px;
+    padding: 4px;
     border-radius: 4px;
-    font-size: 8px;
   }
 
   .type-label {
-    padding: 4px;
+    padding: 3px;
     border-radius: 3px;
     text-shadow: 1px 1px 0 #000;
-    width: 45px;
+    width: 40px;
     text-align: center;
-    margin-right: 10px;
-  }
-
-  .type-stats {
-    display: flex;
-    gap: 5px;
+    margin-right: 5px;
+    font-size: 8px;
   }
 
   .stat-badge {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 2px;
-    color: white;
     font-size: 8px;
+    margin: 0 2px;
   }
 
   .bg-weak { background-color: #d82b2b; }
   .bg-resist { background-color: #4CAF50; }
   .bg-immune { background-color: #4a90e2; }
-  .bg-se { background-color: #ff9800; } /* Super Effective Badge */
-
-  .divider-vert {
-    width: 1px;
-    background-color: #444;
-    height: 16px;
-    margin: 0 8px;
-  }
+  .bg-se { background-color: #ff9800; }
 
   /* --- ROSTER STYLES --- */
   .grid-container {
@@ -188,17 +175,9 @@
     border-color: #ffcc00;
   }
 
-  .arrow {
-    color: #ff0000;
-    margin: 0 10px;
-    font-size: 14px;
-  }
+  .arrow { color: #ff0000; margin: 0 10px; font-size: 14px; }
 
-  .stage-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .stage-container { display: flex; align-items: center; gap: 10px; }
 
   .poke-sprite-container {
     display: flex;
@@ -207,98 +186,24 @@
     text-align: center;
     min-width: 64px;
     cursor: pointer;
-    transition: transform 0.1s;
   }
 
-  .poke-sprite-container:hover {
-    transform: scale(1.1);
-    color: #ffcc00;
-  }
+  .poke-sprite { image-rendering: pixelated; max-height: 60px; margin-bottom: 8px; }
 
-  .poke-sprite {
-    image-rendering: pixelated; 
-    max-height: 60px;
-    margin-bottom: 8px;
-  }
-
-  .branch-divider {
-    color: #666;
-    margin: 0 5px;
-  }
-
-  /* --- BUTTONS & MODALS --- */
+  /* --- MODAL --- */
   .modal {
-    display: none; 
-    position: fixed; 
-    z-index: 1000; 
-    left: 0; 
-    top: 0; 
-    width: 100%; 
-    height: 100%;
-    background-color: rgba(0,0,0,0.8); 
-    align-items: center; 
-    justify-content: center;
+    display: none; position: fixed; z-index: 1001; left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center;
   }
 
   .modal-content {
-    background-color: #111111; 
-    border: 4px solid #ffcc00; 
-    padding: 20px;
-    width: 320px; 
-    text-align: center; 
-    border-radius: 8px; 
-    box-shadow: 0 0 15px #ffcc00;
-    position: relative;
-  }
-
-  .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    color: #ff0000; 
-    font-size: 16px; 
-    cursor: pointer;
-  }
-
-  .stat-row { 
-    display: flex; 
-    justify-content: space-between; 
-    margin-bottom: 8px; 
-    font-size: 9px;
+    background-color: #111111; border: 4px solid #ffcc00; padding: 20px;
+    width: 320px; border-radius: 8px; text-align: center; max-height: 85vh; overflow-y: auto;
   }
 
   .btn-action {
-    background-color: #ffcc00;
-    color: #111;
-    border: none;
-    padding: 10px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 9px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-  }
-
-  .btn-action:hover {
-    background-color: #fff;
-  }
-
-  .btn-add {
-    margin-top: 15px;
-    width: 100%;
-  }
-
-  .btn-export {
-    padding: 8px 12px;
-  }
-
-  .smogon-link { 
-    display: inline-block; 
-    margin-top: 15px; 
-    color: #aaddff; 
-    text-decoration: none; 
-    border-bottom: 2px solid #aaddff;
-    padding-bottom: 2px;
+    background-color: #ffcc00; color: #111; border: none; padding: 10px;
+    font-family: 'Press Start 2P', monospace; font-size: 8px; cursor: pointer; border-radius: 4px;
   }
 </style>
 </head>
@@ -309,30 +214,14 @@
   <div id="dashboard">
     <div id="team-builder">
       <div class="team-header">
-        <h3 style="margin: 0;">Current Team</h3>
-        <button id="export-btn" class="btn-action btn-export" onclick="exportTeam()">Export Showdown</button>
+        <h3 style="margin: 0;">Team</h3>
+        <button id="export-btn" class="btn-action" onclick="exportTeam()">Export</button>
       </div>
-      <div class="team-slots" id="team-container">
-        </div>
+      <div class="team-slots" id="team-container"></div>
     </div>
     <div id="type-chart-container">
-      <h3 style="margin-top: 0; margin-bottom: 10px;">Type Analysis</h3>
-      
-      <div style="display: flex; justify-content: space-between; font-size: 8px; color: #888; margin-bottom: 15px; background: #222; padding: 10px; border-radius: 4px;">
-        <div>
-          <strong>Defensive Breakdown</strong><br><br>
-          <span class="stat-badge bg-weak" style="display:inline-flex;"></span> Weak 
-          <span class="stat-badge bg-resist" style="display:inline-flex; margin-left:5px;"></span> Resist 
-          <span class="stat-badge bg-immune" style="display:inline-flex; margin-left:5px;"></span> Immune
-        </div>
-        <div style="text-align: right;">
-          <strong>Offensive STAB</strong><br><br>
-          <span class="stat-badge bg-se" style="display:inline-flex;"></span> Super Effective Hits
-        </div>
-      </div>
-
-      <div class="type-grid" id="type-grid-container">
-        </div>
+      <div style="font-size: 7px; color: #aaa;">Def: <span class="bg-weak">W</span> <span class="bg-resist">R</span> <span class="bg-immune">I</span> | Off: <span class="bg-se">SE</span></div>
+      <div class="type-grid" id="type-grid-container"></div>
     </div>
   </div>
 
@@ -450,6 +339,100 @@
     <div class="poke-box">Bellsprout <span class="arrow">▶</span> Weepinbell <span class="arrow">▶</span> Victreebel</div>
   </div>
 
+  <h3>Hoenn, Sinnoh & Unova Megas</h3>
+  <div class="grid-container">
+    <div class="poke-box">Aron <span class="arrow">▶</span> Lairon <span class="arrow">▶</span> Aggron</div>
+    <div class="poke-box">Meditite <span class="arrow">▶</span> Medicham</div>
+    <div class="poke-box">Electrike <span class="arrow">▶</span> Manectric</div>
+    <div class="poke-box">Carvanha <span class="arrow">▶</span> Sharpedo</div>
+    <div class="poke-box">Numel <span class="arrow">▶</span> Camerupt</div>
+    <div class="poke-box">Swablu <span class="arrow">▶</span> Altaria</div>
+    <div class="poke-box">Shuppet <span class="arrow">▶</span> Banette</div>
+    <div class="poke-box">Absol</div>
+    <div class="poke-box">Snorunt <span class="arrow">▶</span> Glalie/Froslass</div>
+    <div class="poke-box">Bagon <span class="arrow">▶</span> Shelgon <span class="arrow">▶</span> Salamence</div>
+    <div class="poke-box">Mawile</div>
+    <div class="poke-box">Sableye</div>
+    <div class="poke-box">Buneary <span class="arrow">▶</span> Lopunny</div>
+    <div class="poke-box">Snover <span class="arrow">▶</span> Abomasnow</div>
+    <div class="poke-box">Audino</div>
+    <div class="poke-box">Starly <span class="arrow">▶</span> Staravia <span class="arrow">▶</span> Staraptor</div>
+  </div>
+
+  <h3>New DLC Additions</h3>
+  <div class="grid-container">
+    <div class="poke-box">Skarmory</div>
+    <div class="poke-box">Venipede <span class="arrow">▶</span> Whirlipede <span class="arrow">▶</span> Scolipede</div>
+    <div class="poke-box">Skrelp <span class="arrow">▶</span> Dragalge</div>
+    <div class="poke-box">Litleo <span class="arrow">▶</span> Pyroar</div>
+    <div class="poke-box">Crabrawler <span class="arrow">▶</span> Crabominable</div>
+    <div class="poke-box">Capsakid <span class="arrow">▶</span> Scovillain</div>
+    <div class="poke-box">Golett <span class="arrow">▶</span> Golurk</div>
+    <div class="poke-box">Drampa</div>
+    <div class="poke-box">Tynamo <span class="arrow">▶</span> Eelektrik <span class="arrow">▶</span> Eelektross</div>
+    <div class="poke-box">Falinks</div>
+    <div class="poke-box">Binacle <span class="arrow">▶</span> Barbaracle</div>
+    <div class="poke-box">Flabébé <span class="arrow">▶</span> Floette <span class="arrow">▶</span> Florges</div>
+    <div class="poke-box">Chingling <span class="arrow">▶</span> Chimecho</div>
+    <div class="poke-box">Espurr <span class="arrow">▶</span> Meowstic</div>
+    <div class="poke-box">Inkay <span class="arrow">▶</span> Malamar</div>
+  </div>
+
+  <h3>VGC Glue & Weather</h3>
+  <div class="grid-container">
+    <div class="poke-box">Foongus <span class="arrow">▶</span> Amoonguss</div>
+    <div class="poke-box">Cleffa <span class="arrow">▶</span> Clefairy <span class="arrow">▶</span> Clefable</div>
+    <div class="poke-box">Togepi <span class="arrow">▶</span> Togetic <span class="arrow">▶</span> Togekiss</div>
+    <div class="poke-box">Impidimp <span class="arrow">▶</span> Morgrem <span class="arrow">▶</span> Grimmsnarl</div>
+    <div class="poke-box">Wingull <span class="arrow">▶</span> Pelipper</div>
+    <div class="poke-box">Torkoal</div>
+    <div class="poke-box">Vulpix <span class="arrow">▶</span> Ninetales</div>
+    <div class="poke-box">Porygon <span class="arrow">▶</span> Porygon2 <span class="arrow">▶</span> Porygon-Z</div>
+    <div class="poke-box">Girafarig <span class="arrow">▶</span> Farigiraf</div>
+    <div class="poke-box">Growlithe <span class="arrow">▶</span> Arcanine</div>
+    <div class="poke-box">Mankey <span class="arrow">▶</span> Primeape <span class="arrow">▶</span> Annihilape</div>
+    <div class="poke-box">Gimmighoul <span class="arrow">▶</span> Gholdengo</div>
+    <div class="poke-box">Grookey <span class="arrow">▶</span> Thwackey <span class="arrow">▶</span> Rillaboom</div>
+    <div class="poke-box">Scorbunny <span class="arrow">▶</span> Raboot <span class="arrow">▶</span> Cinderace</div>
+    <div class="poke-box">Sobble <span class="arrow">▶</span> Drizzile <span class="arrow">▶</span> Inteleon</div>
+  </div>
+
+  <h3>Regional Favorites</h3>
+  <div class="grid-container">
+    <div class="poke-box">Charcadet <span class="arrow">▶</span> Armarouge/Ceruledge</div>
+    <div class="poke-box">Paldean Wooper <span class="arrow">▶</span> Clodsire</div>
+    <div class="poke-box">Nacli <span class="arrow">▶</span> Naclstack <span class="arrow">▶</span> Garganacl</div>
+    <div class="poke-box">Frigibax <span class="arrow">▶</span> Arctibax <span class="arrow">▶</span> Baxcalibur</div>
+    <div class="poke-box">Applin <span class="arrow">▶</span> Flapple/Appletun/Dipplin <span class="arrow">▶</span> Hydrapple</div>
+    <div class="poke-box">Munchlax <span class="arrow">▶</span> Snorlax</div>
+    <div class="poke-box">Lapras</div>
+    <div class="poke-box">Ditto</div>
+    <div class="poke-box">Rotom</div>
+    <div class="poke-box">Magnemite <span class="arrow">▶</span> Magneton <span class="arrow">▶</span> Magnezone</div>
+    <div class="poke-box">Koffing <span class="arrow">▶</span> Weezing</div>
+    <div class="poke-box">Grimer <span class="arrow">▶</span> Muk</div>
+    <div class="poke-box">Zorua <span class="arrow">▶</span> Zoroark</div>
+    <div class="poke-box">Wimpod <span class="arrow">▶</span> Golisopod</div>
+    <div class="poke-box">Dewpider <span class="arrow">▶</span> Araquanid</div>
+    <div class="poke-box">Mimikyu</div>
+    <div class="poke-box">Shroomish <span class="arrow">▶</span> Breloom</div>
+    <div class="poke-box">Mareanie <span class="arrow">▶</span> Toxapex</div>
+    <div class="poke-box">Rookidee <span class="arrow">▶</span> Corvisquire <span class="arrow">▶</span> Corviknight</div>
+    <div class="poke-box">Shellos <span class="arrow">▶</span> Gastrodon</div>
+    <div class="poke-box">Drilbur <span class="arrow">▶</span> Excadrill</div>
+    <div class="poke-box">Glimmet <span class="arrow">▶</span> Glimmora</div>
+    <div class="poke-box">Flamigo</div>
+    <div class="poke-box">Smeargle</div>
+    <div class="poke-box">Bronzor <span class="arrow">▶</span> Bronzong</div>
+    <div class="poke-box">Indeedee</div>
+    <div class="poke-box">Makuhita <span class="arrow">▶</span> Hariyama</div>
+    <div class="poke-box">Scraggy <span class="arrow">▶</span> Scrafty</div>
+    <div class="poke-box">Vullaby <span class="arrow">▶</span> Mandibuzz</div>
+    <div class="poke-box">Rufflet <span class="arrow">▶</span> Braviary</div>
+    <div class="poke-box">Gothita <span class="arrow">▶</span> Gothorita <span class="arrow">▶</span> Gothitelle</div>
+    <div class="poke-box">Litwick <span class="arrow">▶</span> Lampent <span class="arrow">▶</span> Chandelure</div>
+  </div>
+
   <div id="data-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">X</span>
@@ -458,8 +441,6 @@
   </div>
 
   <script>
-    // --- TYPE DATA MATRIX ---
-    // (Defining weakTo/resists/immuneTo from the perspective of the DEFENDING type)
     const TYPE_DATA = {
       Normal: { weakTo: ['Fighting'], resists: [], immuneTo: ['Ghost'] },
       Fire: { weakTo: ['Water', 'Ground', 'Rock'], resists: ['Fire', 'Grass', 'Ice', 'Bug', 'Steel', 'Fairy'], immuneTo: [] },
@@ -481,284 +462,90 @@
       Fairy: { weakTo: ['Poison', 'Steel'], resists: ['Fighting', 'Bug', 'Dark'], immuneTo: ['Dragon'] }
     };
 
-    const TYPE_COLORS = {
-      Normal: '#A8A878', Fire: '#F08030', Water: '#6890F0', Electric: '#F8D030',
-      Grass: '#78C850', Ice: '#98D8D8', Fighting: '#C03028', Poison: '#A040A0',
-      Ground: '#E0C068', Flying: '#A890F0', Psychic: '#F85888', Bug: '#A8B820',
-      Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848',
-      Steel: '#B8B8D0', Fairy: '#EE99AC'
-    };
+    const TYPE_COLORS = { Normal: '#A8A878', Fire: '#F08030', Water: '#6890F0', Electric: '#F8D030', Grass: '#78C850', Ice: '#98D8D8', Fighting: '#C03028', Poison: '#A040A0', Ground: '#E0C068', Flying: '#A890F0', Psychic: '#F85888', Bug: '#A8B820', Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848', Steel: '#B8B8D0', Fairy: '#EE99AC' };
 
-    // --- STATE MANAGEMENT ---
-    let showdownData = {};
-    let abilitiesData = {};
-    let currentTeam = []; // Max 6
-    let pendingMon = null; // Stores the current mon being viewed in the modal
+    let pokedex = {}, abilities = {}, currentTeam = [], pendingMon = null;
 
-    // Fetch Showdown Pokedex & Abilities JSON
     Promise.all([
       fetch('https://play.pokemonshowdown.com/data/pokedex.json').then(res => res.json()),
       fetch('https://play.pokemonshowdown.com/data/abilities.json').then(res => res.json())
-    ]).then(([pokedex, abilities]) => {
-      showdownData = pokedex;
-      abilitiesData = abilities;
-    }).catch(err => console.error("Error fetching Showdown data:", err));
+    ]).then(([p, a]) => { pokedex = p; abilities = a; init(); });
 
-    // Initialize UI
-    document.addEventListener("DOMContentLoaded", () => {
-      buildRosterUI();
-      renderTeamUI();
-      renderTypeChart();
-    });
-
-    // --- CORE FUNCTIONS ---
-    function buildRosterUI() {
-      const boxes = document.querySelectorAll('.poke-box');
-      const nameMap = {
-        "hisuian sneasel": "sneasel-hisui", "paldean wooper": "wooper-paldea",
-        "mime jr.": "mimejr", "mr. mime": "mrmime", "jangmo-o": "jangmoo",
-        "hakamo-o": "hakamoo", "kommo-o": "kommoo", "flabébé": "flabebe", "farigiraf": "farigiraf" 
-      };
-
-      boxes.forEach(box => {
-        const stages = box.innerHTML.split('<span class="arrow">▶</span>');
-        const newStages = stages.map(stage => {
-          const mons = stage.split('/');
-          const monHTML = mons.map(monName => {
-            let cleanName = monName.replace(/<[^>]*>?/gm, '').trim(); 
-            let searchName = cleanName.toLowerCase();
-            if(nameMap[searchName]) searchName = nameMap[searchName];
-            else searchName = searchName.replace(/ /g, '').replace(/[^a-z0-9-]/g, '');
-
-            let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
-            if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
-
-            const spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${searchName}.png`;
-            
-            return `
-              <div class="poke-sprite-container" onclick="showData('${jsonId}', '${cleanName}', '${spriteUrl}')">
-                <img src="${spriteUrl}" alt="${cleanName}" class="poke-sprite" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
-                <span>${cleanName}</span>
-              </div>
-            `;
-          }).join('<div class="branch-divider">/</div>');
-          return `<div class="stage-container">${monHTML}</div>`;
-        });
-        box.innerHTML = newStages.join('<span class="arrow">▶</span>');
+    function init() {
+      const nameMap = { "hisuian sneasel": "sneasel-hisui", "paldean wooper": "wooper-paldea", "flabébé": "flabebe" };
+      document.querySelectorAll('.poke-box').forEach(box => {
+        const stages = box.innerHTML.split('▶');
+        box.innerHTML = stages.map(s => {
+          return s.split('/').map(mon => {
+            let name = mon.replace(/<[^>]*>?/gm, '').trim();
+            let search = nameMap[name.toLowerCase()] || name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+            let id = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+            if(id === 'paldeanwooper') id = 'wooperpaldea';
+            let sprite = `https://play.pokemonshowdown.com/sprites/gen5/${search}.png`;
+            return `<div class="poke-sprite-container" onclick="showData('${id}', '${name}', '${sprite}')">
+              <img src="${sprite}" class="poke-sprite" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
+              <span>${name}</span></div>`;
+          }).join('<div style="color:#666;margin:0 5px;">/</div>');
+        }).join('<span class="arrow">▶</span>');
       });
+      renderTeamUI(); renderTypeChart();
     }
 
-    // Modal Logic
-    function showData(jsonId, displayName, spriteUrl) {
-      const modal = document.getElementById('data-modal');
-      const content = document.getElementById('modal-info');
-      let monData = showdownData[jsonId];
+    function showData(id, name, sprite) {
+      let mon = pokedex[id]; if(!mon) return;
+      pendingMon = { id, name, sprite, types: mon.types };
+      let abils = Object.values(mon.abilities).map((a, i) => {
+        let aId = a.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let d = abilities[aId] ? (abilities[aId].shortDesc || abilities[aId].desc) : "";
+        return `<label style="display:block;text-align:left;margin:5px 0;"><input type="radio" name="abil" value="${a}" ${i===0?'checked':''} onchange="document.getElementById('m-desc').innerText='${d.replace(/'/g, "\\'")}'"> ${a}</label>`;
+      }).join('');
 
-      if (!monData) {
-        content.innerHTML = `
-          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
-          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-          <p>Data not found on API.</p>
-        `;
-      } else {
-        let stats = monData.baseStats;
-        let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
-        
-        // Build Ability Selector HTML
-        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
-        let first = true;
-        let initialDesc = "";
-        
-        for(let key in monData.abilities) {
-            let aName = monData.abilities[key];
-            let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
-            
-            if(first) initialDesc = aDesc;
-            
-            abilitiesHtml += `
-              <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
-                 <input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} 
-                 onchange="document.getElementById('ability-desc').innerText = '${aDesc.replace(/'/g, "&#39;")}'">
-                 ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}
-              </label>
-            `;
-            first = false;
-        }
-        abilitiesHtml += `
-          <div id="ability-desc" style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; min-height:30px; margin-top:5px; color:#ddd; line-height:1.4;">
-            ${initialDesc}
-          </div>
-        `;
-
-        // Store current selection payload
-        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
-
-        content.innerHTML = `
-          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
-          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-          <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
-          
-          ${abilitiesHtml}
-          
-          <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
-            <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
-            <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
-            <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
-            <div class="stat-row"><span>Sp. Atk:</span> <span>${stats.spa}</span></div>
-            <div class="stat-row"><span>Sp. Def:</span> <span>${stats.spd}</span></div>
-            <div class="stat-row"><span>Speed:</span> <span>${stats.spe}</span></div>
-            <hr style="border-color:#444; margin: 5px 0;">
-            <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
-          </div>
-          
-          <button class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
-          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">Smogon Strategy</a>
-        `;
-      }
-      modal.style.display = 'flex';
+      document.getElementById('modal-info').innerHTML = `<h3>${name}</h3><img src="${sprite}" style="height:70px;"><p>${mon.types.join('/')}</p>
+        <div style="background:#222;padding:10px;border-radius:4px;">${abils}<div id="m-desc" style="font-size:7px;color:#aaa;margin-top:5px;">Select ability</div></div>
+        <button class="btn-action" style="width:100%;margin-top:10px;" onclick="add()">Add to Team</button>`;
+      document.getElementById('data-modal').style.display = 'flex';
     }
 
-    function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
-    window.onclick = function(event) {
-      const modal = document.getElementById('data-modal');
-      if (event.target == modal) modal.style.display = "none";
-    }
-
-    // --- TEAM BUILDER LOGIC ---
-    function submitToTeam() {
-      if (currentTeam.length >= 6) {
-        alert("Your team is already full! Remove a Pokémon first.");
-        return;
-      }
-      
-      // Get chosen ability
-      let selectedAbility = document.querySelector('input[name="ability-select"]:checked').value;
-      pendingMon.ability = selectedAbility;
-      
-      currentTeam.push(pendingMon);
-      closeModal();
-      renderTeamUI();
-      renderTypeChart();
-    }
-
-    function removeFromTeam(index) {
-      currentTeam.splice(index, 1);
-      renderTeamUI();
-      renderTypeChart();
+    function add() {
+      if(currentTeam.length >= 6) return alert("Full");
+      pendingMon.ability = document.querySelector('input[name="abil"]:checked').value;
+      currentTeam.push({...pendingMon}); closeModal(); renderTeamUI(); renderTypeChart();
     }
 
     function renderTeamUI() {
-      const container = document.getElementById('team-container');
-      container.innerHTML = '';
-      
-      for (let i = 0; i < 6; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'team-slot';
-        if (currentTeam[i]) {
-          slot.classList.add('filled');
-          slot.innerHTML = `<img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="${currentTeam[i].name}\nAbility: ${currentTeam[i].ability}">`;
-          slot.onclick = () => removeFromTeam(i);
-        }
-        container.appendChild(slot);
+      const c = document.getElementById('team-container'); c.innerHTML = '';
+      for(let i=0; i<6; i++) {
+        let s = document.createElement('div'); s.className = 'team-slot' + (currentTeam[i]?' filled':'');
+        if(currentTeam[i]) { s.innerHTML = `<img src="${currentTeam[i].sprite}">`; s.onclick = () => { currentTeam.splice(i,1); renderTeamUI(); renderTypeChart(); }; }
+        c.appendChild(s);
       }
-    }
-
-    // --- EXPORT LOGIC ---
-    function exportTeam() {
-      if (currentTeam.length === 0) {
-        alert("Add some Pokémon to your team first!");
-        return;
-      }
-
-      let exportText = "";
-      currentTeam.forEach(mon => {
-        exportText += `${mon.name}\n`;
-        exportText += `Ability: ${mon.ability}\n`;
-        exportText += `\n`; // Showdown requires an empty line between Pokemon
-      });
-
-      navigator.clipboard.writeText(exportText.trim()).then(() => {
-        const btn = document.getElementById('export-btn');
-        const originalText = btn.innerText;
-        btn.innerText = "Copied!";
-        btn.style.backgroundColor = "#4CAF50"; 
-        btn.style.color = "#fff";
-        
-        setTimeout(() => {
-          btn.innerText = originalText;
-          btn.style.backgroundColor = ""; 
-          btn.style.color = "";
-        }, 2000);
-      }).catch(err => {
-        alert("Failed to copy to clipboard.");
-      });
-    }
-
-    // --- TYPE CALCULATION LOGIC ---
-    function getDefensiveMultiplier(defendingTypes, attackingType) {
-      let mult = 1;
-      defendingTypes.forEach(type => {
-        if (!TYPE_DATA[type]) return;
-        if (TYPE_DATA[type].weakTo.includes(attackingType)) mult *= 2;
-        if (TYPE_DATA[type].resists.includes(attackingType)) mult *= 0.5;
-        if (TYPE_DATA[type].immuneTo.includes(attackingType)) mult *= 0;
-      });
-      return mult;
     }
 
     function renderTypeChart() {
-      const container = document.getElementById('type-grid-container');
-      container.innerHTML = '';
-      
-      Object.keys(TYPE_DATA).forEach(targetType => {
-        // Defensive stats
-        let weakCount = 0;
-        let resistCount = 0;
-        let immuneCount = 0;
-        
-        // Offensive stats
-        let seCount = 0;
-
-        currentTeam.forEach(mon => {
-          // Calculate if this targetType attacks our mon
-          let defMult = getDefensiveMultiplier(mon.types, targetType);
-          if (defMult > 1) weakCount++;
-          else if (defMult === 0) immuneCount++;
-          else if (defMult < 1 && defMult > 0) resistCount++;
-
-          // Calculate if our mon attacks this targetType with STAB
-          // A mon has a Super Effective STAB hit if one of its types is in the targetType's "weakTo" list
-          let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
-          if (hasSE) seCount++;
+      const c = document.getElementById('type-grid-container'); c.innerHTML = '';
+      Object.keys(TYPE_DATA).forEach(t => {
+        let w=0, r=0, i=0, se=0;
+        currentTeam.forEach(m => {
+          let mult = 1; m.types.forEach(mt => {
+            if(TYPE_DATA[mt].weakTo.includes(t)) mult *= 2;
+            if(TYPE_DATA[mt].resists.includes(t)) mult *= 0.5;
+            if(TYPE_DATA[mt].immuneTo.includes(t)) mult *= 0;
+          });
+          if(mult > 1) w++; else if(mult === 0) i++; else if(mult < 1) r++;
+          if(m.types.some(mt => TYPE_DATA[t].weakTo.includes(mt))) se++;
         });
-
-        const row = document.createElement('div');
-        row.className = 'type-row';
-        row.innerHTML = `
-          <div class="type-label" style="background-color: ${TYPE_COLORS[targetType]};">${targetType.substring(0,3).toUpperCase()}</div>
-          
-          <div class="type-stats" style="flex: 1; justify-content: flex-start;">
-            <div class="stat-badge ${weakCount > 0 ? 'bg-weak' : ''}" title="${weakCount} weak to ${targetType}">${weakCount || '-'}</div>
-            <div class="stat-badge ${resistCount > 0 ? 'bg-resist' : ''}" title="${resistCount} resist ${targetType}">${resistCount || '-'}</div>
-            <div class="stat-badge ${immuneCount > 0 ? 'bg-immune' : ''}" title="${immuneCount} immune to ${targetType}">${immuneCount || '-'}</div>
-          </div>
-
-          <div class="divider-vert"></div>
-
-          <div class="type-stats" style="width: 25px; justify-content: flex-end;">
-             <div class="stat-badge ${seCount > 0 ? 'bg-se' : ''}" title="${seCount} STAB hits super-effective on ${targetType}">${seCount || '-'}</div>
-          </div>
-        `;
-        container.appendChild(row);
+        c.innerHTML += `<div class="type-row"><div class="type-label" style="background:${TYPE_COLORS[t]}">${t.slice(0,3)}</div>
+          <div class="stat-badge ${w?'bg-weak':''}">${w||'-'}</div><div class="stat-badge ${r?'bg-resist':''}">${r||'-'}</div><div class="stat-badge ${i?'bg-immune':''}">${i||'-'}</div>
+          <div style="width:1px;background:#444;height:14px;margin:0 5px;"></div><div class="stat-badge ${se?'bg-se':''}">${se||'-'}</div></div>`;
       });
     }
-  </script>
 
-</body>
-</html>
-  </script>
+    function exportTeam() {
+      let txt = currentTeam.map(m => `${m.name}\nAbility: ${m.ability}\n`).join('\n');
+      navigator.clipboard.writeText(txt).then(() => alert("Copied!"));
+    }
 
+    function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
+  </script>
 </body>
 </html>
