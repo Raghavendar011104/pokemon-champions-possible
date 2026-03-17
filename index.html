@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pixel Art Pokémon Roster - Competitive Edition</title>
+<title>Pixel Art Pokémon Roster - Team Builder</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -21,7 +21,7 @@
     color: #ffcc00;
     text-shadow: 3px 3px 0 #333;
     font-size: 24px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
   }
 
   h2 {
@@ -37,6 +37,125 @@
     margin-top: 20px;
   }
 
+  /* --- DASHBOARD: TEAM BUILDER & TYPE CHART --- */
+  #dashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background-color: #1a365d;
+    border: 4px solid #ffcc00;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+    box-shadow: 6px 6px 0 #000;
+  }
+
+  #team-builder {
+    flex: 1;
+    min-width: 300px;
+  }
+
+  .team-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+  }
+
+  .team-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+  }
+
+  .team-slot {
+    width: 80px;
+    height: 80px;
+    background-color: #111;
+    border: 3px dashed #555;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .team-slot img {
+    max-height: 60px;
+    image-rendering: pixelated;
+  }
+
+  .team-slot:hover {
+    border-color: #ff0000;
+  }
+
+  .team-slot.filled:hover::after {
+    content: "X";
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff0000;
+    color: white;
+    padding: 4px;
+    border-radius: 50%;
+    font-size: 8px;
+  }
+
+  #type-chart-container {
+    flex: 2;
+    min-width: 400px;
+    background-color: #111;
+    padding: 15px;
+    border-radius: 4px;
+    border: 2px solid #555;
+  }
+
+  .type-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .type-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #222;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 8px;
+  }
+
+  .type-label {
+    padding: 4px;
+    border-radius: 3px;
+    text-shadow: 1px 1px 0 #000;
+    width: 50px;
+    text-align: center;
+  }
+
+  .type-stats {
+    display: flex;
+    gap: 5px;
+  }
+
+  .stat-badge {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    color: white;
+  }
+
+  .bg-weak { background-color: #d82b2b; }
+  .bg-resist { background-color: #4CAF50; }
+  .bg-immune { background-color: #4a90e2; }
+
+  /* --- ROSTER STYLES --- */
   .grid-container {
     display: flex;
     flex-wrap: wrap;
@@ -98,7 +217,7 @@
     margin: 0 5px;
   }
 
-  /* --- NEW COMPETITIVE MODAL STYLES --- */
+  /* --- BUTTONS & MODALS --- */
   .modal {
     display: none; 
     position: fixed; 
@@ -132,10 +251,6 @@
     cursor: pointer;
   }
 
-  .close-btn:hover {
-    color: #fff;
-  }
-
   .stat-row { 
     display: flex; 
     justify-content: space-between; 
@@ -143,24 +258,65 @@
     font-size: 9px;
   }
 
+  .btn-action {
+    background-color: #ffcc00;
+    color: #111;
+    border: none;
+    padding: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+
+  .btn-action:hover {
+    background-color: #fff;
+  }
+
+  .btn-add {
+    margin-top: 15px;
+    width: 100%;
+  }
+
+  .btn-export {
+    padding: 8px 12px;
+  }
+
   .smogon-link { 
     display: inline-block; 
-    margin-top: 20px; 
+    margin-top: 15px; 
     color: #aaddff; 
     text-decoration: none; 
     border-bottom: 2px solid #aaddff;
     padding-bottom: 2px;
-  }
-
-  .smogon-link:hover {
-    color: #ffcc00;
-    border-color: #ffcc00;
   }
 </style>
 </head>
 <body>
 
   <h1>Pokédex Roster</h1>
+
+  <div id="dashboard">
+    <div id="team-builder">
+      <div class="team-header">
+        <h3 style="margin: 0;">Current Team</h3>
+        <button id="export-btn" class="btn-action btn-export" onclick="exportTeam()">Export Showdown</button>
+      </div>
+      <div class="team-slots" id="team-container">
+        </div>
+    </div>
+    <div id="type-chart-container">
+      <h3 style="margin-top: 0;">Team Defenses</h3>
+      <div style="font-size: 8px; color: #888; margin-bottom: 10px;">
+        <span class="stat-badge bg-weak" style="display:inline-flex;"></span> Weak 
+        <span class="stat-badge bg-resist" style="display:inline-flex; margin-left:10px;"></span> Resist 
+        <span class="stat-badge bg-immune" style="display:inline-flex; margin-left:10px;"></span> Immune
+      </div>
+      <div class="type-grid" id="type-grid-container">
+        </div>
+    </div>
+  </div>
 
   <h2>1. The Confirmed Roster (117)</h2>
   <h3>Kanto</h3>
@@ -378,48 +534,73 @@
   </div>
 
   <script>
-    // 1. Fetch Showdown Pokedex JSON
+    // --- TYPE DATA MATRIX ---
+    const TYPE_DATA = {
+      Normal: { weakTo: ['Fighting'], resists: [], immuneTo: ['Ghost'] },
+      Fire: { weakTo: ['Water', 'Ground', 'Rock'], resists: ['Fire', 'Grass', 'Ice', 'Bug', 'Steel', 'Fairy'], immuneTo: [] },
+      Water: { weakTo: ['Electric', 'Grass'], resists: ['Fire', 'Water', 'Ice', 'Steel'], immuneTo: [] },
+      Electric: { weakTo: ['Ground'], resists: ['Electric', 'Flying', 'Steel'], immuneTo: [] },
+      Grass: { weakTo: ['Fire', 'Ice', 'Poison', 'Flying', 'Bug'], resists: ['Water', 'Electric', 'Grass', 'Ground'], immuneTo: [] },
+      Ice: { weakTo: ['Fire', 'Fighting', 'Rock', 'Steel'], resists: ['Ice'], immuneTo: [] },
+      Fighting: { weakTo: ['Flying', 'Psychic', 'Fairy'], resists: ['Bug', 'Rock', 'Dark'], immuneTo: [] },
+      Poison: { weakTo: ['Ground', 'Psychic'], resists: ['Grass', 'Fighting', 'Poison', 'Bug', 'Fairy'], immuneTo: [] },
+      Ground: { weakTo: ['Water', 'Grass', 'Ice'], resists: ['Poison', 'Rock'], immuneTo: ['Electric'] },
+      Flying: { weakTo: ['Electric', 'Ice', 'Rock'], resists: ['Grass', 'Fighting', 'Bug'], immuneTo: ['Ground'] },
+      Psychic: { weakTo: ['Bug', 'Ghost', 'Dark'], resists: ['Fighting', 'Psychic'], immuneTo: [] },
+      Bug: { weakTo: ['Fire', 'Flying', 'Rock'], resists: ['Grass', 'Fighting', 'Ground'], immuneTo: [] },
+      Rock: { weakTo: ['Water', 'Grass', 'Fighting', 'Ground', 'Steel'], resists: ['Normal', 'Fire', 'Poison', 'Flying'], immuneTo: [] },
+      Ghost: { weakTo: ['Ghost', 'Dark'], resists: ['Poison', 'Bug'], immuneTo: ['Normal', 'Fighting'] },
+      Dragon: { weakTo: ['Ice', 'Dragon', 'Fairy'], resists: ['Fire', 'Water', 'Electric', 'Grass'], immuneTo: [] },
+      Dark: { weakTo: ['Fighting', 'Bug', 'Fairy'], resists: ['Ghost', 'Dark'], immuneTo: ['Psychic'] },
+      Steel: { weakTo: ['Fire', 'Fighting', 'Ground'], resists: ['Normal', 'Grass', 'Ice', 'Flying', 'Psychic', 'Bug', 'Rock', 'Dragon', 'Steel', 'Fairy'], immuneTo: ['Poison'] },
+      Fairy: { weakTo: ['Poison', 'Steel'], resists: ['Fighting', 'Bug', 'Dark'], immuneTo: ['Dragon'] }
+    };
+
+    const TYPE_COLORS = {
+      Normal: '#A8A878', Fire: '#F08030', Water: '#6890F0', Electric: '#F8D030',
+      Grass: '#78C850', Ice: '#98D8D8', Fighting: '#C03028', Poison: '#A040A0',
+      Ground: '#E0C068', Flying: '#A890F0', Psychic: '#F85888', Bug: '#A8B820',
+      Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848',
+      Steel: '#B8B8D0', Fairy: '#EE99AC'
+    };
+
+    // --- STATE MANAGEMENT ---
     let showdownData = {};
+    let currentTeam = []; // Max 6
+
+    // Fetch Showdown Pokedex JSON
     fetch('https://play.pokemonshowdown.com/data/pokedex.json')
       .then(res => res.json())
       .then(data => { showdownData = data; })
       .catch(err => console.error("Error fetching Showdown data:", err));
 
-    // 2. Build the Roster Visuals
+    // Initialize UI
     document.addEventListener("DOMContentLoaded", () => {
+      buildRosterUI();
+      renderTeamUI();
+      renderTypeChart();
+    });
+
+    // --- CORE FUNCTIONS ---
+    function buildRosterUI() {
       const boxes = document.querySelectorAll('.poke-box');
-      
       const nameMap = {
-        "hisuian sneasel": "sneasel-hisui",
-        "paldean wooper": "wooper-paldea",
-        "mime jr.": "mimejr",
-        "mr. mime": "mrmime",
-        "jangmo-o": "jangmoo",
-        "hakamo-o": "hakamoo",
-        "kommo-o": "kommoo",
-        "flabébé": "flabebe",
-        "farigiraf": "farigiraf" 
+        "hisuian sneasel": "sneasel-hisui", "paldean wooper": "wooper-paldea",
+        "mime jr.": "mimejr", "mr. mime": "mrmime", "jangmo-o": "jangmoo",
+        "hakamo-o": "hakamoo", "kommo-o": "kommoo", "flabébé": "flabebe", "farigiraf": "farigiraf" 
       };
 
       boxes.forEach(box => {
         const stages = box.innerHTML.split('<span class="arrow">▶</span>');
-        
         const newStages = stages.map(stage => {
           const mons = stage.split('/');
-          
           const monHTML = mons.map(monName => {
             let cleanName = monName.replace(/<[^>]*>?/gm, '').trim(); 
             let searchName = cleanName.toLowerCase();
-            
-            if(nameMap[searchName]) {
-                searchName = nameMap[searchName];
-            } else {
-                searchName = searchName.replace(/ /g, '').replace(/[^a-z0-9-]/g, '');
-            }
+            if(nameMap[searchName]) searchName = nameMap[searchName];
+            else searchName = searchName.replace(/ /g, '').replace(/[^a-z0-9-]/g, '');
 
-            // Create strict alphanumeric ID for searching Showdown's JSON
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            // Handle regional forms for the JSON key
             if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
             if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
 
@@ -432,37 +613,34 @@
               </div>
             `;
           }).join('<div class="branch-divider">/</div>');
-          
           return `<div class="stage-container">${monHTML}</div>`;
         });
-
         box.innerHTML = newStages.join('<span class="arrow">▶</span>');
       });
-    });
+    }
 
-    // 3. Modal Logic
+    // Modal Logic
     function showData(jsonId, displayName, spriteUrl) {
       const modal = document.getElementById('data-modal');
       const content = document.getElementById('modal-info');
-      
       let monData = showdownData[jsonId];
 
       if (!monData) {
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
           <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-          <p>Data not found on Showdown API for this form.</p>
+          <p>Data not found on API.</p>
         `;
       } else {
         let abilities = Object.values(monData.abilities).join(' / ');
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
-        let tier = monData.tier || "Untiered";
+        
+        let monObject = JSON.stringify({ id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types }).replace(/'/g, "&#39;");
 
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
           <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-          <p style="color:#ff9900; margin-bottom: 5px;">Tier: ${tier}</p>
           <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
           <p style="margin: 2px 0 15px 0;"><strong>Abilities:</strong> ${abilities}</p>
           
@@ -477,23 +655,134 @@
             <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
           </div>
           
-          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
+          <button class="btn-action btn-add" onclick='addToTeam(${monObject})'>Add to Team</button>
+          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">Smogon Strategy</a>
         `;
       }
       modal.style.display = 'flex';
     }
 
-    function closeModal() {
-      document.getElementById('data-modal').style.display = 'none';
-    }
-
-    // Close modal if user clicks outside of it
+    function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     window.onclick = function(event) {
       const modal = document.getElementById('data-modal');
-      if (event.target == modal) {
-        modal.style.display = "none";
+      if (event.target == modal) modal.style.display = "none";
+    }
+
+    // --- TEAM BUILDER LOGIC ---
+    function addToTeam(mon) {
+      if (currentTeam.length >= 6) {
+        alert("Your team is already full! Remove a Pokémon first.");
+        return;
+      }
+      currentTeam.push(mon);
+      closeModal();
+      renderTeamUI();
+      renderTypeChart();
+    }
+
+    function removeFromTeam(index) {
+      currentTeam.splice(index, 1);
+      renderTeamUI();
+      renderTypeChart();
+    }
+
+    function renderTeamUI() {
+      const container = document.getElementById('team-container');
+      container.innerHTML = '';
+      
+      for (let i = 0; i < 6; i++) {
+        const slot = document.createElement('div');
+        slot.className = 'team-slot';
+        if (currentTeam[i]) {
+          slot.classList.add('filled');
+          slot.innerHTML = `<img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="${currentTeam[i].name}">`;
+          slot.onclick = () => removeFromTeam(i);
+        }
+        container.appendChild(slot);
       }
     }
+
+    // --- EXPORT LOGIC ---
+    function exportTeam() {
+      if (currentTeam.length === 0) {
+        alert("Add some Pokémon to your team first!");
+        return;
+      }
+
+      let exportText = "";
+      currentTeam.forEach(mon => {
+        let monData = showdownData[mon.id];
+        // Defaulting to the first ability listed in the API for formatting
+        let ability = (monData && monData.abilities && monData.abilities["0"]) ? monData.abilities["0"] : "";
+        
+        exportText += `${mon.name}\n`;
+        if (ability) exportText += `Ability: ${ability}\n`;
+        exportText += `\n`; // Showdown requires an empty line between Pokemon
+      });
+
+      navigator.clipboard.writeText(exportText.trim()).then(() => {
+        const btn = document.getElementById('export-btn');
+        const originalText = btn.innerText;
+        btn.innerText = "Copied!";
+        btn.style.backgroundColor = "#4CAF50"; // Turn green
+        btn.style.color = "#fff";
+        
+        setTimeout(() => {
+          btn.innerText = originalText;
+          btn.style.backgroundColor = ""; // Reset to CSS default
+          btn.style.color = "";
+        }, 2000);
+      }).catch(err => {
+        console.error('Failed to copy text: ', err);
+        alert("Failed to copy to clipboard.");
+      });
+    }
+
+    // --- TYPE CALCULATION LOGIC ---
+    function getMultiplier(defendingTypes, attackingType) {
+      let mult = 1;
+      defendingTypes.forEach(type => {
+        if (!TYPE_DATA[type]) return;
+        if (TYPE_DATA[type].weakTo.includes(attackingType)) mult *= 2;
+        if (TYPE_DATA[type].resists.includes(attackingType)) mult *= 0.5;
+        if (TYPE_DATA[type].immuneTo.includes(attackingType)) mult *= 0;
+      });
+      return mult;
+    }
+
+    function renderTypeChart() {
+      const container = document.getElementById('type-grid-container');
+      container.innerHTML = '';
+      
+      Object.keys(TYPE_DATA).forEach(attackType => {
+        let weakCount = 0;
+        let resistCount = 0;
+        let immuneCount = 0;
+
+        currentTeam.forEach(mon => {
+          let mult = getMultiplier(mon.types, attackType);
+          if (mult > 1) weakCount++;
+          else if (mult === 0) immuneCount++;
+          else if (mult < 1 && mult > 0) resistCount++;
+        });
+
+        const row = document.createElement('div');
+        row.className = 'type-row';
+        row.innerHTML = `
+          <div class="type-label" style="background-color: ${TYPE_COLORS[attackType]};">${attackType.substring(0,3).toUpperCase()}</div>
+          <div class="type-stats">
+            <div class="stat-badge ${weakCount > 0 ? 'bg-weak' : ''}">${weakCount || '-'}</div>
+            <div class="stat-badge ${resistCount > 0 ? 'bg-resist' : ''}">${resistCount || '-'}</div>
+            <div class="stat-badge ${immuneCount > 0 ? 'bg-immune' : ''}">${immuneCount || '-'}</div>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+    }
+  </script>
+
+</body>
+</html>
   </script>
 
 </body>
