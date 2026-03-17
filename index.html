@@ -623,7 +623,7 @@
       "excadrill": [{ stone: "Excadrite", id: "excadrillmega" }],
       "falinks": [{ stone: "Falinksite", id: "falinksmega" }],
       "feraligatr": [{ stone: "Feraligite", id: "feraligatrmega" }],
-      "floette": [{ stone: "Floettite", id: "florgesmega" }], 
+     "floette": [{ stone: "Floettite", id: "floettemega" }], 
       "froslass": [{ stone: "Froslassite", id: "froslassmega" }],
       "gallade": [{ stone: "Galladite", id: "gallademega" }],
       "garchomp": [{ stone: "Garchompite", id: "garchompmega" }],
@@ -666,11 +666,69 @@
       "starmie": [{ stone: "Starminite", id: "starmiemega" }],
       "steelix": [{ stone: "Steelixite", id: "steelixmega" }],
       "swampert": [{ stone: "Swampertite", id: "swampertmega" }],
-      "tatsugiri": [{ stone: "Tatsugirinite", id: "tatsugirimega" }],
+      "tatsugiri": [
+      { stone: "Tatsugirinite (Droopy)", id: "tatsugirimegadroopy" },
+      { stone: "Tatsugirinite (Stretchy)", id: "tatsugirimegastretchy" },
+      { stone: "Tatsugirinite (Curly)", id: "tatsugirimegacurly" }
+    ],
       "tyranitar": [{ stone: "Tyranitarite", id: "tyranitarmega" }],
       "venusaur": [{ stone: "Venusaurite", id: "venusaurmega" }],
       "victreebel": [{ stone: "Victreebelite", id: "victreebelmega" }]
     };
+    const CUSTOM_SPRITES = {
+  // Row 1
+  "raichumegax": "images/raichu-mega-x.png",
+  "raichumegay": "images/raichu-mega-y.png",
+  "clefablemega": "images/clefable-mega.png",
+  "victreebelmega": "images/victreebel-mega.png",
+  "starmiemega": "images/starmie-mega.png",
+  "dragonitemega": "images/dragonite-mega.png",
+  "meganiummega": "images/meganium-mega.png",
+  "feraligatrmega": "images/feraligatr-mega.png",
+
+  // Row 2
+  "skarmorymega": "images/skarmory-mega.png",
+  "chimechomega": "images/chimecho-mega.png",
+  "absolmegaz": "images/absol-mega-z.png",
+  "staraptormega": "images/staraptor-mega.png",
+  "froslassmega": "images/froslass-mega.png",
+  "emboarmega": "images/emboar-mega.png",
+
+  // Row 3
+  "excadrillmega": "images/excadrill-mega.png",
+  "scolipedemega": "images/scolipede-mega.png",
+  "scraftymega": "images/scrafty-mega.png",
+  "eelektrossmega": "images/eelektross-mega.png", 
+  "chandeluremega": "images/chandelure-mega.png",
+  "golurkmega": "images/golurk-mega.png",
+  "chesnaughtmega": "images/chesnaught-mega.png",
+  "delphoxmega": "images/delphox-mega.png",
+
+  // Row 4
+  "greninjamega": "images/greninja-mega.png",
+  "pyroarmega": "images/pyroar-mega.png",
+  "floettemega": "images/floette-mega.png",
+  "meowsticmega": "images/meowstic-mega.png",
+  "malamarmega": "images/malamar-mega.png",
+  "barbaraclemega": "images/barbaracle-mega.png",
+  "dragalgemega": "images/dragalge-mega.png",
+  "hawluchamega": "images/hawlucha-mega.png",
+
+  // Row 5
+  "crabominablemega": "images/crabominable-mega.png",
+  "golisopodmega": "images/golisopod-mega.png",
+  "drampamega": "images/drampa-mega.png",
+  "falinksmega": "images/falinks-mega.png",
+  "scovillainmega": "images/scovillain-mega.png",
+
+  // Row 6
+  "glimmoramega": "images/glimmora-mega.png",
+  "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
+  "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
+  "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
+  "baxcaliburmega": "images/baxcalibur-mega.png",
+  "lucariomegaz": "images/lucario-mega-z.png"
+};
 
     let showdownData = {};
     let abilitiesData = {};
@@ -862,8 +920,8 @@
             `;
             break; 
         }
-
-        let megaSprite = `https://play.pokemonshowdown.com/sprites/gen5/${megaId}.png`;
+// Check if the Mega ID exists in your custom list. If yes, use your image. If no, use Showdown's!
+        let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${megaId}.png`;
 
         dynamicArea.innerHTML = `
           <img src="${megaSprite}" style="height:80px; image-rendering:pixelated;" onerror="this.src='${baseSprite}'">
