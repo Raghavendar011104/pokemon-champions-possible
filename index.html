@@ -886,7 +886,7 @@
       modal.style.display = 'flex';
     }
 
-    function previewMega(baseId, displayName, baseSprite, megaId) {
+        function previewMega(baseId, displayName, baseSprite, megaId) {
         const dynamicArea = document.getElementById('modal-dynamic-area');
         const addBtn = document.getElementById('modal-add-btn');
 
@@ -921,9 +921,12 @@
             break; 
         }
 
-let showdownSpriteName = megaId.replace('mega', '-mega');
-let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
-      
+        // THE FIX: This adds the hyphen for official Showdown files (charizardmegax -> charizard-megax)
+        let showdownSpriteName = megaId.replace('mega', '-mega');
+        
+        // It checks your custom list first. If it's not there, it asks Showdown for the hyphenated name!
+        let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
+
         dynamicArea.innerHTML = `
           <img src="${megaSprite}" style="height:80px; image-rendering:pixelated;" onerror="this.src='${baseSprite}'">
           <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>
@@ -945,6 +948,7 @@ let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play
         addBtn.innerText = "Cannot Add Megas directly";
         addBtn.style.cursor = "not-allowed";
     }
+
 
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     window.onclick = function(event) {
