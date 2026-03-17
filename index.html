@@ -39,7 +39,7 @@
     margin-top: 20px;
   }
 
-  /* --- STICKY DASHBOARD --- */
+  /* --- DASHBOARD --- */
   #dashboard {
     display: flex;
     flex-wrap: wrap;
@@ -591,6 +591,7 @@
       Fighting: '#C03028', Poison: '#A040A0', Ground: '#E0C068', Flying: '#A890F0', Psychic: '#F85888', Bug: '#A8B820',
       Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848', Steel: '#B8B8D0', Fairy: '#EE99AC'
     };
+
     const MEGA_MAP = {
       "abomasnow": [{ stone: "Abomasite", id: "abomasnowmega" }],
       "absol": [{ stone: "Absolite", id: "absolmega" }, { stone: "Absolite Z", id: "absolmegaz" }],
@@ -678,7 +679,6 @@
 
     // --- INITIALIZATION ---
     window.addEventListener('load', () => {
-      // Check if the script tags in <head> loaded successfully
       if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities) {
           showdownData = window.exports.BattlePokedex;
           abilitiesData = window.exports.BattleAbilities;
@@ -688,7 +688,6 @@
           renderTeamUI();
           renderTypeChart();
       } else {
-          // Fallback if Opera GX Shields or Adblocker blocked the script tags
           document.getElementById('loading-overlay').innerHTML = `
             <h2 style="color:#ff0000;">Data Blocked by Browser</h2>
             <p>Your browser's adblocker or tracking protection blocked the Pokémon Showdown scripts.</p>
@@ -702,7 +701,6 @@
       const boxes = document.querySelectorAll('.poke-box');
 
       boxes.forEach(box => {
-        // Safe split by the exact HTML span to prevent removing elements
         const htmlContent = box.innerHTML;
         const stages = htmlContent.split(/<span class="arrow">▶<\/span>|▶/i);
         
@@ -712,14 +710,11 @@
           const monHTML = mons.map(monNameHTML => {
             let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
             
-            // 1. Create strict alphanumeric ID for Showdown JSON lookup
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
             if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
             if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
 
-            // 2. Create strict sprite name for the Gen 5 repository
             let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
-            // Manual overrides for specific files in the image directory
             if (cleanName === 'Hisuian Sneasel') spriteName = 'sneasel-hisui';
             if (cleanName === 'Paldean Wooper') spriteName = 'wooper-paldea';
             if (cleanName === 'Flabébé') spriteName = 'flabebe';
@@ -754,7 +749,6 @@
       let monData = showdownData[jsonId];
 
       if (!monData) {
-        // This should just be the error message if the API fails
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
           <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
@@ -764,7 +758,6 @@
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
-        // 1. The Ability Fix (You did this part perfectly!)
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
         let first = true;
         let initialDesc = "";
@@ -794,7 +787,6 @@
           </div>
         `;
 
-        // 2. The Mega Dropdown Logic (Moved to where the data is actually found)
         let megaDropdown = "";
         if (MEGA_MAP[jsonId]) {
             let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
@@ -811,7 +803,6 @@
 
         pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
 
-        // 3. Final Output Assembly
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
           ${megaDropdown}
@@ -835,72 +826,13 @@
         `;
       }
       modal.style.display = 'flex';
-    } else {
-        let stats = monData.baseStats;
-        let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
-        
-        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
-        let first = true;
-        let initialDesc = "";
-        
-        for(let key in monData.abilities) {
-            let aName = monData.abilities[key];
-            let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
-            
-            if(first) initialDesc = aDesc;
-            
-            // Safely escape quotes so they don't break the HTML attribute
-            let safeDesc = aDesc.replace(/"/g, '&quot;');
-            
-            abilitiesHtml += `
-              <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
-                 <input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} 
-                 data-desc="${safeDesc}" 
-                 onchange="document.getElementById('ability-desc').innerText = this.getAttribute('data-desc')">
-                 ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}
-              </label>
-            `;
-            first = false;
-        }
-        abilitiesHtml += `
-          <div id="ability-desc" style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; min-height:30px; margin-top:5px; color:#ddd; line-height:1.4;">
-            ${initialDesc}
-          </div>
-        `;
-
-        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
-
-        content.innerHTML = `
-          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
-          <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-          <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
-          
-          ${abilitiesHtml}
-          
-          <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
-            <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
-            <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
-            <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
-            <div class="stat-row"><span>Sp. Atk:</span> <span>${stats.spa}</span></div>
-            <div class="stat-row"><span>Sp. Def:</span> <span>${stats.spd}</span></div>
-            <div class="stat-row"><span>Speed:</span> <span>${stats.spe}</span></div>
-            <hr style="border-color:#444; margin: 5px 0;">
-            <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
-          </div>
-          
-          <button class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
-          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
-        `;
-      }
-      modal.style.display = 'flex';
     }
+
     function previewMega(baseId, displayName, baseSprite, megaId) {
         const dynamicArea = document.getElementById('modal-dynamic-area');
         const addBtn = document.getElementById('modal-add-btn');
 
         if (megaId === "none") {
-            // Re-run showData to perfectly reset back to the base form
             showData(baseId, displayName, baseSprite);
             return;
         }
@@ -918,7 +850,6 @@
         let stats = megaData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
-        // Grab the Mega Ability (Megas usually only have 1)
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Mega Ability:</strong></div>`;
         for(let key in megaData.abilities) {
             let aName = megaData.abilities[key];
@@ -950,7 +881,6 @@
           </div>
         `;
 
-        // Disable adding to team
         addBtn.disabled = true;
         addBtn.style.opacity = "0.3";
         addBtn.innerText = "Cannot Add Megas directly";
