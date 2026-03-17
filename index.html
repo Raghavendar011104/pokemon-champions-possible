@@ -1037,46 +1037,58 @@
       return mult;
     }
 
-    function renderTypeChart() {
+        function renderTypeChart() {
       const container = document.getElementById('type-grid-container');
       container.innerHTML = '';
       
+      // Makes the columns slightly wider to comfortably fit the mini-sprites
+      container.style.gridTemplateColumns = "repeat(auto-fill, minmax(220px, 1fr))";
+
       Object.keys(TYPE_DATA).forEach(targetType => {
-        let weakCount = 0;
-        let resistCount = 0;
-        let immuneCount = 0;
-        let seCount = 0;
+        let weakMons = [];
+        let resistMons = [];
+        let immuneMons = [];
+        let seMons = [];
 
         currentTeam.forEach(mon => {
           let defMult = getDefensiveMultiplier(mon.types, targetType);
-          if (defMult > 1) weakCount++;
-          else if (defMult === 0) immuneCount++;
-          else if (defMult < 1 && defMult > 0) resistCount++;
+          if (defMult > 1) weakMons.push(mon);
+          else if (defMult === 0) immuneMons.push(mon);
+          else if (defMult < 1 && defMult > 0) resistMons.push(mon);
 
           let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
-          if (hasSE) seCount++;
+          if (hasSE) seMons.push(mon);
         });
+
+        // Helper function to build the mini-sprite boxes
+        const makeSpriteHtml = (mons, bgColor) => {
+            if (mons.length === 0) return `<div class="stat-badge" style="background-color: #333; color: #555;">-</div>`;
+            return `<div style="display: flex; gap: 2px; background-color: ${bgColor}; padding: 2px 4px; border-radius: 3px; min-height: 16px; align-items: center;">` + 
+                   mons.map(m => `<img src="${m.sprite}" title="${m.name}" style="height: 18px; width: 18px; object-fit: contain; image-rendering: pixelated;">`).join('') + 
+                   `</div>`;
+        };
 
         const row = document.createElement('div');
         row.className = 'type-row';
         row.innerHTML = `
-          <div class="type-label" style="background-color: ${TYPE_COLORS[targetType]};">${targetType.substring(0,3).toUpperCase()}</div>
+          <div class="type-label" style="background-color: ${TYPE_COLORS[targetType]}; width: 40px;">${targetType.substring(0,3).toUpperCase()}</div>
           
-          <div class="type-stats" style="flex: 1; justify-content: flex-start;">
-            <div class="stat-badge ${weakCount > 0 ? 'bg-weak' : ''}" title="${weakCount} weak to ${targetType}">${weakCount || '-'}</div>
-            <div class="stat-badge ${resistCount > 0 ? 'bg-resist' : ''}" title="${resistCount} resist ${targetType}">${resistCount || '-'}</div>
-            <div class="stat-badge ${immuneCount > 0 ? 'bg-immune' : ''}" title="${immuneCount} immune to ${targetType}">${immuneCount || '-'}</div>
+          <div class="type-stats" style="flex: 1; justify-content: flex-start; align-items: center; gap: 4px;">
+            ${makeSpriteHtml(weakMons, '#d82b2b')}
+            ${makeSpriteHtml(resistMons, '#4CAF50')}
+            ${makeSpriteHtml(immuneMons, '#4a90e2')}
           </div>
 
           <div class="divider-vert"></div>
 
-          <div class="type-stats" style="width: 25px; justify-content: flex-end;">
-             <div class="stat-badge ${seCount > 0 ? 'bg-se' : ''}" title="${seCount} STAB hits super-effective on ${targetType}">${seCount || '-'}</div>
+          <div class="type-stats" style="justify-content: flex-end; align-items: center;">
+             ${makeSpriteHtml(seMons, '#ff9800')}
           </div>
         `;
         container.appendChild(row);
       });
     }
+
   </script>
 
 </body>
