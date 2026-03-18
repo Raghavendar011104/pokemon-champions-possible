@@ -1341,9 +1341,13 @@ function analyzeArchetype() {
     else if (stats.hasTailwind && stats.hasTR) {
         archetype = "TailRoom (Hybrid)";
         desc = "A flexible VGC archetype that adapts speed control to either outpace fast teams or reverse Trick Room.";
-    } else if (stats.hasTR && stats.avgSpeed < 75) {
+    } } else if (stats.hasTR && stats.avgSpeed < 75) {
         archetype = "Hard Trick Room";
         desc = "Committed to speed inversion. Needs redirection or Fake Out to safely set the dimension.";
+    } else if (stats.hasTR && stats.avgSpeed >= 75) {
+        archetype = "Hybrid Speed Control";
+        desc = "Features Trick Room as a secondary speed control option alongside inherently faster offensive threats.";
+        
     } else if (stats.hasPsychicTerrain && stats.hasExpandingForce) {
         archetype = "Psyspam (Expanding Force)";
         desc = "Abuses Psychic Terrain to fire off high-powered, spread Expanding Force attacks that bypass priority.";
