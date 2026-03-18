@@ -576,7 +576,9 @@
         <div class="poke-box">Hisuian Braviary</div>
         <div class="poke-box">Hisuian Decidueye</div>
       </div>
-  </div> <div id="data-modal" class="modal">
+  </div> 
+
+  <div id="data-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">X</span>
       <div id="modal-info">Loading...</div>
@@ -619,7 +621,6 @@
       Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848', Steel: '#B8B8D0', Fairy: '#EE99AC'
     };
 
-    // Upgraded to handle Megas AND Forms!
     const MEGA_MAP = {
       "abomasnow": [{ stone: "Abomasite", id: "abomasnowmega" }],
       "absol": [{ stone: "Absolite", id: "absolmega" }, { stone: "Absolite Z", id: "absolmegaz" }],
@@ -712,7 +713,6 @@
       "tatsugiri": [
           { stone: "Droopy Form", id: "tatsugiridroopy" },
           { stone: "Stretchy Form", id: "tatsugiristretchy" }
-          // Curly is base form!
       ]
     };
     
@@ -777,7 +777,6 @@
       "baxcaliburmega": "images/baxcalibur-mega.png",
       "lucariomegaz": "images/lucario-mega-z.png",
       
-      // SHOWDOWN FORM OVERRIDES TO PREVENT IMAGE ERRORS
       "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png",
       "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
       "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png",
@@ -941,7 +940,6 @@
             `;
         }
 
-        // Use proper official name capitalization from Showdown Database
         let finalName = monData.name || displayName;
         pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [] };
 
@@ -1053,7 +1051,6 @@
           </div>
         `;
 
-        // Use the official form name from Showdown (e.g. "Indeedee-F", "Charizard-Mega-X")
         let finalName = megaData.name || displayName + " (Form)";
         pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], ability: megaAbilityName };
 
@@ -1080,7 +1077,7 @@
             let lset = learnsetsData[currentId]?.learnset;
             let mon = showdownData[currentId];
             
-            // If this specific form doesn't have a learnset, fallback to its base species!
+            // If this specific form doesn't have a learnset, fallback to its base species
             if (!lset && mon && mon.baseSpecies) {
                 let baseId = mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
                 lset = learnsetsData[baseId]?.learnset;
@@ -1209,7 +1206,6 @@
 
       let exportText = "";
       currentTeam.forEach(mon => {
-        // Because pendingMon.name now directly pulls the official Showdown name, we can just print it!
         exportText += `${mon.name}\n`;
         exportText += `Level: 50\n`;
         exportText += `Ability: ${mon.ability}\n`;
@@ -1235,158 +1231,158 @@
         }, 2000);
       });
     }
-   // --- IMPROVED ARCHETYPE ANALYZER ---
-function analyzeArchetype() {
-    let container = document.getElementById('archetype-summary');
-    if (currentTeam.length === 0) {
-        container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>';
-        return;
-    }
-    
-    let totalMoves = 0;
-    currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
-    
-    if (totalMoves === 0) {
-        container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Awaiting move selection...</p>';
-        return;
-    }
 
-    // --- State Trackers ---
-    let stats = {
-        hasTR: false, hasTailwind: false, hasStickyWeb: false,
-        hasDrizzle: false, hasRainAbuser: false,
-        hasDrought: false, hasSunAbuser: false,
-        hasSand: false, hasSnow: false,
-        hasPsychicTerrain: false, hasExpandingForce: false,
-        protectCount: 0, recoveryCount: 0, unawareCount: 0,
-        statDroppers: 0, perishSongCount: 0,
-        redirectorCount: 0, fakeOutCount: 0, pivotMoveCount: 0,
-        hazardSetters: 0, hazardRemovers: 0, hasGholdengo: false,
-        avgSpeed: 0, highSpeedCount: 0, suicideLeadPotential: false,
-        hasDondozo: false, hasTatsugiri: false,
-        hasMagnezone: false, dragonCount: 0, shadowTag: false
-    };
-
-    let typesPresent = new Set();
-
-    // 1. Comprehensive Team Scan
-    currentTeam.forEach(mon => {
-        let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
-        stats.avgSpeed += baseSpe;
-        if (baseSpe >= 110) stats.highSpeedCount++;
-        
-        mon.types.forEach(t => typesPresent.add(t));
-        
-        // Specific Mon/Ability Checks
-        if (mon.id.includes('dondozo')) stats.hasDondozo = true;
-        if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
-        if (mon.id.includes('magnezone')) stats.hasMagnezone = true;
-        if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
-        if (mon.types.includes('Dragon')) stats.dragonCount++;
-        if (mon.ability === 'Unaware') stats.unawareCount++;
-
-        // Field Effect Abilities
-        if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
-        if (mon.ability === 'Swift Swim') stats.hasRainAbuser = true;
-        if (mon.ability === 'Drought') stats.hasDrought = true;
-        if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
-        if (mon.ability === 'Sand Stream') stats.hasSand = true;
-        if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
-        if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true;
-        if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
-
-        // Move Checks
-        if (mon.moves) {
-            if (mon.moves.includes('Trick Room')) stats.hasTR = true;
-            if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
-            if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true;
-            if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
-            
-            // Fixed Array Checks
-            if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
-            if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
-            if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
-            if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => mon.moves.includes(m))) stats.recoveryCount++;
-            if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => mon.moves.includes(m))) stats.protectCount++;
-            
-            if (mon.moves.includes('Perish Song')) stats.perishSongCount++;
-            if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
-            if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
-            
-            // Suicide Lead Check (Note: Item logic will need a UI update later!)
-            if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) {
-                stats.suicideLeadPotential = true;
-            }
+    // --- IMPROVED ARCHETYPE ANALYZER ---
+    function analyzeArchetype() {
+        let container = document.getElementById('archetype-summary');
+        if (currentTeam.length === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>';
+            return;
         }
-    });
-    
-    stats.avgSpeed /= currentTeam.length;
-
-    // 2. Hierarchical Identification Logic
-    let archetype = "Bulky Offense / Balance";
-    let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
-
-    // Priority 1: Specific Named Cores
-    if (stats.hasDondozo && stats.hasTatsugiri) {
-        archetype = "DozoGiri (Commander)";
-        desc = "A VGC powerhouse that uses the Commander ability to grant Dondozo double omni-boosts to sweep.";
-    } else if (stats.hasMagnezone && stats.dragonCount >= 2) {
-        archetype = "DragMag";
-        desc = "An iconic Smogon archetype where Magnezone traps Steel-types to clear the path for Dragon sweepers.";
-    } else if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) {
-        archetype = "Perish Trap";
-        desc = "A control-heavy archetype that traps opponents and uses Perish Song to force KOs within 3 turns.";
-    } 
-    // Priority 2: Field/Speed Control
-    else if (stats.hasTailwind && stats.hasTR) {
-        archetype = "TailRoom (Hybrid)";
-        desc = "A flexible VGC archetype that adapts speed control to either outpace fast teams or reverse Trick Room.";
-    } } else if (stats.hasTR && stats.avgSpeed < 75) {
-        archetype = "Hard Trick Room";
-        desc = "Committed to speed inversion. Needs redirection or Fake Out to safely set the dimension.";
-    } else if (stats.hasTR && stats.avgSpeed >= 75) {
-        archetype = "Hybrid Speed Control";
-        desc = "Features Trick Room as a secondary speed control option alongside inherently faster offensive threats.";
         
-    } else if (stats.hasPsychicTerrain && stats.hasExpandingForce) {
-        archetype = "Psyspam (Expanding Force)";
-        desc = "Abuses Psychic Terrain to fire off high-powered, spread Expanding Force attacks that bypass priority.";
-    } else if (stats.hasStickyWeb) {
-        archetype = "Sticky Web Offense";
-        desc = "A singles-focused offense that uses webs to lower opponent speed, enabling mid-speed heavy hitters.";
-    } else if (stats.hazardSetters >= 3 && stats.hasGholdengo) {
-        archetype = "Hazard Stack (Cheese)";
-        desc = "Builds progress by stacking layers of spikes/rocks, using Gholdengo to block all removal attempts.";
-    }
-    // Priority 3: Weather
-    else if (stats.hasDrizzle && stats.hasRainAbuser) {
-        archetype = "Rain Offense";
-        desc = "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers.";
-    } else if (stats.hasDrought && stats.hasSunAbuser) {
-        archetype = "Sun Offense";
-        desc = "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate offensive pressure.";
-    }
-    // Priority 4: Playstyle Spectrums
-    else if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
-        archetype = "Stall / Semi-Stall";
-        desc = "Wins through attrition, passive damage (hazards/status), and extreme defensive redundancy.";
-    } else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) {
-        archetype = "Hyper Offense (HO)";
-        desc = "Total aggression. Uses a lead to set hazards/screens then chains sweepers to overwhelm the foe.";
-    } else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) {
-        archetype = "Bulky Offense / Pivot Balance";
-        desc = "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control.";
+        let totalMoves = 0;
+        currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
+        
+        if (totalMoves === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Awaiting move selection...</p>';
+            return;
+        }
+
+        // --- State Trackers ---
+        let stats = {
+            hasTR: false, hasTailwind: false, hasStickyWeb: false,
+            hasDrizzle: false, hasRainAbuser: false,
+            hasDrought: false, hasSunAbuser: false,
+            hasSand: false, hasSnow: false,
+            hasPsychicTerrain: false, hasExpandingForce: false,
+            protectCount: 0, recoveryCount: 0, unawareCount: 0,
+            statDroppers: 0, perishSongCount: 0,
+            redirectorCount: 0, fakeOutCount: 0, pivotMoveCount: 0,
+            hazardSetters: 0, hazardRemovers: 0, hasGholdengo: false,
+            avgSpeed: 0, highSpeedCount: 0, suicideLeadPotential: false,
+            hasDondozo: false, hasTatsugiri: false,
+            hasMagnezone: false, dragonCount: 0, shadowTag: false
+        };
+
+        let typesPresent = new Set();
+
+        // 1. Comprehensive Team Scan
+        currentTeam.forEach(mon => {
+            let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
+            stats.avgSpeed += baseSpe;
+            if (baseSpe >= 110) stats.highSpeedCount++;
+            
+            mon.types.forEach(t => typesPresent.add(t));
+            
+            // Specific Mon/Ability Checks
+            if (mon.id.includes('dondozo')) stats.hasDondozo = true;
+            if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
+            if (mon.id.includes('magnezone')) stats.hasMagnezone = true;
+            if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
+            if (mon.types.includes('Dragon')) stats.dragonCount++;
+            if (mon.ability === 'Unaware') stats.unawareCount++;
+
+            // Field Effect Abilities
+            if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
+            if (mon.ability === 'Swift Swim') stats.hasRainAbuser = true;
+            if (mon.ability === 'Drought') stats.hasDrought = true;
+            if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
+            if (mon.ability === 'Sand Stream') stats.hasSand = true;
+            if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
+            if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true;
+            if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
+
+            // Move Checks
+            if (mon.moves) {
+                if (mon.moves.includes('Trick Room')) stats.hasTR = true;
+                if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
+                if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true;
+                if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
+                
+                // Fixed Array Checks
+                if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
+                if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
+                if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
+                if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => mon.moves.includes(m))) stats.recoveryCount++;
+                if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => mon.moves.includes(m))) stats.protectCount++;
+                
+                if (mon.moves.includes('Perish Song')) stats.perishSongCount++;
+                if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
+                if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
+                
+                if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) {
+                    stats.suicideLeadPotential = true;
+                }
+            }
+        });
+        
+        stats.avgSpeed /= currentTeam.length;
+
+        // 2. Hierarchical Identification Logic
+        let archetype = "Bulky Offense / Balance";
+        let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
+
+        // Priority 1: Specific Named Cores
+        if (stats.hasDondozo && stats.hasTatsugiri) {
+            archetype = "DozoGiri (Commander)";
+            desc = "A VGC powerhouse that uses the Commander ability to grant Dondozo double omni-boosts to sweep.";
+        } else if (stats.hasMagnezone && stats.dragonCount >= 2) {
+            archetype = "DragMag";
+            desc = "An iconic Smogon archetype where Magnezone traps Steel-types to clear the path for Dragon sweepers.";
+        } else if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) {
+            archetype = "Perish Trap";
+            desc = "A control-heavy archetype that traps opponents and uses Perish Song to force KOs within 3 turns.";
+        } 
+        // Priority 2: Field/Speed Control
+        else if (stats.hasTailwind && stats.hasTR) {
+            archetype = "TailRoom (Hybrid)";
+            desc = "A flexible VGC archetype that adapts speed control to either outpace fast teams or reverse Trick Room.";
+        } else if (stats.hasTR && stats.avgSpeed < 75) {
+            archetype = "Hard Trick Room";
+            desc = "Committed to speed inversion. Needs redirection or Fake Out to safely set the dimension.";
+        } else if (stats.hasTR && stats.avgSpeed >= 75) {
+            archetype = "Hybrid Speed Control";
+            desc = "Features Trick Room as a secondary speed control option alongside inherently faster offensive threats.";
+        } else if (stats.hasPsychicTerrain && stats.hasExpandingForce) {
+            archetype = "Psyspam (Expanding Force)";
+            desc = "Abuses Psychic Terrain to fire off high-powered, spread Expanding Force attacks that bypass priority.";
+        } else if (stats.hasStickyWeb) {
+            archetype = "Sticky Web Offense";
+            desc = "A singles-focused offense that uses webs to lower opponent speed, enabling mid-speed heavy hitters.";
+        } else if (stats.hazardSetters >= 3 && stats.hasGholdengo) {
+            archetype = "Hazard Stack (Cheese)";
+            desc = "Builds progress by stacking layers of spikes/rocks, using Gholdengo to block all removal attempts.";
+        }
+        // Priority 3: Weather
+        else if (stats.hasDrizzle && stats.hasRainAbuser) {
+            archetype = "Rain Offense";
+            desc = "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers.";
+        } else if (stats.hasDrought && stats.hasSunAbuser) {
+            archetype = "Sun Offense";
+            desc = "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate offensive pressure.";
+        }
+        // Priority 4: Playstyle Spectrums
+        else if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
+            archetype = "Stall / Semi-Stall";
+            desc = "Wins through attrition, passive damage (hazards/status), and extreme defensive redundancy.";
+        } else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) {
+            archetype = "Hyper Offense (HO)";
+            desc = "Total aggression. Uses a lead to set hazards/screens then chains sweepers to overwhelm the foe.";
+        } else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) {
+            archetype = "Bulky Offense / Pivot Balance";
+            desc = "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control.";
+        }
+
+        // 3. Core Highlights
+        let cores = [];
+        if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) cores.push("🔥💧🌿 Fire / Water / Grass Core");
+        if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
+
+        let coreHtml = cores.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #555; color: #aaddff;"><strong>Active Defensive Cores:</strong><br>${cores.join('<br>')}</div>` : "";
+
+        container.innerHTML = `<span style="color:#ffcc00; font-size:12px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:10px;">${desc}</span>${coreHtml}`;
     }
 
-    // 3. Core Highlights
-    let cores = [];
-    if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) cores.push("🔥💧🌿 Fire / Water / Grass Core");
-    if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
-
-    let coreHtml = cores.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #555; color: #aaddff;"><strong>Active Defensive Cores:</strong><br>${cores.join('<br>')}</div>` : "";
-
-    container.innerHTML = `<span style="color:#ffcc00; font-size:12px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:10px;">${desc}</span>${coreHtml}`;
-}
     // --- TYPE CALCULATION LOGIC ---
     function getDefensiveMultiplier(defendingTypes, attackingType) {
       let mult = 1;
