@@ -1235,12 +1235,22 @@
         }, 2000);
       });
     }
-
     // --- ARCHETYPE ANALYZER ---
     function analyzeArchetype() {
         let container = document.getElementById('archetype-summary');
         if (currentTeam.length === 0) {
-            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon and moves to analyze archetype.</p>';
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>';
+            return;
+        }
+        
+        // Wait until moves are filled to show the analysis
+        let totalMoves = 0;
+        currentTeam.forEach(mon => {
+            if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length;
+        });
+        
+        if (totalMoves === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Awaiting move selection... Click on your team members to assign moves.</p>';
             return;
         }
         
@@ -1249,12 +1259,30 @@
         let hasDrought = false; let hasSunAbuser = false;
         let hasSand = false; let hasSnow = false;
         let hasPsychicTerrain = false;
-        let recoveryCount = 0; let avgSpeed = 0;
+        
+        let protectCount = 0; let recoveryCount = 0; 
+        let statDroppers = 0; let perishSongCount = 0;
+        let redirectorCount = 0; let fakeOutCount = 0;
+        let avgSpeed = 0;
+        
+        let hasDondozo = false; let hasTatsugiri = false;
+        let hasMagnezone = false; let dragonCount = 0;
+        let shadowTag = false;
+        
+        let typesPresent = new Set();
 
+        // 1. Scan the team for data
         currentTeam.forEach(mon => {
             let speed = showdownData[mon.id] ? showdownData[mon.id].baseStats.spe : 50;
             avgSpeed += speed;
             
+            mon.types.forEach(t => typesPresent.add(t));
+            
+            if (mon.id.includes('dondozo')) hasDondozo = true;
+            if (mon.id.includes('tatsugiri')) hasTatsugiri = true;
+            if (mon.id.includes('magnezone')) hasMagnezone = true;
+            if (mon.types.includes('Dragon')) dragonCount++;
+
             if (mon.ability === 'Drizzle') hasDrizzle = true;
             if (['Swift Swim'].includes(mon.ability)) hasRainAbuser = true;
             if (mon.ability === 'Drought') hasDrought = true;
@@ -1262,22 +1290,39 @@
             if (mon.ability === 'Sand Stream') hasSand = true;
             if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) hasSnow = true;
             if (mon.ability === 'Psychic Surge') hasPsychicTerrain = true;
+            if (['Intimidate'].includes(mon.ability)) statDroppers++;
+            if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) shadowTag = true;
             
             if (mon.moves) {
                 if (mon.moves.includes('Trick Room')) hasTrickRoom = true;
                 if (mon.moves.includes('Tailwind')) hasTailwind = true;
                 if (mon.moves.includes('Recover') || mon.moves.includes('Roost') || mon.moves.includes('Soft-Boiled')) recoveryCount++;
+                if (mon.moves.includes('Protect') || mon.moves.includes('Spiky Shield') || mon.moves.includes('Detect')) protectCount++;
+                if (mon.moves.includes('Snarl') || mon.moves.includes('Eerie Impulse') || mon.moves.includes('Icy Wind') || mon.moves.includes('Electroweb')) statDroppers++;
+                if (mon.moves.includes('Perish Song')) perishSongCount++;
+                if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) redirectorCount++;
+                if (mon.moves.includes('Fake Out')) fakeOutCount++;
             }
         });
         
         avgSpeed = avgSpeed / currentTeam.length;
 
-        let archetype = "Standard VGC Balance";
+        // 2. Identify Archetype
+        let archetype = "Bulky Offense / Balance";
         let desc = "Relies on high-value Pokémon with strong natural synergy, pivoting, and balanced offensive/defensive pressure.";
 
-        if (hasTrickRoom && avgSpeed < 75) {
+        if (hasDondozo && hasTatsugiri) {
+            archetype = "DozoGiri Offense";
+            desc = "Centers around the Dondozo + Tatsugiri (Commander) combination to gain double omni-boosts and sweep the field.";
+        } else if (hasMagnezone && dragonCount >= 2) {
+            archetype = "DragMag";
+            desc = "Built around Magnezone trapping and eliminating Steel types to clear the way for multiple Dragon sweepers.";
+        } else if (perishSongCount > 0 && shadowTag) {
+            archetype = "Perish Trap";
+            desc = "A defensive archetype utilizing Perish Song and trapping abilities while stalling out turns with Protect and Fake Out.";
+        } else if (hasTrickRoom && avgSpeed < 75) {
             archetype = "Hard Trick Room";
-            desc = "Utilizes Trick Room to turn low speed into an offensive advantage, supported by Fake Out or Redirection.";
+            desc = "Utilizes Trick Room to turn low speed into an offensive advantage, generally supported by Fake Out or Redirection.";
         } else if (hasTrickRoom && avgSpeed >= 75) {
              archetype = "Hybrid Speed Control";
              desc = "Features Trick Room as a secondary control option alongside inherently faster threats.";
@@ -1289,22 +1334,33 @@
             desc = "Uses Drought to power up Fire moves and activate Chlorophyll or Protosynthesis.";
         } else if (hasSand) {
             archetype = "Sand Balance";
-            desc = "Uses Sandstorm for residual damage and Special Defense boosts for Rock types.";
+            desc = "Uses Sandstorm for residual damage and to grant Special Defense boosts to Rock types.";
         } else if (hasSnow) {
             archetype = "Snow Balance";
             desc = "Sets Snow to boost Ice-type Defense and enable Aurora Veil support.";
         } else if (hasPsychicTerrain) {
             archetype = "Psychic Terrain Offense";
-            desc = "Uses Terrain to block priority and launch devastating Expanding Force attacks.";
-        } else if (hasTailwind && avgSpeed > 85) {
-            archetype = "Tailwind Hyper Offense";
-            desc = "Prioritizes extreme speed and raw damage to overwhelm the opponent quickly.";
+            desc = "Uses Terrain to block priority moves and launch devastating Expanding Force attacks.";
+        } else if ((hasTailwind || statDroppers >= 2) && avgSpeed > 85 && protectCount < 3) {
+            archetype = "Hyper Offense (HO)";
+            desc = "Prioritizes immediate speed and raw damage to overwhelm the opponent in fewer than 8-12 turns.";
         } else if (recoveryCount >= 3) {
-            archetype = "Heavy Bulky Stall";
-            desc = "Aims to win through attrition, resource exhaustion, and passive damage.";
+            archetype = "Stall";
+            desc = "Wins through resource exhaustion, passive damage, and dedicated walls with reliable recovery.";
         }
 
-        container.innerHTML = `<span style="color:#ffcc00; font-size:12px;">${archetype}</span><br><br><span style="color:#ccc;">${desc}</span>`;
+        // 3. Identify Fantasy Cores
+        let cores = [];
+        if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) {
+            cores.push("🔥💧🌿 Fire / Water / Grass Core");
+        }
+        if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) {
+            cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
+        }
+
+        let coreHtml = cores.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #555; color: #aaddff;"><strong>Active Defensive Cores:</strong><br>${cores.join('<br>')}</div>` : "";
+
+        container.innerHTML = `<span style="color:#ffcc00; font-size:12px;">${archetype}</span><br><br><span style="color:#ccc;">${desc}</span>${coreHtml}`;
     }
 
     // --- TYPE CALCULATION LOGIC ---
