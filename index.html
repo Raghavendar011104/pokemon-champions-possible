@@ -1508,7 +1508,506 @@ Tera Type: Fire
       });
     }
 
-    // --- VGC OPEN TEAM SHEET GENERATOR ---
+    // --- AESTHETICS DATABASE ---
+    const RAW_AESTHETICS_CSV = `Pokemon_Name,Signature_Letter,Hex_Color,Color_Vibe
+Bulbasaur,B,#78C850,Grass Green
+Ivysaur,I,#78C850,Grass Green
+Venusaur,V,#78C850,Grass Green
+Charmander,C,#F08030,Fire Orange
+Charmeleon,C,#F08030,Fire Orange
+Charizard,C,#F08030,Fire Orange
+Squirtle,S,#6890F0,Water Blue
+Wartortle,W,#6890F0,Water Blue
+Blastoise,B,#6890F0,Water Blue
+Pichu,P,#F8D030,Electric Yellow
+Pikachu,P,#F8D030,Electric Yellow
+Raichu,R,#F8D030,Electric Yellow
+Gastly,G,#705898,Ghost Purple
+Haunter,H,#705898,Ghost Purple
+Gengar,G,#705898,Ghost Purple
+Kangaskhan,K,#A8A878,Normal Khaki
+Staryu,S,#6890F0,Water Blue
+Starmie,S,#F85888,Psychic Pink
+Pinsir,P,#A8B820,Bug Olive
+Magikarp,M,#F08030,Fire Orange
+Gyarados,G,#6890F0,Water Blue
+Dratini,D,#7038F8,Dragon Indigo
+Dragonair,D,#7038F8,Dragon Indigo
+Dragonite,D,#F08030,Dragon Orange
+Totodile,T,#6890F0,Water Blue
+Croconaw,C,#6890F0,Water Blue
+Feraligatr,F,#6890F0,Water Blue
+Scyther,S,#A8B820,Bug Olive
+Scizor,S,#C03028,Steel Red
+Heracross,H,#C03028,Fighting Crimson
+Larvitar,L,#B8A038,Rock Tan
+Pupitar,P,#B8A038,Rock Tan
+Tyranitar,T,#705848,Dark Umber
+Ralts,R,#F85888,Psychic Pink
+Kirlia,K,#F85888,Psychic Pink
+Gardevoir,G,#F85888,Psychic Pink
+Gallade,G,#C03028,Fighting Crimson
+Feebas,F,#A8A878,Normal Khaki
+Milotic,M,#6890F0,Water Blue
+Beldum,B,#B8B8D0,Steel Silver
+Metang,M,#B8B8D0,Steel Silver
+Metagross,M,#B8B8D0,Steel Silver
+Piplup,P,#6890F0,Water Blue
+Prinplup,P,#6890F0,Water Blue
+Empoleon,E,#B8B8D0,Steel Silver
+Gible,G,#7038F8,Dragon Indigo
+Gabite,G,#7038F8,Dragon Indigo
+Garchomp,G,#7038F8,Dragon Indigo
+Riolu,R,#C03028,Fighting Crimson
+Lucario,L,#B8B8D0,Steel Silver
+Snivy,S,#78C850,Grass Green
+Servine,S,#78C850,Grass Green
+Serperior,S,#78C850,Grass Green
+Oshawott,O,#6890F0,Water Blue
+Dewott,D,#6890F0,Water Blue
+Samurott,S,#6890F0,Water Blue
+Cottonee,C,#78C850,Grass Green
+Whimsicott,W,#EE99AC,Fairy Rose
+Emolga,E,#F8D030,Electric Yellow
+Deino,D,#705848,Dark Umber
+Zweilous,Z,#705848,Dark Umber
+Hydreigon,H,#705848,Dark Umber
+Chespin,C,#78C850,Grass Green
+Quilladin,Q,#78C850,Grass Green
+Chesnaught,C,#78C850,Grass Green
+Fennekin,F,#F08030,Fire Orange
+Braixen,B,#F08030,Fire Orange
+Delphox,D,#F85888,Psychic Pink
+Froakie,F,#6890F0,Water Blue
+Frogadier,F,#6890F0,Water Blue
+Greninja,G,#705848,Dark Umber
+Fletchling,F,#A8A878,Normal Khaki
+Fletchinder,F,#F08030,Fire Orange
+Talonflame,T,#F08030,Fire Orange
+Honedge,H,#B8B8D0,Steel Silver
+Doublade,D,#B8B8D0,Steel Silver
+Aegislash,A,#B8B8D0,Steel Silver
+Hawlucha,H,#C03028,Fighting Crimson
+Litten,L,#F08030,Fire Orange
+Torracat,T,#F08030,Fire Orange
+Incineroar,I,#705848,Dark Umber
+Bounsweet,B,#78C850,Grass Green
+Steenee,S,#78C850,Grass Green
+Tsareena,T,#78C850,Grass Green
+Oranguru,O,#A8A878,Normal Khaki
+Jangmo-o,J,#7038F8,Dragon Indigo
+Hakamo-o,H,#7038F8,Dragon Indigo
+Kommo-o,K,#7038F8,Dragon Indigo
+Hatenna,H,#F85888,Psychic Pink
+Hattrem,H,#F85888,Psychic Pink
+Hatterene,H,#EE99AC,Fairy Rose
+Dreepy,D,#705898,Ghost Purple
+Drakloak,D,#705898,Ghost Purple
+Dragapult,D,#705898,Ghost Purple
+Teddiursa,T,#A8A878,Normal Khaki
+Ursaring,U,#A8A878,Normal Khaki
+Ursaluna,U,#E0C068,Ground Tan
+Basculin,B,#6890F0,Water Blue
+Basculegion,B,#705898,Ghost Purple
+Hisuian Sneasel,H,#C03028,Fighting Crimson
+Sneasler,S,#C03028,Fighting Crimson
+Tandemaus,T,#A8A878,Normal Khaki
+Maushold,M,#A8A878,Normal Khaki
+Tinkatink,T,#EE99AC,Fairy Rose
+Tinkatuff,T,#EE99AC,Fairy Rose
+Tinkaton,T,#EE99AC,Fairy Rose
+Finizen,F,#6890F0,Water Blue
+Palafin,P,#6890F0,Water Blue
+Dondozo,D,#6890F0,Water Blue
+Tatsugiri,T,#7038F8,Dragon Indigo
+Pawniard,P,#705848,Dark Umber
+Bisharp,B,#705848,Dark Umber
+Kingambit,K,#705848,Dark Umber
+Poltchageist,P,#78C850,Grass Green
+Sinistcha,S,#78C850,Grass Green
+Duraludon,D,#B8B8D0,Steel Silver
+Archaludon,A,#B8B8D0,Steel Silver
+Eevee,E,#A8A878,Normal Khaki
+Vaporeon,V,#6890F0,Water Blue
+Jolteon,J,#F8D030,Electric Yellow
+Flareon,F,#F08030,Fire Orange
+Espeon,E,#F85888,Psychic Pink
+Umbreon,U,#705848,Dark Umber
+Glaceon,G,#98D8D8,Ice Cyan
+Chikorita,C,#78C850,Grass Green
+Bayleef,B,#78C850,Grass Green
+Meganium,M,#78C850,Grass Green
+Cyndaquil,C,#F08030,Fire Orange
+Quilava,Q,#F08030,Fire Orange
+Typhlosion,T,#F08030,Fire Orange
+Turtwig,T,#78C850,Grass Green
+Grotle,G,#78C850,Grass Green
+Torterra,T,#78C850,Grass Green
+Chimchar,C,#F08030,Fire Orange
+Monferno,M,#F08030,Fire Orange
+Infernape,I,#F08030,Fire Orange
+Tepig,T,#F08030,Fire Orange
+Pignite,P,#F08030,Fire Orange
+Emboar,E,#F08030,Fire Orange
+Rowlet,R,#78C850,Grass Green
+Dartrix,D,#78C850,Grass Green
+Decidueye,D,#705898,Ghost Purple
+Popplio,P,#6890F0,Water Blue
+Brionne,B,#6890F0,Water Blue
+Primarina,P,#EE99AC,Fairy Rose
+Treecko,T,#78C850,Grass Green
+Grovyle,G,#78C850,Grass Green
+Sceptile,S,#78C850,Grass Green
+Torchic,T,#F08030,Fire Orange
+Combusken,C,#F08030,Fire Orange
+Blaziken,B,#F08030,Fire Orange
+Mudkip,M,#6890F0,Water Blue
+Marshtomp,M,#6890F0,Water Blue
+Swampert,S,#6890F0,Water Blue
+Weedle,W,#A8B820,Bug Olive
+Kakuna,K,#A8B820,Bug Olive
+Beedrill,B,#A8B820,Bug Olive
+Pidgey,P,#A8A878,Normal Khaki
+Pidgeotto,P,#A8A878,Normal Khaki
+Pidgeot,P,#A8A878,Normal Khaki
+Abra,A,#F85888,Psychic Pink
+Kadabra,K,#F85888,Psychic Pink
+Alakazam,A,#F85888,Psychic Pink
+Slowpoke,S,#6890F0,Water Blue
+Slowbro,S,#6890F0,Water Blue
+Aerodactyl,A,#B8A038,Rock Tan
+Mareep,M,#F8D030,Electric Yellow
+Flaaffy,F,#F8D030,Electric Yellow
+Ampharos,A,#F8D030,Electric Yellow
+Onix,O,#B8A038,Rock Tan
+Steelix,S,#B8B8D0,Steel Silver
+Houndour,H,#705848,Dark Umber
+Houndoom,H,#705848,Dark Umber
+Bellsprout,B,#78C850,Grass Green
+Weepinbell,W,#78C850,Grass Green
+Victreebel,V,#78C850,Grass Green
+Aron,A,#B8B8D0,Steel Silver
+Lairon,L,#B8B8D0,Steel Silver
+Aggron,A,#B8B8D0,Steel Silver
+Meditite,M,#C03028,Fighting Crimson
+Medicham,M,#C03028,Fighting Crimson
+Electrike,E,#F8D030,Electric Yellow
+Manectric,M,#F8D030,Electric Yellow
+Carvanha,C,#6890F0,Water Blue
+Sharpedo,S,#6890F0,Water Blue
+Numel,N,#F08030,Fire Orange
+Camerupt,C,#F08030,Fire Orange
+Swablu,S,#A8A878,Normal Khaki
+Altaria,A,#7038F8,Dragon Indigo
+Shuppet,S,#705898,Ghost Purple
+Banette,B,#705898,Ghost Purple
+Absol,A,#705848,Dark Umber
+Snorunt,S,#98D8D8,Ice Cyan
+Glalie,G,#98D8D8,Ice Cyan
+Froslass,F,#705898,Ghost Purple
+Bagon,B,#7038F8,Dragon Indigo
+Shelgon,S,#7038F8,Dragon Indigo
+Salamence,S,#7038F8,Dragon Indigo
+Mawile,M,#B8B8D0,Steel Silver
+Sableye,S,#705848,Dark Umber
+Buneary,B,#A8A878,Normal Khaki
+Lopunny,L,#A8A878,Normal Khaki
+Snover,S,#78C850,Grass Green
+Abomasnow,A,#98D8D8,Ice Cyan
+Audino,A,#A8A878,Normal Khaki
+Starly,S,#A8A878,Normal Khaki
+Staravia,S,#A8A878,Normal Khaki
+Staraptor,S,#A8A878,Normal Khaki
+Skarmory,S,#B8B8D0,Steel Silver
+Venipede,V,#A8B820,Bug Olive
+Whirlipede,W,#A8B820,Bug Olive
+Scolipede,S,#A8B820,Bug Olive
+Skrelp,S,#A040A0,Poison Violet
+Dragalge,D,#A040A0,Poison Violet
+Litleo,L,#F08030,Fire Orange
+Pyroar,P,#F08030,Fire Orange
+Crabrawler,C,#C03028,Fighting Crimson
+Crabominable,C,#98D8D8,Ice Cyan
+Capsakid,C,#78C850,Grass Green
+Scovillain,S,#78C850,Grass Green
+Golett,G,#E0C068,Ground Tan
+Golurk,G,#E0C068,Ground Tan
+Drampa,D,#A8A878,Normal Khaki
+Tynamo,T,#F8D030,Electric Yellow
+Eelektrik,E,#F8D030,Electric Yellow
+Eelektross,E,#F8D030,Electric Yellow
+Falinks,F,#C03028,Fighting Crimson
+Binacle,B,#B8A038,Rock Tan
+Barbaracle,B,#B8A038,Rock Tan
+Flabébé,F,#EE99AC,Fairy Rose
+Floette,F,#EE99AC,Fairy Rose
+Florges,F,#EE99AC,Fairy Rose
+Chingling,C,#F85888,Psychic Pink
+Chimecho,C,#F85888,Psychic Pink
+Espurr,E,#F85888,Psychic Pink
+Meowstic,M,#F85888,Psychic Pink
+Indeedee,I,#F85888,Psychic Pink
+Inkay,I,#705848,Dark Umber
+Malamar,M,#705848,Dark Umber
+Foongus,F,#78C850,Grass Green
+Amoonguss,A,#78C850,Grass Green
+Cleffa,C,#EE99AC,Fairy Rose
+Clefairy,C,#EE99AC,Fairy Rose
+Clefable,C,#EE99AC,Fairy Rose
+Togepi,T,#EE99AC,Fairy Rose
+Togetic,T,#EE99AC,Fairy Rose
+Togekiss,T,#EE99AC,Fairy Rose
+Impidimp,I,#705848,Dark Umber
+Morgrem,M,#705848,Dark Umber
+Grimmsnarl,G,#705848,Dark Umber
+Wingull,W,#6890F0,Water Blue
+Pelipper,P,#6890F0,Water Blue
+Torkoal,T,#F08030,Fire Orange
+Vulpix,V,#F08030,Fire Orange
+Ninetales,N,#F08030,Fire Orange
+Porygon,P,#A8A878,Normal Khaki
+Porygon2,P,#A8A878,Normal Khaki
+Porygon-Z,P,#A8A878,Normal Khaki
+Girafarig,G,#A8A878,Normal Khaki
+Farigiraf,F,#A8A878,Normal Khaki
+Growlithe,G,#F08030,Fire Orange
+Arcanine,A,#F08030,Fire Orange
+Mankey,M,#C03028,Fighting Crimson
+Primeape,P,#C03028,Fighting Crimson
+Annihilape,A,#705898,Ghost Purple
+Gimmighoul,G,#705898,Ghost Purple
+Gholdengo,G,#B8B8D0,Steel Silver
+Grookey,G,#78C850,Grass Green
+Thwackey,T,#78C850,Grass Green
+Rillaboom,R,#78C850,Grass Green
+Scorbunny,S,#F08030,Fire Orange
+Raboot,R,#F08030,Fire Orange
+Cinderace,C,#F08030,Fire Orange
+Sobble,S,#6890F0,Water Blue
+Drizzile,D,#6890F0,Water Blue
+Inteleon,I,#6890F0,Water Blue
+Sprigatito,S,#78C850,Grass Green
+Floragato,F,#78C850,Grass Green
+Meowscarada,M,#78C850,Grass Green
+Fuecoco,F,#F08030,Fire Orange
+Crocalor,C,#F08030,Fire Orange
+Skeledirge,S,#F08030,Fire Orange
+Quaxly,Q,#6890F0,Water Blue
+Quaxwell,Q,#6890F0,Water Blue
+Quaquaval,Q,#6890F0,Water Blue
+Charcadet,C,#F08030,Fire Orange
+Armarouge,A,#F08030,Fire Orange
+Ceruledge,C,#F08030,Fire Orange
+Paldean Wooper,P,#A040A0,Poison Violet
+Clodsire,C,#A040A0,Poison Violet
+Nacli,N,#B8A038,Rock Tan
+Naclstack,N,#B8A038,Rock Tan
+Garganacl,G,#B8A038,Rock Tan
+Frigibax,F,#7038F8,Dragon Indigo
+Arctibax,A,#7038F8,Dragon Indigo
+Baxcalibur,B,#7038F8,Dragon Indigo
+Applin,A,#78C850,Grass Green
+Flapple,F,#78C850,Grass Green
+Appletun,A,#78C850,Grass Green
+Dipplin,D,#78C850,Grass Green
+Hydrapple,H,#78C850,Grass Green
+Munchlax,M,#A8A878,Normal Khaki
+Snorlax,S,#A8A878,Normal Khaki
+Lapras,L,#6890F0,Water Blue
+Ditto,D,#A8A878,Normal Khaki
+Rotom,R,#F8D030,Electric Yellow
+Magnemite,M,#F8D030,Electric Yellow
+Magneton,M,#F8D030,Electric Yellow
+Magnezone,M,#F8D030,Electric Yellow
+Azurill,A,#A8A878,Normal Khaki
+Marill,M,#6890F0,Water Blue
+Azumarill,A,#6890F0,Water Blue
+Koffing,K,#A040A0,Poison Violet
+Weezing,W,#A040A0,Poison Violet
+Grimer,G,#A040A0,Poison Violet
+Muk,M,#A040A0,Poison Violet
+Zorua,Z,#705848,Dark Umber
+Zoroark,Z,#705848,Dark Umber
+Wimpod,W,#A8B820,Bug Olive
+Golisopod,G,#A8B820,Bug Olive
+Dewpider,D,#6890F0,Water Blue
+Araquanid,A,#6890F0,Water Blue
+Mimikyu,M,#705898,Ghost Purple
+Shroomish,S,#78C850,Grass Green
+Breloom,B,#78C850,Grass Green
+Mareanie,M,#A040A0,Poison Violet
+Toxapex,T,#A040A0,Poison Violet
+Rookidee,R,#A8A878,Normal Khaki
+Corvisquire,C,#A8A878,Normal Khaki
+Corviknight,C,#B8B8D0,Steel Silver
+Shellos,S,#6890F0,Water Blue
+Gastrodon,G,#6890F0,Water Blue
+Drilbur,D,#E0C068,Ground Tan
+Excadrill,E,#E0C068,Ground Tan
+Glimmet,G,#B8A038,Rock Tan
+Glimmora,G,#B8A038,Rock Tan
+Flamigo,F,#A8A878,Normal Khaki
+Smeargle,S,#A8A878,Normal Khaki
+Bronzor,B,#B8B8D0,Steel Silver
+Bronzong,B,#B8B8D0,Steel Silver
+Makuhita,M,#C03028,Fighting Crimson
+Hariyama,H,#C03028,Fighting Crimson
+Scraggy,S,#705848,Dark Umber
+Scrafty,S,#705848,Dark Umber
+Vullaby,V,#705848,Dark Umber
+Mandibuzz,M,#705848,Dark Umber
+Rufflet,R,#A8A878,Normal Khaki
+Braviary,B,#A8A878,Normal Khaki
+Gothita,G,#F85888,Psychic Pink
+Gothorita,G,#F85888,Psychic Pink
+Gothitelle,G,#F85888,Psychic Pink
+Litwick,L,#705898,Ghost Purple
+Lampent,L,#705898,Ghost Purple
+Chandelure,C,#705898,Ghost Purple
+Alolan Raichu,A,#F8D030,Electric Yellow
+Alolan Sandshrew,A,#98D8D8,Ice Cyan
+Alolan Sandslash,A,#98D8D8,Ice Cyan
+Alolan Vulpix,A,#98D8D8,Ice Cyan
+Alolan Ninetales,A,#98D8D8,Ice Cyan
+Alolan Grimer,A,#A040A0,Poison Violet
+Alolan Muk,A,#A040A0,Poison Violet
+Galarian Slowpoke,G,#F85888,Psychic Pink
+Galarian Slowbro,G,#A040A0,Poison Violet
+Galarian Weezing,G,#EE99AC,Fairy Rose
+Hisuian Growlithe,H,#F08030,Fire Orange
+Hisuian Arcanine,H,#F08030,Fire Orange
+Hisuian Typhlosion,H,#705898,Ghost Purple
+Hisuian Samurott,H,#705848,Dark Umber
+Hisuian Zorua,H,#A8A878,Normal Khaki
+Hisuian Zoroark,H,#A8A878,Normal Khaki
+Hisuian Braviary,H,#F85888,Psychic Pink
+Hisuian Decidueye,H,#C03028,Fighting Crimson
+Aegislash (Blade),A,#B8B8D0,Steel Silver
+Indeedee (Female),I,#F85888,Psychic Pink
+Palafin (Hero),P,#6890F0,Water Blue
+Tatsugiri (Droopy),T,#7038F8,Dragon Indigo
+Tatsugiri (Stretchy),T,#7038F8,Dragon Indigo
+Tatsugiri (Curly),T,#7038F8,Dragon Indigo
+Rotom (Wash),R,#6890F0,Water Blue
+Rotom (Heat),R,#F08030,Fire Orange
+Rotom (Mow),R,#78C850,Grass Green
+Rotom (Frost),R,#98D8D8,Ice Cyan
+Rotom (Fan),R,#A8A878,Normal Khaki
+Mega Abomasnow,M,#98D8D8,Ice Cyan
+Mega Absol,M,#705848,Dark Umber
+Absol Z,A,#705848,Dark Umber
+Mega Aerodactyl,M,#B8A038,Rock Tan
+Mega Aggron,M,#B8B8D0,Steel Silver
+Mega Alakazam,M,#F85888,Psychic Pink
+Mega Altaria,M,#EE99AC,Fairy Rose
+Mega Ampharos,M,#7038F8,Dragon Indigo
+Mega Audino,M,#EE99AC,Fairy Rose
+Mega Banette,M,#705898,Ghost Purple
+Mega Barbaracle,M,#B8A038,Rock Tan
+Mega Baxcalibur,M,#7038F8,Dragon Indigo
+Mega Beedrill,M,#A040A0,Poison Violet
+Mega Blastoise,M,#6890F0,Water Blue
+Mega Blaziken,M,#F08030,Fire Orange
+Mega Camerupt,M,#F08030,Fire Orange
+Mega Chandelure,M,#705898,Ghost Purple
+Mega Charizard X,M,#7038F8,Dragon Indigo
+Mega Charizard Y,M,#F08030,Fire Orange
+Mega Chesnaught,M,#78C850,Grass Green
+Mega Chimecho,M,#F85888,Psychic Pink
+Mega Clefable,M,#EE99AC,Fairy Rose
+Mega Crabominable,M,#98D8D8,Ice Cyan
+Mega Delphox,M,#F85888,Psychic Pink
+Mega Dragalge,M,#A040A0,Poison Violet
+Mega Dragonite,M,#7038F8,Dragon Indigo
+Mega Drampa,M,#A8A878,Normal Khaki
+Mega Eelektross,M,#F8D030,Electric Yellow
+Mega Emboar,M,#F08030,Fire Orange
+Mega Excadrill,M,#E0C068,Ground Tan
+Mega Falinks,M,#C03028,Fighting Crimson
+Mega Feraligatr,M,#6890F0,Water Blue
+Mega Floette,M,#EE99AC,Fairy Rose
+Mega Froslass,M,#705898,Ghost Purple
+Mega Gallade,M,#C03028,Fighting Crimson
+Mega Garchomp,M,#7038F8,Dragon Indigo
+Mega Gardevoir,M,#EE99AC,Fairy Rose
+Mega Gengar,M,#705898,Ghost Purple
+Mega Glalie,M,#98D8D8,Ice Cyan
+Mega Glimmora,M,#B8A038,Rock Tan
+Mega Golisopod,M,#A8B820,Bug Olive
+Mega Golurk,M,#E0C068,Ground Tan
+Mega Greninja,M,#6890F0,Water Blue
+Mega Gyarados,M,#705848,Dark Umber
+Mega Hawlucha,M,#C03028,Fighting Crimson
+Mega Heracross,M,#A8B820,Bug Olive
+Mega Houndoom,M,#705848,Dark Umber
+Mega Kangaskhan,M,#A8A878,Normal Khaki
+Mega Lopunny,M,#C03028,Fighting Crimson
+Mega Lucario,M,#B8B8D0,Steel Silver
+Lucario Z,L,#B8B8D0,Steel Silver
+Mega Malamar,M,#705848,Dark Umber
+Mega Manectric,M,#F8D030,Electric Yellow
+Mega Mawile,M,#EE99AC,Fairy Rose
+Mega Medicham,M,#C03028,Fighting Crimson
+Mega Meganium,M,#78C850,Grass Green
+Mega Meowstic,M,#F85888,Psychic Pink
+Mega Metagross,M,#B8B8D0,Steel Silver
+Mega Pidgeot,M,#A8A878,Normal Khaki
+Mega Pinsir,M,#A8B820,Bug Olive
+Mega Pyroar,M,#F08030,Fire Orange
+Mega Raichu X,M,#F8D030,Electric Yellow
+Mega Raichu Y,M,#F8D030,Electric Yellow
+Mega Sableye,M,#705848,Dark Umber
+Mega Salamence,M,#7038F8,Dragon Indigo
+Mega Sceptile,M,#7038F8,Dragon Indigo
+Mega Scizor,M,#C03028,Steel Red
+Mega Scolipede,M,#A8B820,Bug Olive
+Mega Scovillain,M,#78C850,Grass Green
+Mega Scrafty,M,#705848,Dark Umber
+Mega Sharpedo,M,#6890F0,Water Blue
+Mega Skarmory,M,#B8B8D0,Steel Silver
+Mega Slowbro,M,#6890F0,Water Blue
+Mega Staraptor,M,#A8A878,Normal Khaki
+Mega Starmie,M,#6890F0,Water Blue
+Mega Steelix,M,#B8B8D0,Steel Silver
+Mega Swampert,M,#6890F0,Water Blue
+Mega Tyranitar,M,#705848,Dark Umber
+Mega Venusaur,M,#78C850,Grass Green
+Mega Victreebel,M,#78C850,Grass Green`;
+
+    const POKEMON_AESTHETICS = {};
+    RAW_AESTHETICS_CSV.trim().split('\n').forEach((line, index) => {
+        if (index === 0) return; // Skip header
+        let [name, letter, color] = line.split(',');
+        if (!name || !letter || !color) return;
+        name = name.trim();
+        letter = letter.trim();
+        color = color.trim();
+
+        let id = name.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        if (name.includes('Mega ')) {
+            let base = name.replace('Mega ', '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            id = base + 'mega';
+            if (id.includes('xmega')) id = id.replace('xmega', 'megax');
+            if (id.includes('ymega')) id = id.replace('ymega', 'megay');
+        }
+        if (name.includes('Alolan ')) id = name.replace('Alolan ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'alola';
+        if (name.includes('Galarian ')) id = name.replace('Galarian ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'galar';
+        if (name.includes('Hisuian ')) id = name.replace('Hisuian ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'hisui';
+        
+        if (name === "Aegislash (Blade)") id = "aegislashblade";
+        if (name === "Indeedee (Female)") id = "indeedeef";
+        if (name === "Palafin (Hero)") id = "palafinhero";
+        
+        let rotomMatch = name.match(/Rotom \(([^)]+)\)/);
+        if (rotomMatch) id = 'rotom' + rotomMatch[1].toLowerCase();
+        
+        let tatsuMatch = name.match(/Tatsugiri \(([^)]+)\)/);
+        if (tatsuMatch) id = 'tatsugiri' + tatsuMatch[1].toLowerCase();
+
+        POKEMON_AESTHETICS[id] = { letter, color };
+    });
+
     // --- VGC OPEN TEAM SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) {
@@ -1523,22 +2022,41 @@ Tera Type: Fire
                 <style>
                     body { background-color: #111; color: #fff; font-family: monospace; font-size: 14px; padding: 20px; }
                     .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
-                    .mon-container { display: flex; align-items: center; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #1a1a1a; page-break-inside: avoid; }
-                    .mon-sprite { width: 100px; text-align: center; flex-shrink: 0; }
+                    .mon-container { display: flex; align-items: center; background: #1a1a1a; padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid #333; }
+                    
+                    .mon-crest {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: 'Impact', 'Oswald', sans-serif;
+                        font-size: 24px;
+                        color: #fff;
+                        text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
+                        margin-right: 15px;
+                        border: 2px solid #fff;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+                        flex-shrink: 0;
+                    }
+
+                    .mon-sprite { width: 90px; text-align: center; flex-shrink: 0; margin-right: 10px; }
                     .mon-sprite img { width: 100%; image-rendering: pixelated; }
-                    .mon-details { margin-left: 20px; line-height: 1.6; width: 100%; }
-                    .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; }
-                    .mon-item { color: #ccc; }
-                    .mon-ability { color: #fff; }
+                    
+                    .mon-details { line-height: 1.6; width: 100%; }
+                    .mon-name { color: #fff; font-weight: bold; font-size: 16px; }
+                    .mon-item { color: #ccc; font-style: italic; }
+                    .mon-ability { color: #aaa; }
                     .mon-tera { color: #ff9900; }
-                    .mon-moves { color: #ddd; margin-top: 5px; }
+                    .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid #555; }
                     
                     /* PRINT STYLES - Forces 1 Page with 2 Columns */
                     @media print {
                         body { background-color: #fff; color: #000; font-size: 12px; padding: 0; margin: 0; }
                         h2 { color: #000 !important; margin: 10px 0; }
                         .team-grid { grid-template-columns: 1fr 1fr; gap: 10px; max-width: 100%; }
-                        .mon-container { border: 1px solid #ccc; background: #fff; padding: 10px; margin: 0; }
+                        .mon-container { background: #fff; padding: 10px; margin: 0; border: 1px solid #ccc; }
                         .mon-name, .mon-tera { color: #000 !important; }
                         .mon-item, .mon-ability, .mon-moves { color: #333 !important; }
                         .print-btn { display: none; }
@@ -1558,8 +2076,17 @@ Tera Type: Fire
                 mon.moves.forEach(m => { movesHTML += `- ${m}<br>`; });
             }
 
+            // Look up aesthetics, use fallback if not found
+            let aesthetic = POKEMON_AESTHETICS[mon.id] || { 
+                letter: exportName.charAt(0).toUpperCase(), 
+                color: TYPE_COLORS[mon.types[0]] || "#555" 
+            };
+
             sheetHTML += `
-                <div class="mon-container">
+                <div class="mon-container" style="border-left: 8px solid ${aesthetic.color} !important;">
+                    <div class="mon-crest" style="background-color: ${aesthetic.color};">
+                        ${aesthetic.letter}
+                    </div>
                     <div class="mon-sprite">
                         <img src="${mon.sprite}" alt="${mon.name}">
                     </div>
