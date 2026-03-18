@@ -825,6 +825,7 @@
     });
 
     // --- DOM PARSING & FIXING SPRITES ---
+    // --- DOM PARSING & FIXING SPRITES ---
     function buildRosterUI() {
       const boxes = document.querySelectorAll('.poke-box');
 
@@ -836,7 +837,11 @@
           const mons = stage.split('/');
           
           const monHTML = mons.map(monNameHTML => {
-           // Smart auto-formatter for Regional Forms
+            
+            // THIS IS THE LINE THAT WENT MISSING! 
+            let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
+            
+            // Smart auto-formatter for Regional Forms
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
 
@@ -865,7 +870,7 @@
             if (cleanName === 'Mr. Mime') { spriteName = 'mrmime'; jsonId = 'mrmime'; }
             if (cleanName === 'Jangmo-o') { spriteName = 'jangmoo'; jsonId = 'jangmoo'; }
             if (cleanName === 'Hakamo-o') { spriteName = 'hakamoo'; jsonId = 'hakamoo'; }
-            if (cleanName === 'Kommo-o') { spriteName = 'kommoo'; jsonId = 'kommoo'; };
+            if (cleanName === 'Kommo-o') { spriteName = 'kommoo'; jsonId = 'kommoo'; }
 
             const spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
             
