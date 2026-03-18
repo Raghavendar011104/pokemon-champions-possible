@@ -61,6 +61,33 @@
     display: flex; 
     justify-content: space-between; 
     align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* --- TABS --- */
+  #team-tabs {
+    display: flex;
+    gap: 5px;
+  }
+  .btn-tab {
+    background-color: #222;
+    color: #888;
+    border: 1px solid #555;
+    padding: 6px 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.2s;
+  }
+  .btn-tab.active {
+    background-color: #ffcc00;
+    color: #111;
+    border-color: #ffcc00;
+  }
+  .btn-tab:hover:not(.active) {
+    background-color: #444;
   }
 
   .team-slots {
@@ -111,8 +138,8 @@
   }
 
   #type-chart-container {
-    flex: 2;
-    min-width: 450px;
+    flex: 1.2;
+    min-width: 350px;
     background-color: #111;
     padding: 15px;
     border-radius: 4px;
@@ -315,9 +342,12 @@
 <script src="https://play.pokemonshowdown.com/data/abilities.js"></script>
 <script src="https://play.pokemonshowdown.com/data/moves.js"></script>
 <script src="https://play.pokemonshowdown.com/data/learnsets.js"></script>
+<script src="https://play.pokemonshowdown.com/data/items.js"></script>
 
 </head>
 <body>
+
+  <datalist id="item-list"></datalist>
 
   <div id="loading-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column;">
       <h2 style="color: #ffcc00;">Booting Pokédex...</h2>
@@ -331,11 +361,26 @@
   <div id="dashboard">
     <div id="team-builder">
       <div class="team-header">
-        <h3 style="margin: 0;">Current Team</h3>
-        <button id="export-btn" class="btn-action" style="padding: 8px 12px;" onclick="exportTeam()">Export Data</button>
+        <h3 style="margin: 0;">Roster</h3>
+        <div id="team-tabs">
+           <button id="tab-team-0" class="btn-tab active" onclick="switchTeam(0)">Team 1</button>
+           <button id="tab-team-1" class="btn-tab" onclick="switchTeam(1)">Team 2</button>
+           <button id="tab-team-2" class="btn-tab" onclick="switchTeam(2)">Team 3</button>
+        </div>
+        <div>
+           <button id="import-btn" class="btn-action" style="padding: 8px 12px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import Data</button>
+           <button id="export-btn" class="btn-action" style="padding: 8px 12px;" onclick="exportTeam()">Export Data</button>
+        </div>
       </div>
       <div class="team-slots" id="team-container"></div>
+      
+      <h3 style="margin-top: 30px; margin-bottom: 10px;">Speed Tiers (Lv. 50)</h3>
+      <div id="speed-tier-container" style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555; min-height: 80px;">
+         <p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to see speed tiers.</p>
+      </div>
+
     </div>
+
    <div id="type-chart-container">
       <h3 style="margin-top: 0; margin-bottom: 10px;">Team Archetype</h3>
       <div id="archetype-summary" style="background:#222; padding:10px; border-radius:4px; font-size:9px; line-height:1.4; margin-bottom:15px; border: 1px solid #ffcc00;">
@@ -523,8 +568,11 @@
         <div class="poke-box">Sobble <span class="arrow">▶</span> Drizzile <span class="arrow">▶</span> Inteleon</div>
       </div>
 
-      <h2>5. Regional Favorites & Type Balancing (67)</h2>
+      <h2>5. Regional Favorites & Type Balancing (70)</h2>
       <div class="grid-container">
+        <div class="poke-box">Sprigatito <span class="arrow">▶</span> Floragato <span class="arrow">▶</span> Meowscarada</div>
+        <div class="poke-box">Fuecoco <span class="arrow">▶</span> Crocalor <span class="arrow">▶</span> Skeledirge</div>
+        <div class="poke-box">Quaxly <span class="arrow">▶</span> Quaxwell <span class="arrow">▶</span> Quaquaval</div>
         <div class="poke-box">Charcadet <span class="arrow">▶</span> Armarouge/Ceruledge</div>
         <div class="poke-box">Paldean Wooper <span class="arrow">▶</span> Clodsire</div>
         <div class="poke-box">Nacli <span class="arrow">▶</span> Naclstack <span class="arrow">▶</span> Garganacl</div>
@@ -589,6 +637,26 @@
     <div class="modal-content" style="width: 280px;">
       <span class="close-btn" onclick="closeEditModal()">X</span>
       <div id="edit-modal-info">Loading...</div>
+    </div>
+  </div>
+
+  <div id="import-modal" class="modal">
+    <div class="modal-content" style="width: 360px;">
+      <span class="close-btn" onclick="closeImportModal()">X</span>
+      <h2 style="color:#ffcc00; font-size:14px; margin-top:0;">Import Team</h2>
+      <p style="font-size:8px; color:#ccc; margin-bottom:10px;">Paste Showdown format or upload a .txt file.</p>
+      
+      <input type="file" id="file-import" accept=".txt" style="font-size: 8px; margin-bottom: 10px; color: #fff;" onchange="handleFileUpload(event)">
+      
+      <textarea id="import-text" style="width: 100%; height: 150px; background: #222; color: #fff; border: 1px solid #555; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing:border-box;" placeholder="Charizard-Mega-Y @ Charizardite Y
+Ability: Drought
+Level: 50
+- Heat Wave
+- Solar Beam
+- Focus Blast
+- Protect"></textarea>
+      
+      <button class="btn-action btn-add" style="margin-top:15px; font-size:10px;" onclick="processImport()">Parse & Add Team</button>
     </div>
   </div>
 
@@ -791,20 +859,35 @@
     let abilitiesData = {};
     let movesData = {};
     let learnsetsData = {};
+    let itemsData = {};
+    
+    // Team Management Variables
+    let allTeams = [[], [], []];
+    let currentTeamIndex = 0;
     let currentTeam = []; 
     let pendingMon = null; 
 
     // --- INITIALIZATION ---
     window.addEventListener('load', () => {
-      if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities && window.exports.BattleMovedex && window.exports.BattleLearnsets) {
+      if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities && window.exports.BattleMovedex && window.exports.BattleLearnsets && window.exports.BattleItems) {
           showdownData = window.exports.BattlePokedex;
           abilitiesData = window.exports.BattleAbilities;
           movesData = window.exports.BattleMovedex;
           learnsetsData = window.exports.BattleLearnsets;
+          itemsData = window.exports.BattleItems;
           
+          // Populate the Item Datalist, filtering out Mega Stones and Z-Crystals
+          let itemOptions = "";
+          Object.values(itemsData).forEach(item => {
+              if (item.name && !item.megaStone && !item.zMove) {
+                  itemOptions += `<option value="${item.name}">`;
+              }
+          });
+          document.getElementById('item-list').innerHTML = itemOptions;
+
           document.getElementById('loading-overlay').style.display = 'none';
           buildRosterUI();
-          loadTeam(); // Loads the saved team on boot!
+          loadTeam(); // Loads the saved teams on boot!
       } else {
           document.getElementById('loading-overlay').innerHTML = `
             <h2 style="color:#ff0000;">Data Blocked by Browser</h2>
@@ -826,9 +909,7 @@
           const mons = stage.split('/');
           
           const monHTML = mons.map(monNameHTML => {
-            
             let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
-            
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
 
@@ -875,7 +956,7 @@
       });
     }
 
-    // --- MODAL LOGIC ---
+    // --- MODAL LOGIC (INITIAL ADD) ---
     function showData(jsonId, displayName, spriteUrl) {
       const modal = document.getElementById('data-modal');
       const content = document.getElementById('modal-info');
@@ -941,7 +1022,7 @@
         }
 
         let finalName = monData.name || displayName;
-        pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [] };
+        pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [], item: "" };
 
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
@@ -1051,8 +1132,17 @@
           </div>
         `;
 
+        // Auto-assign Mega Stones
+        let megaItemName = "";
+        if (MEGA_MAP[baseId]) {
+            let match = MEGA_MAP[baseId].find(m => m.id === megaId);
+            if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) {
+                megaItemName = match.stone;
+            }
+        }
+
         let finalName = megaData.name || displayName + " (Form)";
-        pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], ability: megaAbilityName };
+        pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName };
 
         addBtn.disabled = false;
         addBtn.style.opacity = "1";
@@ -1060,12 +1150,16 @@
         addBtn.style.cursor = "pointer";
     }
 
+    // --- MODAL CONTROLS ---
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
+    function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
+    function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
     
     window.onclick = function(event) {
       if (event.target == document.getElementById('data-modal')) closeModal();
       if (event.target == document.getElementById('edit-modal')) closeEditModal();
+      if (event.target == document.getElementById('import-modal')) closeImportModal();
     }
 
     // --- LEGAL MOVEPOOL ENGINE ---
@@ -1097,6 +1191,7 @@
         return moveArray;
     }
 
+    // --- EDIT MOVES AND ITEMS ---
     function openEditModal(index) {
         let mon = currentTeam[index];
         let legalMoves = getLegalMoves(mon.id);
@@ -1106,15 +1201,21 @@
         let html = `
             <h2 style="color:#ffcc00; font-size:14px;">Edit ${mon.name}</h2>
             <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
-            <p style="font-size:8px;">Select up to 4 legal moves:</p>
+            
+            <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
+            <input type="text" id="edit-item" list="item-list" placeholder="e.g. Focus Sash" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px; box-sizing:border-box;">
+
+            <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
             <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
             <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
             <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
             <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
+            
             <button class="btn-action btn-add" style="margin-top:15px; font-size:10px;" onclick="saveMoves(${index})">Save Team Member</button>
         `;
         document.getElementById('edit-modal-info').innerHTML = html;
         
+        if (mon.item) { document.getElementById('edit-item').value = mon.item; }
         if (mon.moves) {
             if (mon.moves[0]) document.getElementById('edit-move1').value = mon.moves[0];
             if (mon.moves[1]) document.getElementById('edit-move2').value = mon.moves[1];
@@ -1130,27 +1231,56 @@
         let m2 = document.getElementById('edit-move2').value;
         let m3 = document.getElementById('edit-move3').value;
         let m4 = document.getElementById('edit-move4').value;
+        let itm = document.getElementById('edit-item').value;
         
         currentTeam[index].moves = [m1, m2, m3, m4].filter(m => m !== "");
+        currentTeam[index].item = itm;
+        
         saveTeam();
         closeEditModal();
         renderTeamUI();
         analyzeArchetype();
+        renderSpeedTiers();
     }
 
-    // --- TEAM BUILDER LOGIC & AUTO-SAVE ---
+    // --- MULTIPLE TEAMS & AUTO-SAVE LOGIC ---
     function saveTeam() {
-      localStorage.setItem('myVGCTeam', JSON.stringify(currentTeam));
+      allTeams[currentTeamIndex] = currentTeam;
+      localStorage.setItem('myVGCTeams_v2', JSON.stringify(allTeams));
     }
 
     function loadTeam() {
-      const saved = localStorage.getItem('myVGCTeam');
+      const saved = localStorage.getItem('myVGCTeams_v2');
       if (saved) {
-        currentTeam = JSON.parse(saved);
+        allTeams = JSON.parse(saved);
+      } else {
+        // Migrate old save format if they have it
+        const oldSaved = localStorage.getItem('myVGCTeam');
+        if (oldSaved) {
+            allTeams[0] = JSON.parse(oldSaved);
+            localStorage.removeItem('myVGCTeam');
+        }
+      }
+      switchTeam(0);
+    }
+
+    function switchTeam(index) {
+        currentTeamIndex = index;
+        currentTeam = allTeams[currentTeamIndex] || [];
+        
+        // Update Tabs UI
+        for(let i=0; i<3; i++) {
+            let tab = document.getElementById(`tab-team-${i}`);
+            if (tab) {
+                if (i === index) tab.classList.add('active');
+                else tab.classList.remove('active');
+            }
+        }
+        
         renderTeamUI();
         renderTypeChart();
         analyzeArchetype();
-      }
+        renderSpeedTiers();
     }
 
     function submitToTeam() {
@@ -1162,6 +1292,7 @@
       let selectedAbility = document.querySelector('input[name="ability-select"]:checked').value;
       pendingMon.ability = selectedAbility;
       if (!pendingMon.moves) pendingMon.moves = [];
+      if (!pendingMon.item) pendingMon.item = "";
       
       currentTeam.push(pendingMon);
       saveTeam();
@@ -1169,6 +1300,7 @@
       renderTeamUI();
       renderTypeChart();
       analyzeArchetype();
+      renderSpeedTiers();
     }
 
     function removeFromTeam(index) {
@@ -1177,6 +1309,7 @@
       renderTeamUI();
       renderTypeChart();
       analyzeArchetype();
+      renderSpeedTiers();
     }
 
     function renderTeamUI() {
@@ -1189,12 +1322,135 @@
         if (currentTeam[i]) {
           slot.classList.add('filled');
           slot.innerHTML = `
-            <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit Moves\nAbility: ${currentTeam[i].ability}" onclick="openEditModal(${i})">
+            <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}" onclick="openEditModal(${i})">
             <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
           `;
         }
         container.appendChild(slot);
       }
+    }
+
+    // --- SPEED TIER VISUALIZER ---
+    function renderSpeedTiers() {
+        let container = document.getElementById('speed-tier-container');
+        if (currentTeam.length === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to see speed tiers.</p>';
+            return;
+        }
+
+        let speeds = currentTeam.map(mon => {
+            let baseSpe = showdownData[mon.id] ? showdownData[mon.id].baseStats.spe : 50;
+            // Baseline VGC Speed (Lv 50, 31 IV, 0 EV, Neutral Nature)
+            let spe50 = Math.floor(0.5 * (2 * baseSpe + 31)) + 5; 
+            
+            // Adjust for common speed items
+            if (mon.item === 'Choice Scarf') spe50 = Math.floor(spe50 * 1.5);
+            if (mon.item === 'Iron Ball' || mon.item === 'Macho Brace') spe50 = Math.floor(spe50 * 0.5);
+            
+            return { name: mon.name, sprite: mon.sprite, speed: spe50, item: mon.item };
+        });
+
+        // Sort Fastest to Slowest
+        speeds.sort((a, b) => b.speed - a.speed);
+
+        let html = speeds.map(s => `
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px; background:#222; padding:4px; border-radius:4px; border-left:3px solid #ffcc00;">
+                <span style="color:#ffcc00; width:35px; text-align:right; font-size:10px;">${s.speed}</span>
+                <img src="${s.sprite}" style="height:24px; image-rendering:pixelated;">
+                <span style="font-size:8px;">${s.name} ${s.item ? `<span style="color:#888;">(@${s.item})</span>` : ''}</span>
+            </div>
+        `).join('');
+
+        container.innerHTML = html;
+    }
+
+    // --- IMPORT LOGIC ---
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('import-text').value = e.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    function processImport() {
+        let text = document.getElementById('import-text').value;
+        let blocks = text.trim().split(/\n\s*\n/);
+        let importedTeam = [];
+        
+        blocks.forEach(block => {
+            let lines = block.split('\n');
+            if (lines.length === 0 || lines[0] === '') return;
+            
+            // Parse Line 1: Nickname (Species) (M) @ Item OR Species @ Item
+            let firstLine = lines[0].trim();
+            let item = "";
+            if (firstLine.includes('@')) {
+                let parts = firstLine.split('@');
+                item = parts[1].trim();
+                firstLine = parts[0].trim();
+            }
+            
+            // Remove Gender tags e.g. (M), (F), (N)
+            firstLine = firstLine.replace(/\s*\([MFN]\)$/i, '').trim();
+            
+            let species = firstLine;
+            // Check for Nickname (Species)
+            let match = firstLine.match(/.*\(([^)]+)\)$/);
+            if (match) {
+                species = match[1].trim();
+            }
+            
+            let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, '');
+            let ability = "";
+            let moves = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                let line = lines[i].trim();
+                if (line.startsWith('Ability:')) ability = line.replace('Ability:', '').trim();
+                if (line.startsWith('-')) moves.push(line.replace('-', '').trim());
+            }
+            
+            let monData = showdownData[jsonId];
+            if (!monData) {
+                 let found = Object.values(showdownData).find(d => d.name === species);
+                 if (found) {
+                     monData = found;
+                     jsonId = found.id || jsonId;
+                 }
+            }
+
+            if (monData) {
+                let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                let spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
+                if (CUSTOM_SPRITES[jsonId]) spriteUrl = CUSTOM_SPRITES[jsonId];
+
+                importedTeam.push({
+                    id: jsonId,
+                    name: monData.name,
+                    sprite: spriteUrl,
+                    types: monData.types,
+                    ability: ability,
+                    item: item,
+                    moves: moves.slice(0, 4)
+                });
+            }
+        });
+        
+        if (importedTeam.length > 0) {
+            currentTeam = importedTeam.slice(0, 6);
+            saveTeam();
+            renderTeamUI();
+            renderTypeChart();
+            analyzeArchetype();
+            renderSpeedTiers();
+            closeImportModal();
+            document.getElementById('import-text').value = ""; // Clear for next time
+        } else {
+            alert("Could not parse any valid Pokémon from the text.");
+        }
     }
 
     // --- EXPORT LOGIC ---
@@ -1206,9 +1462,13 @@
 
       let exportText = "";
       currentTeam.forEach(mon => {
-        exportText += `${mon.name}\n`;
+        let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
+        
+        // Print Name and Item
+        exportText += mon.item ? `${exportName} @ ${mon.item}\n` : `${exportName}\n`;
         exportText += `Level: 50\n`;
         exportText += `Ability: ${mon.ability}\n`;
+        
         if (mon.moves && mon.moves.length > 0) {
             mon.moves.forEach(move => {
                 exportText += `- ${move}\n`;
@@ -1248,7 +1508,6 @@
             return;
         }
 
-        // --- State Trackers ---
         let stats = {
             hasTR: false, hasTailwind: false, hasStickyWeb: false,
             hasDrizzle: false, hasRainAbuser: false,
@@ -1266,7 +1525,6 @@
 
         let typesPresent = new Set();
 
-        // 1. Comprehensive Team Scan
         currentTeam.forEach(mon => {
             let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
             stats.avgSpeed += baseSpe;
@@ -1274,7 +1532,6 @@
             
             mon.types.forEach(t => typesPresent.add(t));
             
-            // Specific Mon/Ability Checks
             if (mon.id.includes('dondozo')) stats.hasDondozo = true;
             if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
             if (mon.id.includes('magnezone')) stats.hasMagnezone = true;
@@ -1282,7 +1539,6 @@
             if (mon.types.includes('Dragon')) stats.dragonCount++;
             if (mon.ability === 'Unaware') stats.unawareCount++;
 
-            // Field Effect Abilities
             if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
             if (mon.ability === 'Swift Swim') stats.hasRainAbuser = true;
             if (mon.ability === 'Drought') stats.hasDrought = true;
@@ -1292,14 +1548,12 @@
             if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true;
             if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
 
-            // Move Checks
             if (mon.moves) {
                 if (mon.moves.includes('Trick Room')) stats.hasTR = true;
                 if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
                 if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true;
                 if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
                 
-                // Fixed Array Checks
                 if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
                 if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
                 if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
@@ -1310,6 +1564,7 @@
                 if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
                 if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
                 
+                // Advanced Check: Now includes Item Logic!
                 if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) {
                     stats.suicideLeadPotential = true;
                 }
@@ -1318,11 +1573,9 @@
         
         stats.avgSpeed /= currentTeam.length;
 
-        // 2. Hierarchical Identification Logic
         let archetype = "Bulky Offense / Balance";
         let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
 
-        // Priority 1: Specific Named Cores
         if (stats.hasDondozo && stats.hasTatsugiri) {
             archetype = "DozoGiri (Commander)";
             desc = "A VGC powerhouse that uses the Commander ability to grant Dondozo double omni-boosts to sweep.";
@@ -1332,9 +1585,7 @@
         } else if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) {
             archetype = "Perish Trap";
             desc = "A control-heavy archetype that traps opponents and uses Perish Song to force KOs within 3 turns.";
-        } 
-        // Priority 2: Field/Speed Control
-        else if (stats.hasTailwind && stats.hasTR) {
+        } else if (stats.hasTailwind && stats.hasTR) {
             archetype = "TailRoom (Hybrid)";
             desc = "A flexible VGC archetype that adapts speed control to either outpace fast teams or reverse Trick Room.";
         } else if (stats.hasTR && stats.avgSpeed < 75) {
@@ -1352,17 +1603,13 @@
         } else if (stats.hazardSetters >= 3 && stats.hasGholdengo) {
             archetype = "Hazard Stack (Cheese)";
             desc = "Builds progress by stacking layers of spikes/rocks, using Gholdengo to block all removal attempts.";
-        }
-        // Priority 3: Weather
-        else if (stats.hasDrizzle && stats.hasRainAbuser) {
+        } else if (stats.hasDrizzle && stats.hasRainAbuser) {
             archetype = "Rain Offense";
             desc = "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers.";
         } else if (stats.hasDrought && stats.hasSunAbuser) {
             archetype = "Sun Offense";
             desc = "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate offensive pressure.";
-        }
-        // Priority 4: Playstyle Spectrums
-        else if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
+        } else if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
             archetype = "Stall / Semi-Stall";
             desc = "Wins through attrition, passive damage (hazards/status), and extreme defensive redundancy.";
         } else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) {
@@ -1373,7 +1620,6 @@
             desc = "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control.";
         }
 
-        // 3. Core Highlights
         let cores = [];
         if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) cores.push("🔥💧🌿 Fire / Water / Grass Core");
         if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
