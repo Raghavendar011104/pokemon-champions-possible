@@ -115,58 +115,6 @@
     border: 2px solid #555;
   }
 
-  .type-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .type-row {
-    display: flex;
-    align-items: center;
-    background: #222;
-    padding: 5px;
-    border-radius: 4px;
-    font-size: 8px;
-  }
-
-  .type-label {
-    padding: 4px;
-    border-radius: 3px;
-    text-shadow: 1px 1px 0 #000;
-    width: 45px;
-    text-align: center;
-    margin-right: 10px;
-  }
-
-  .type-stats {
-    display: flex;
-    gap: 5px;
-  }
-
-  .stat-badge {
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 2px;
-    color: white;
-    font-size: 8px;
-  }
-
-  .bg-weak { background-color: #d82b2b; }
-  .bg-resist { background-color: #4CAF50; }
-  .bg-immune { background-color: #4a90e2; }
-  .bg-se { background-color: #ff9800; }
-
-  .divider-vert {
-    width: 1px;
-    background-color: #444;
-    height: 16px;
-    margin: 0 8px;
-  }
   /* --- ACCORDION STYLES --- */
   details {
     background-color: #222;
@@ -197,6 +145,14 @@
     display: flex;
     align-items: center;
     margin-bottom: 6px;
+  }
+  .type-label {
+    padding: 4px;
+    border-radius: 3px;
+    text-shadow: 1px 1px 0 #000;
+    width: 45px;
+    text-align: center;
+    margin-right: 10px;
   }
   .summary-sprites {
     display: flex;
@@ -372,8 +328,7 @@
         <h3 style="margin: 0;">Current Team</h3>
         <button id="export-btn" class="btn-action" style="padding: 8px 12px;" onclick="exportTeam()">Export Data</button>
       </div>
-      <div class="team-slots" id="team-container">
-        </div>
+      <div class="team-slots" id="team-container"></div>
     </div>
    <div id="type-chart-container">
       <h3 style="margin-top: 0; margin-bottom: 10px;">Type Summary</h3>
@@ -610,7 +565,9 @@
         <div class="poke-box">Hisuian Braviary</div>
         <div class="poke-box">Hisuian Decidueye</div>
       </div>
-  </div> <div id="data-modal" class="modal">
+  </div> 
+
+  <div id="data-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">X</span>
       <div id="modal-info">Loading...</div>
@@ -677,7 +634,7 @@
       "excadrill": [{ stone: "Excadrite", id: "excadrillmega" }],
       "falinks": [{ stone: "Falinksite", id: "falinksmega" }],
       "feraligatr": [{ stone: "Feraligite", id: "feraligatrmega" }],
-     "floette": [{ stone: "Floettite", id: "floettemega" }], 
+      "floette": [{ stone: "Floettite", id: "floettemega" }], 
       "froslass": [{ stone: "Froslassite", id: "froslassmega" }],
       "gallade": [{ stone: "Galladite", id: "gallademega" }],
       "garchomp": [{ stone: "Garchompite", id: "garchompmega" }],
@@ -747,59 +704,59 @@
       "Water Bubble": { resists: ["Fire"] }
     };
     const CUSTOM_SPRITES = {
-  // Row 1
-  "raichumegax": "images/raichu-mega-x.png",
-  "raichumegay": "images/raichu-mega-y.png",
-  "clefablemega": "images/clefable-mega.png",
-  "victreebelmega": "images/victreebel-mega.png",
-  "starmiemega": "images/starmie-mega.png",
-  "dragonitemega": "images/dragonite-mega.png",
-  "meganiummega": "images/meganium-mega.png",
-  "feraligatrmega": "images/feraligatr-mega.png",
+      // Row 1
+      "raichumegax": "images/raichu-mega-x.png",
+      "raichumegay": "images/raichu-mega-y.png",
+      "clefablemega": "images/clefable-mega.png",
+      "victreebelmega": "images/victreebel-mega.png",
+      "starmiemega": "images/starmie-mega.png",
+      "dragonitemega": "images/dragonite-mega.png",
+      "meganiummega": "images/meganium-mega.png",
+      "feraligatrmega": "images/feraligatr-mega.png",
 
-  // Row 2
-  "skarmorymega": "images/skarmory-mega.png",
-  "chimechomega": "images/chimecho-mega.png",
-  "absolmegaz": "images/absol-mega-z.png",
-  "staraptormega": "images/staraptor-mega.png",
-  "froslassmega": "images/froslass-mega.png",
-  "emboarmega": "images/emboar-mega.png",
+      // Row 2
+      "skarmorymega": "images/skarmory-mega.png",
+      "chimechomega": "images/chimecho-mega.png",
+      "absolmegaz": "images/absol-mega-z.png",
+      "staraptormega": "images/staraptor-mega.png",
+      "froslassmega": "images/froslass-mega.png",
+      "emboarmega": "images/emboar-mega.png",
 
-  // Row 3
-  "excadrillmega": "images/excadrill-mega.png",
-  "scolipedemega": "images/scolipede-mega.png",
-  "scraftymega": "images/scrafty-mega.png",
-  "eelektrossmega": "images/eelektross-mega.png", 
-  "chandeluremega": "images/chandelure-mega.png",
-  "golurkmega": "images/golurk-mega.png",
-  "chesnaughtmega": "images/chesnaught-mega.png",
-  "delphoxmega": "images/delphox-mega.png",
+      // Row 3
+      "excadrillmega": "images/excadrill-mega.png",
+      "scolipedemega": "images/scolipede-mega.png",
+      "scraftymega": "images/scrafty-mega.png",
+      "eelektrossmega": "images/eelektross-mega.png", 
+      "chandeluremega": "images/chandelure-mega.png",
+      "golurkmega": "images/golurk-mega.png",
+      "chesnaughtmega": "images/chesnaught-mega.png",
+      "delphoxmega": "images/delphox-mega.png",
 
-  // Row 4
-  "greninjamega": "images/greninja-mega.png",
-  "pyroarmega": "images/pyroar-mega.png",
-  "floettemega": "images/floette-mega.png",
-  "meowsticmega": "images/meowstic-mega.png",
-  "malamarmega": "images/malamar-mega.png",
-  "barbaraclemega": "images/barbaracle-mega.png",
-  "dragalgemega": "images/dragalge-mega.png",
-  "hawluchamega": "images/hawlucha-mega.png",
+      // Row 4
+      "greninjamega": "images/greninja-mega.png",
+      "pyroarmega": "images/pyroar-mega.png",
+      "floettemega": "images/floette-mega.png",
+      "meowsticmega": "images/meowstic-mega.png",
+      "malamarmega": "images/malamar-mega.png",
+      "barbaraclemega": "images/barbaracle-mega.png",
+      "dragalgemega": "images/dragalge-mega.png",
+      "hawluchamega": "images/hawlucha-mega.png",
 
-  // Row 5
-  "crabominablemega": "images/crabominable-mega.png",
-  "golisopodmega": "images/golisopod-mega.png",
-  "drampamega": "images/drampa-mega.png",
-  "falinksmega": "images/falinks-mega.png",
-  "scovillainmega": "images/scovillain-mega.png",
+      // Row 5
+      "crabominablemega": "images/crabominable-mega.png",
+      "golisopodmega": "images/golisopod-mega.png",
+      "drampamega": "images/drampa-mega.png",
+      "falinksmega": "images/falinks-mega.png",
+      "scovillainmega": "images/scovillain-mega.png",
 
-  // Row 6
-  "glimmoramega": "images/glimmora-mega.png",
-  "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
-  "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
-  "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
-  "baxcaliburmega": "images/baxcalibur-mega.png",
-  "lucariomegaz": "images/lucario-mega-z.png"
-};
+      // Row 6
+      "glimmoramega": "images/glimmora-mega.png",
+      "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
+      "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
+      "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
+      "baxcaliburmega": "images/baxcalibur-mega.png",
+      "lucariomegaz": "images/lucario-mega-z.png"
+    };
 
     let showdownData = {};
     let abilitiesData = {};
@@ -812,10 +769,6 @@
           showdownData = window.exports.BattlePokedex;
           abilitiesData = window.exports.BattleAbilities;
           
-          document.getElementById('loading-overlay').style.display = 'none';
-          buildRosterUI();
-          renderTeamUI();
-          renderTypeChart();
           document.getElementById('loading-overlay').style.display = 'none';
           buildRosterUI();
           renderTeamUI();
@@ -894,7 +847,6 @@
     }
 
     // --- MODAL LOGIC ---
-    // --- MODAL LOGIC ---
     function showData(jsonId, displayName, spriteUrl) {
       const modal = document.getElementById('data-modal');
       const content = document.getElementById('modal-info');
@@ -907,7 +859,6 @@
           <p style="color:#ff0000;">Error: Data not found on Showdown API for ID "${jsonId}".</p>
         `;
       } else {
-        // THIS LINE IS CRITICAL! It tells the code where to find the stats.
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
@@ -981,6 +932,11 @@
                 <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
                 <hr style="border-color:#444; margin: 5px 0;">
                 <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
+                <div style="margin-top: 15px; color:#ffcc00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 5px;"><strong>Moveset</strong></div>
+                <input type="text" id="move1" placeholder="Move 1" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+                <input type="text" id="move2" placeholder="Move 2" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+                <input type="text" id="move3" placeholder="Move 3" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+                <input type="text" id="move4" placeholder="Move 4" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
               </div>
           </div>
           <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
@@ -990,48 +946,7 @@
       modal.style.display = 'flex';
     }
 
-        let megaDropdown = "";
-        if (MEGA_MAP[jsonId]) {
-            let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
-            megaDropdown = `
-              <div style="margin: 10px 0; color: #aaddff; text-align: left;">
-                <strong>Hold Item:</strong> 
-                <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)">
-                  <option value="none">None</option>
-                  ${options}
-                </select>
-              </div>
-            `;
-        }
-
-        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
-
-        content.innerHTML = `
-          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
-          ${megaDropdown}
-          <div id="modal-dynamic-area">
-              <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-              <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
-              ${abilitiesHtml}
-              <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
-                <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
-                <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
-                <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
-                <div class="stat-row"><span>Sp. Atk:</span> <span>${stats.spa}</span></div>
-                <div class="stat-row"><span>Sp. Def:</span> <span>${stats.spd}</span></div>
-                <div class="stat-row"><span>Speed:</span> <span>${stats.spe}</span></div>
-                <hr style="border-color:#444; margin: 5px 0;">
-                <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
-              </div>
-          </div>
-          <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
-          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
-        `;
-      }
-      modal.style.display = 'flex';
-    }
-
-   function previewMega(baseId, displayName, baseSprite, megaId) {
+    function previewMega(baseId, displayName, baseSprite, megaId) {
         const dynamicArea = document.getElementById('modal-dynamic-area');
         const addBtn = document.getElementById('modal-add-btn');
 
@@ -1077,7 +992,9 @@
             break; 
         }
 
+        // Adds the hyphen for official Showdown files
         let showdownSpriteName = megaId.replace('mega', '-mega');
+        
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
@@ -1094,6 +1011,11 @@
             <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
             <hr style="border-color:#444; margin: 5px 0;">
             <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
+            <div style="margin-top: 15px; color:#ffcc00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 5px;"><strong>Moveset</strong></div>
+            <input type="text" id="move1" placeholder="Move 1" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+            <input type="text" id="move2" placeholder="Move 2" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+            <input type="text" id="move3" placeholder="Move 3" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
+            <input type="text" id="move4" placeholder="Move 4" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
           </div>
         `;
 
@@ -1104,7 +1026,6 @@
         addBtn.innerText = "Add Mega to Team";
         addBtn.style.cursor = "pointer";
     }
-        
 
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     window.onclick = function(event) {
@@ -1112,7 +1033,6 @@
       if (event.target == modal) modal.style.display = "none";
     }
 
-    // --- TEAM BUILDER LOGIC ---
     // --- TEAM BUILDER LOGIC & AUTO-SAVE ---
     function saveTeam() {
       localStorage.setItem('myVGCTeam', JSON.stringify(currentTeam));
@@ -1134,7 +1054,15 @@
       }
       
       let selectedAbility = document.querySelector('input[name="ability-select"]:checked').value;
+      
+      // Grab the moves from the text boxes
+      let m1 = document.getElementById('move1') ? document.getElementById('move1').value : "";
+      let m2 = document.getElementById('move2') ? document.getElementById('move2').value : "";
+      let m3 = document.getElementById('move3') ? document.getElementById('move3').value : "";
+      let m4 = document.getElementById('move4') ? document.getElementById('move4').value : "";
+
       pendingMon.ability = selectedAbility;
+      pendingMon.moves = [m1, m2, m3, m4].filter(m => m.trim() !== ""); // Saves only filled boxes
       
       currentTeam.push(pendingMon);
       saveTeam(); // Auto-save!
@@ -1165,6 +1093,7 @@
         container.appendChild(slot);
       }
     }
+
     // --- EXPORT LOGIC ---
     function exportTeam() {
       if (currentTeam.length === 0) {
@@ -1174,8 +1103,19 @@
 
       let exportText = "";
       currentTeam.forEach(mon => {
-        exportText += `${mon.name}\n`;
+        // Formats the name correctly if it's a Mega
+        let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
+        
+        exportText += `${exportName}\n`;
+        exportText += `Level: 50\n`;
         exportText += `Ability: ${mon.ability}\n`;
+        
+        // Print the moves if they exist!
+        if (mon.moves && mon.moves.length > 0) {
+            mon.moves.forEach(move => {
+                exportText += `- ${move}\n`;
+            });
+        }
         exportText += `\n`; 
       });
 
@@ -1260,6 +1200,7 @@
           if (hasSE) coverage[targetType].push(mon);
         });
       });
+
       // Helper function to build a dropdown accordion
       const buildSection = (title, color, dataObj, emptyMsg) => {
         // Filter out types with 0 pokemon, then sort by highest count first
@@ -1305,6 +1246,7 @@
         ${buildSection('⚔️ SE Coverage', '#ff9800', coverage, 'No super effective STAB coverage.')}
       `;
     }
+
     function filterByAbility() {
         let input = document.getElementById('ability-search').value.toLowerCase();
         let containers = document.querySelectorAll('.poke-sprite-container');
