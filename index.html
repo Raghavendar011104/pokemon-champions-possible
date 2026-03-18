@@ -363,7 +363,9 @@
   </div>
 
   <h1>Pokédex Roster</h1>
-
+  <div style="text-align: center; margin-bottom: 20px;">
+      <input type="text" id="ability-search" placeholder="🔍 Search Ability (e.g. Intimidate)..." onkeyup="filterByAbility()" style="padding: 10px; width: 60%; max-width: 400px; background: #111; color: #fff; border: 2px solid #ffcc00; border-radius: 4px; font-family: 'Press Start 2P', monospace; font-size: 8px;">
+  </div>
   <div id="dashboard">
     <div id="team-builder">
       <div class="team-header">
@@ -565,6 +567,7 @@
         <div class="poke-box">Ditto</div>
         <div class="poke-box">Rotom</div>
         <div class="poke-box">Magnemite <span class="arrow">▶</span> Magneton <span class="arrow">▶</span> Magnezone</div>
+        <div class="poke-box">Azurill <span class="arrow">▶</span> Marill <span class="arrow">▶</span> Azumarill</div>
         <div class="poke-box">Koffing <span class="arrow">▶</span> Weezing</div>
         <div class="poke-box">Grimer <span class="arrow">▶</span> Muk</div>
         <div class="poke-box">Zorua <span class="arrow">▶</span> Zoroark</div>
@@ -588,6 +591,22 @@
         <div class="poke-box">Gothita <span class="arrow">▶</span> Gothorita <span class="arrow">▶</span> Gothitelle</div>
         <div class="poke-box">Litwick <span class="arrow">▶</span> Lampent <span class="arrow">▶</span> Chandelure</div>
       </div>
+    <h2>5. Regional VARIONTS OF POKEMON HERE (11(MOSTLY WON'T BE COUNTED)</h2>
+      <div class="grid-container">
+        <div class="poke-box">Alolan Raichu</div>
+        <div class="poke-box">Alolan Vulpix <span class="arrow">▶</span> Alolan Ninetales</div>
+        <div class="poke-box">Alolan Grimer <span class="arrow">▶</span> Alolan Muk</div>
+        
+        <div class="poke-box">Galarian Slowpoke <span class="arrow">▶</span> Galarian Slowbro</div>
+        <div class="poke-box">Galarian Weezing</div>
+        
+        <div class="poke-box">Hisuian Growlithe <span class="arrow">▶</span> Hisuian Arcanine</div>
+        <div class="poke-box">Hisuian Typhlosion</div>
+        <div class="poke-box">Hisuian Samurott</div>
+        <div class="poke-box">Hisuian Zorua <span class="arrow">▶</span> Hisuian Zoroark</div>
+        <div class="poke-box">Hisuian Braviary</div>
+        <div class="poke-box">Hisuian Decidueye</div>
+     </div>
   </div>
 
   <div id="data-modal" class="modal">
@@ -817,22 +836,36 @@
           const mons = stage.split('/');
           
           const monHTML = mons.map(monNameHTML => {
-            let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
-            
+           // Smart auto-formatter for Regional Forms
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (jsonId === 'paldeanwooper') jsonId = 'wooperpaldea';
-            if (jsonId === 'hisuiansneasel') jsonId = 'sneaselhisui';
-
             let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
-            if (cleanName === 'Hisuian Sneasel') spriteName = 'sneasel-hisui';
-            if (cleanName === 'Paldean Wooper') spriteName = 'wooper-paldea';
+
+            if (cleanName.includes("Alolan ")) {
+                let base = cleanName.replace("Alolan ", "").toLowerCase();
+                jsonId = base + "alola";
+                spriteName = base + "-alola";
+            } else if (cleanName.includes("Galarian ")) {
+                let base = cleanName.replace("Galarian ", "").toLowerCase();
+                jsonId = base + "galar";
+                spriteName = base + "-galar";
+            } else if (cleanName.includes("Hisuian ")) {
+                let base = cleanName.replace("Hisuian ", "").toLowerCase();
+                jsonId = base + "hisui";
+                spriteName = base + "-hisui";
+            } else if (cleanName.includes("Paldean ")) {
+                let base = cleanName.replace("Paldean ", "").toLowerCase();
+                jsonId = base + "paldea";
+                spriteName = base + "-paldea";
+            }
+
+            // Manual fixes for weirdly named mons
             if (cleanName === 'Flabébé') spriteName = 'flabebe';
             if (cleanName === 'Porygon-Z') spriteName = 'porygon-z';
-            if (cleanName === 'Mime Jr.') spriteName = 'mimejr';
-            if (cleanName === 'Mr. Mime') spriteName = 'mrmime';
-            if (cleanName === 'Jangmo-o') spriteName = 'jangmoo';
-            if (cleanName === 'Hakamo-o') spriteName = 'hakamoo';
-            if (cleanName === 'Kommo-o') spriteName = 'kommoo';
+            if (cleanName === 'Mime Jr.') { spriteName = 'mimejr'; jsonId = 'mimejr'; }
+            if (cleanName === 'Mr. Mime') { spriteName = 'mrmime'; jsonId = 'mrmime'; }
+            if (cleanName === 'Jangmo-o') { spriteName = 'jangmoo'; jsonId = 'jangmoo'; }
+            if (cleanName === 'Hakamo-o') { spriteName = 'hakamoo'; jsonId = 'hakamoo'; }
+            if (cleanName === 'Kommo-o') { spriteName = 'kommoo'; jsonId = 'kommoo'; };
 
             const spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
             
@@ -960,22 +993,22 @@
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Mega Ability:</strong></div>`;
+        let megaAbilityName = "";
         for(let key in megaData.abilities) {
             let aName = megaData.abilities[key];
             let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
+            megaAbilityName = aName;
             abilitiesHtml += `
               <div style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; color:#ddd; line-height:1.4;">
                 <strong>${aName}:</strong> ${aDesc}
+                <input type="radio" name="ability-select" value="${aName}" checked style="display:none;">
               </div>
             `;
             break; 
         }
 
-        // THE FIX: This adds the hyphen for official Showdown files (charizardmegax -> charizard-megax)
         let showdownSpriteName = megaId.replace('mega', '-mega');
-        
-        // It checks your custom list first. If it's not there, it asks Showdown for the hyphenated name!
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
@@ -993,6 +1026,15 @@
             <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
           </div>
         `;
+
+        // Package the Mega data so it can be added to the team!
+        pendingMon = { id: megaId, name: displayName + " (Mega)", sprite: megaSprite, types: megaData.types };
+
+        // Unlock the button
+        addBtn.disabled = false;
+        addBtn.style.opacity = "1";
+        addBtn.innerText = "Add Mega to Team";
+        addBtn.style.cursor = "pointer";
 
         addBtn.disabled = true;
         addBtn.style.opacity = "0.3";
@@ -1184,6 +1226,40 @@
         ${buildSection('❄️ Ability Resistances', '#00bcd4', abilityResist, 'No ability-based resistances.')}
         ${buildSection('⚔️ SE Coverage', '#ff9800', coverage, 'No super effective STAB coverage.')}
       `;
+    }
+    function filterByAbility() {
+        let input = document.getElementById('ability-search').value.toLowerCase();
+        let containers = document.querySelectorAll('.poke-sprite-container');
+
+        containers.forEach(container => {
+            let onclickStr = container.getAttribute('onclick');
+            let match = onclickStr.match(/showData\('([^']+)'/);
+            if (match) {
+                let id = match[1];
+                let monData = showdownData[id];
+                let hasAbility = false;
+
+                if (monData && monData.abilities) {
+                    for (let key in monData.abilities) {
+                        if (monData.abilities[key].toLowerCase().includes(input)) {
+                            hasAbility = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Fade out non-matches so the grid doesn't collapse
+                if (hasAbility || input === '') {
+                    container.style.opacity = "1";
+                    container.style.pointerEvents = "auto";
+                    container.style.filter = "grayscale(0%)";
+                } else {
+                    container.style.opacity = "0.2";
+                    container.style.pointerEvents = "none";
+                    container.style.filter = "grayscale(100%)";
+                }
+            }
+        });
     }
   </script>
 
