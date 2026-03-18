@@ -381,6 +381,7 @@
         <p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>
       </div>
     </div>
+  </div>
 
   <div id="roster-wrapper">
       <h2>1. The Confirmed Roster (117)</h2>
@@ -591,9 +592,11 @@
         <div class="poke-box">Gothita <span class="arrow">▶</span> Gothorita <span class="arrow">▶</span> Gothitelle</div>
         <div class="poke-box">Litwick <span class="arrow">▶</span> Lampent <span class="arrow">▶</span> Chandelure</div>
       </div>
-    <h2>5. Regional VARIONTS OF POKEMON HERE (11(MOSTLY WON'T BE COUNTED)</h2>
+
+    <h2>6. Regional Variants (Alola, Galar, Hisui, Paldea)</h2>
       <div class="grid-container">
         <div class="poke-box">Alolan Raichu</div>
+        <div class="poke-box">Alolan Sandshrew <span class="arrow">▶</span> Alolan Sandslash</div>
         <div class="poke-box">Alolan Vulpix <span class="arrow">▶</span> Alolan Ninetales</div>
         <div class="poke-box">Alolan Grimer <span class="arrow">▶</span> Alolan Muk</div>
         
@@ -606,10 +609,8 @@
         <div class="poke-box">Hisuian Zorua <span class="arrow">▶</span> Hisuian Zoroark</div>
         <div class="poke-box">Hisuian Braviary</div>
         <div class="poke-box">Hisuian Decidueye</div>
-     </div>
-  </div>
-
-  <div id="data-modal" class="modal">
+      </div>
+  </div> <div id="data-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">X</span>
       <div id="modal-info">Loading...</div>
@@ -746,58 +747,58 @@
       "Water Bubble": { resists: ["Fire"] }
     };
     const CUSTOM_SPRITES = {
-  // Row 1
-  "raichumegax": "images/raichu-mega-x.png",
-  "raichumegay": "images/raichu-mega-y.png",
-  "clefablemega": "images/clefable-mega.png",
-  "victreebelmega": "images/victreebel-mega.png",
-  "starmiemega": "images/starmie-mega.png",
-  "dragonitemega": "images/dragonite-mega.png",
-  "meganiummega": "images/meganium-mega.png",
-  "feraligatrmega": "images/feraligatr-mega.png",
+  // Row 1
+  "raichumegax": "images/raichu-mega-x.png",
+  "raichumegay": "images/raichu-mega-y.png",
+  "clefablemega": "images/clefable-mega.png",
+  "victreebelmega": "images/victreebel-mega.png",
+  "starmiemega": "images/starmie-mega.png",
+  "dragonitemega": "images/dragonite-mega.png",
+  "meganiummega": "images/meganium-mega.png",
+  "feraligatrmega": "images/feraligatr-mega.png",
 
-  // Row 2
-  "skarmorymega": "images/skarmory-mega.png",
-  "chimechomega": "images/chimecho-mega.png",
-  "absolmegaz": "images/absol-mega-z.png",
-  "staraptormega": "images/staraptor-mega.png",
-  "froslassmega": "images/froslass-mega.png",
-  "emboarmega": "images/emboar-mega.png",
+  // Row 2
+  "skarmorymega": "images/skarmory-mega.png",
+  "chimechomega": "images/chimecho-mega.png",
+  "absolmegaz": "images/absol-mega-z.png",
+  "staraptormega": "images/staraptor-mega.png",
+  "froslassmega": "images/froslass-mega.png",
+  "emboarmega": "images/emboar-mega.png",
 
-  // Row 3
-  "excadrillmega": "images/excadrill-mega.png",
-  "scolipedemega": "images/scolipede-mega.png",
-  "scraftymega": "images/scrafty-mega.png",
-  "eelektrossmega": "images/eelektross-mega.png", 
-  "chandeluremega": "images/chandelure-mega.png",
-  "golurkmega": "images/golurk-mega.png",
-  "chesnaughtmega": "images/chesnaught-mega.png",
-  "delphoxmega": "images/delphox-mega.png",
+  // Row 3
+  "excadrillmega": "images/excadrill-mega.png",
+  "scolipedemega": "images/scolipede-mega.png",
+  "scraftymega": "images/scrafty-mega.png",
+  "eelektrossmega": "images/eelektross-mega.png", 
+  "chandeluremega": "images/chandelure-mega.png",
+  "golurkmega": "images/golurk-mega.png",
+  "chesnaughtmega": "images/chesnaught-mega.png",
+  "delphoxmega": "images/delphox-mega.png",
 
-  // Row 4
-  "greninjamega": "images/greninja-mega.png",
-  "pyroarmega": "images/pyroar-mega.png",
-  "floettemega": "images/floette-mega.png",
-  "meowsticmega": "images/meowstic-mega.png",
-  "malamarmega": "images/malamar-mega.png",
-  "barbaraclemega": "images/barbaracle-mega.png",
-  "dragalgemega": "images/dragalge-mega.png",
-  "hawluchamega": "images/hawlucha-mega.png",
+  // Row 4
+  "greninjamega": "images/greninja-mega.png",
+  "pyroarmega": "images/pyroar-mega.png",
+  "floettemega": "images/floette-mega.png",
+  "meowsticmega": "images/meowstic-mega.png",
+  "malamarmega": "images/malamar-mega.png",
+  "barbaraclemega": "images/barbaracle-mega.png",
+  "dragalgemega": "images/dragalge-mega.png",
+  "hawluchamega": "images/hawlucha-mega.png",
 
-  // Row 5
-  "crabominablemega": "images/crabominable-mega.png",
-  "golisopodmega": "images/golisopod-mega.png",
-  "drampamega": "images/drampa-mega.png",
-  "falinksmega": "images/falinks-mega.png",
-  "scovillainmega": "images/scovillain-mega.png",
+  // Row 5
+  "crabominablemega": "images/crabominable-mega.png",
+  "golisopodmega": "images/golisopod-mega.png",
+  "drampamega": "images/drampa-mega.png",
+  "falinksmega": "images/falinks-mega.png",
+  "scovillainmega": "images/scovillain-mega.png",
 
-  // Row 6
-  "glimmoramega": "images/glimmora-mega.png",
-  "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
-  "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
-  "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
-  "baxcaliburmega": "images/baxcalibur-mega.png",
-  "lucariomegaz": "images/lucario-mega-z.png"
+  // Row 6
+  "glimmoramega": "images/glimmora-mega.png",
+  "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
+  "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
+  "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
+  "baxcaliburmega": "images/baxcalibur-mega.png",
+  "lucariomegaz": "images/lucario-mega-z.png"
 };
 
     let showdownData = {};
@@ -825,7 +826,6 @@
     });
 
     // --- DOM PARSING & FIXING SPRITES ---
-    // --- DOM PARSING & FIXING SPRITES ---
     function buildRosterUI() {
       const boxes = document.querySelectorAll('.poke-box');
 
@@ -838,7 +838,6 @@
           
           const monHTML = mons.map(monNameHTML => {
             
-            // THIS IS THE LINE THAT WENT MISSING! 
             let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
             
             // Smart auto-formatter for Regional Forms
@@ -864,7 +863,7 @@
             }
 
             // Manual fixes for weirdly named mons
-            if (cleanName === 'Flabébé') spriteName = 'flabebe';
+            if (cleanName === 'Flabébé') { spriteName = 'flabebe'; jsonId = 'flabebe'; }
             if (cleanName === 'Porygon-Z') spriteName = 'porygon-z';
             if (cleanName === 'Mime Jr.') { spriteName = 'mimejr'; jsonId = 'mimejr'; }
             if (cleanName === 'Mr. Mime') { spriteName = 'mrmime'; jsonId = 'mrmime'; }
@@ -975,7 +974,7 @@
       modal.style.display = 'flex';
     }
 
-        function previewMega(baseId, displayName, baseSprite, megaId) {
+    function previewMega(baseId, displayName, baseSprite, megaId) {
         const dynamicArea = document.getElementById('modal-dynamic-area');
         const addBtn = document.getElementById('modal-add-btn');
 
@@ -1013,7 +1012,9 @@
             break; 
         }
 
+        // Adds the hyphen for official Showdown files
         let showdownSpriteName = megaId.replace('mega', '-mega');
+        
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
@@ -1032,21 +1033,13 @@
           </div>
         `;
 
-        // Package the Mega data so it can be added to the team!
-        pendingMon = { id: megaId, name: displayName + " (Mega)", sprite: megaSprite, types: megaData.types };
+        pendingMon = { id: megaId, name: displayName + " (Mega)", sprite: megaSprite, types: megaData.types, ability: megaAbilityName };
 
-        // Unlock the button
         addBtn.disabled = false;
         addBtn.style.opacity = "1";
         addBtn.innerText = "Add Mega to Team";
         addBtn.style.cursor = "pointer";
-
-        addBtn.disabled = true;
-        addBtn.style.opacity = "0.3";
-        addBtn.innerText = "Cannot Add Megas directly";
-        addBtn.style.cursor = "not-allowed";
     }
-
 
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     window.onclick = function(event) {
@@ -1135,7 +1128,7 @@
       return mult;
     }
 
-        function renderTypeChart() {
+    function renderTypeChart() {
       const container = document.getElementById('type-summary-container');
       container.innerHTML = '';
 
