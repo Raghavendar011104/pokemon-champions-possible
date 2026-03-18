@@ -368,8 +368,9 @@
            <button id="tab-team-2" class="btn-tab" onclick="switchTeam(2)">Team 3</button>
         </div>
         <div>
-           <button id="import-btn" class="btn-action" style="padding: 8px 12px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import Data</button>
-           <button id="export-btn" class="btn-action" style="padding: 8px 12px;" onclick="exportTeam()">Export Data</button>
+           <button id="import-btn" class="btn-action" style="padding: 8px 12px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import</button>
+           <button id="export-btn" class="btn-action" style="padding: 8px 12px;" onclick="exportTeam()">Export</button>
+           <button id="sheet-btn" class="btn-action" style="padding: 8px 12px; background-color: #ff9800; color: #111;" onclick="generateTeamSheet()">VGC Team Sheet</button>
         </div>
       </div>
       <div class="team-slots" id="team-container"></div>
@@ -651,6 +652,7 @@
       <textarea id="import-text" style="width: 100%; height: 150px; background: #222; color: #fff; border: 1px solid #555; padding: 8px; font-family: monospace; font-size: 10px; resize: none; box-sizing:border-box;" placeholder="Charizard-Mega-Y @ Charizardite Y
 Ability: Drought
 Level: 50
+Tera Type: Fire
 - Heat Wave
 - Solar Beam
 - Focus Blast
@@ -855,6 +857,8 @@ Level: 50
       "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
     };
 
+    const TERA_TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'];
+
     let showdownData = {};
     let abilitiesData = {};
     let movesData = {};
@@ -1022,7 +1026,7 @@ Level: 50
         }
 
         let finalName = monData.name || displayName;
-        pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [], item: "" };
+        pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [], item: "", teraType: "" };
 
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
@@ -1142,7 +1146,7 @@ Level: 50
         }
 
         let finalName = megaData.name || displayName + " (Form)";
-        pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName };
+        pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, teraType: "" };
 
         addBtn.disabled = false;
         addBtn.style.opacity = "1";
@@ -1197,13 +1201,17 @@ Level: 50
         let legalMoves = getLegalMoves(mon.id);
         
         let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+        let teraOptions = `<option value="">(Select Tera Type)</option>` + TERA_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
 
         let html = `
             <h2 style="color:#ffcc00; font-size:14px;">Edit ${mon.name}</h2>
             <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
             
             <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
-            <input type="text" id="edit-item" list="item-list" placeholder="e.g. Focus Sash" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px; box-sizing:border-box;">
+            <input type="text" id="edit-item" list="item-list" placeholder="e.g. Focus Sash" style="width:100%; margin-bottom:10px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px; box-sizing:border-box;">
+
+            <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Tera Type:</strong></p>
+            <select id="edit-tera" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${teraOptions}</select>
 
             <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
             <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
@@ -1216,6 +1224,7 @@ Level: 50
         document.getElementById('edit-modal-info').innerHTML = html;
         
         if (mon.item) { document.getElementById('edit-item').value = mon.item; }
+        if (mon.teraType) { document.getElementById('edit-tera').value = mon.teraType; }
         if (mon.moves) {
             if (mon.moves[0]) document.getElementById('edit-move1').value = mon.moves[0];
             if (mon.moves[1]) document.getElementById('edit-move2').value = mon.moves[1];
@@ -1232,9 +1241,11 @@ Level: 50
         let m3 = document.getElementById('edit-move3').value;
         let m4 = document.getElementById('edit-move4').value;
         let itm = document.getElementById('edit-item').value;
+        let tera = document.getElementById('edit-tera').value;
         
         currentTeam[index].moves = [m1, m2, m3, m4].filter(m => m !== "");
         currentTeam[index].item = itm;
+        currentTeam[index].teraType = tera;
         
         saveTeam();
         closeEditModal();
@@ -1293,6 +1304,7 @@ Level: 50
       pendingMon.ability = selectedAbility;
       if (!pendingMon.moves) pendingMon.moves = [];
       if (!pendingMon.item) pendingMon.item = "";
+      if (!pendingMon.teraType) pendingMon.teraType = "";
       
       currentTeam.push(pendingMon);
       saveTeam();
@@ -1405,11 +1417,13 @@ Level: 50
             
             let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, '');
             let ability = "";
+            let teraType = "";
             let moves = [];
             
             for (let i = 1; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (line.startsWith('Ability:')) ability = line.replace('Ability:', '').trim();
+                if (line.startsWith('Tera Type:')) teraType = line.replace('Tera Type:', '').trim();
                 if (line.startsWith('-')) moves.push(line.replace('-', '').trim());
             }
             
@@ -1434,6 +1448,7 @@ Level: 50
                     types: monData.types,
                     ability: ability,
                     item: item,
+                    teraType: teraType,
                     moves: moves.slice(0, 4)
                 });
             }
@@ -1468,6 +1483,7 @@ Level: 50
         exportText += mon.item ? `${exportName} @ ${mon.item}\n` : `${exportName}\n`;
         exportText += `Level: 50\n`;
         exportText += `Ability: ${mon.ability}\n`;
+        if (mon.teraType) exportText += `Tera Type: ${mon.teraType}\n`;
         
         if (mon.moves && mon.moves.length > 0) {
             mon.moves.forEach(move => {
@@ -1490,6 +1506,82 @@ Level: 50
           btn.style.color = "";
         }, 2000);
       });
+    }
+
+    // --- VGC OPEN TEAM SHEET GENERATOR ---
+    function generateTeamSheet() {
+        if (currentTeam.length === 0) {
+            alert("Add some Pokémon to your team first!");
+            return;
+        }
+
+        let sheetHTML = `
+            <html>
+            <head>
+                <title>VGC Open Team Sheet</title>
+                <style>
+                    body { background-color: #111; color: #fff; font-family: monospace; font-size: 14px; padding: 20px; }
+                    .mon-container { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+                    .mon-sprite { width: 100px; text-align: center; }
+                    .mon-sprite img { width: 100%; image-rendering: pixelated; }
+                    .mon-details { margin-left: 20px; line-height: 1.6; }
+                    .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; }
+                    .mon-item { color: #ccc; }
+                    .mon-ability { color: #fff; }
+                    .mon-tera { color: #ff9900; }
+                    .mon-moves { color: #ddd; margin-top: 5px; }
+                    @media print {
+                        body { background-color: #fff; color: #000; }
+                        .mon-container { border-bottom: 1px solid #ddd; }
+                        .mon-name { color: #000; }
+                        .mon-item { color: #333; }
+                        .mon-ability { color: #000; }
+                        .mon-tera { color: #000; }
+                        .mon-moves { color: #000; }
+                        .print-btn { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <h2 style="text-align:center; color:#ffcc00; font-family: sans-serif;">VGC Open Team Sheet</h2>
+                <div style="max-width: 600px; margin: 0 auto;">
+        `;
+
+        currentTeam.forEach(mon => {
+            let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
+            
+            let movesHTML = "";
+            if (mon.moves && mon.moves.length > 0) {
+                mon.moves.forEach(m => { movesHTML += `- ${m}<br>`; });
+            }
+
+            sheetHTML += `
+                <div class="mon-container">
+                    <div class="mon-sprite">
+                        <img src="${mon.sprite}" alt="${mon.name}">
+                    </div>
+                    <div class="mon-details">
+                        <span class="mon-name">${exportName}</span> ${mon.item ? `<span class="mon-item">@ ${mon.item}</span>` : ''}<br>
+                        <span class="mon-ability">Ability: ${mon.ability}</span><br>
+                        ${mon.teraType ? `<span class="mon-tera">Tera Type: ${mon.teraType}</span><br>` : ''}
+                        <div class="mon-moves">${movesHTML}</div>
+                    </div>
+                </div>
+            `;
+        });
+
+        sheetHTML += `
+                </div>
+                <div style="text-align:center; margin-top:20px;" class="print-btn">
+                    <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button>
+                </div>
+            </body>
+            </html>
+        `;
+
+        let sheetWindow = window.open('', '_blank');
+        sheetWindow.document.write(sheetHTML);
+        sheetWindow.document.close();
     }
 
     // --- IMPROVED ARCHETYPE ANALYZER ---
@@ -1564,7 +1656,6 @@ Level: 50
                 if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
                 if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
                 
-                // Advanced Check: Now includes Item Logic!
                 if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) {
                     stats.suicideLeadPotential = true;
                 }
