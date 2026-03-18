@@ -816,6 +816,11 @@
           buildRosterUI();
           renderTeamUI();
           renderTypeChart();
+          document.getElementById('loading-overlay').style.display = 'none';
+          buildRosterUI();
+          renderTeamUI();
+          renderTypeChart();
+          loadTeam(); // Loads the saved team on boot!
       } else {
           document.getElementById('loading-overlay').innerHTML = `
             <h2 style="color:#ff0000;">Data Blocked by Browser</h2>
@@ -889,6 +894,7 @@
     }
 
     // --- MODAL LOGIC ---
+    // --- MODAL LOGIC ---
     function showData(jsonId, displayName, spriteUrl) {
       const modal = document.getElementById('data-modal');
       const content = document.getElementById('modal-info');
@@ -901,8 +907,17 @@
           <p style="color:#ff0000;">Error: Data not found on Showdown API for ID "${jsonId}".</p>
         `;
       } else {
+        // THIS LINE IS CRITICAL! It tells the code where to find the stats.
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
+        
+        // VGC Level 50 Math (Assuming 31 IVs, 0 EVs, Neutral Nature)
+        let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
+        let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
+        let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
+        let spa50 = Math.floor(0.5 * (2 * stats.spa + 31)) + 5;
+        let spd50 = Math.floor(0.5 * (2 * stats.spd + 31)) + 5;
+        let spe50 = Math.floor(0.5 * (2 * stats.spe + 31)) + 5;
         
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
         let first = true;
@@ -957,6 +972,48 @@
               <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
               ${abilitiesHtml}
               <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
+                <div style="color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px;"><strong>Lv. 50 Stats (0 EVs)</strong></div>
+                <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div>
+                <div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
+                <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div>
+                <div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
+                <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div>
+                <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
+                <hr style="border-color:#444; margin: 5px 0;">
+                <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
+              </div>
+          </div>
+          <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
+          <a class="smogon-link" href="https://www.smogon.com/dex/sv/pokemon/${jsonId}/" target="_blank">View Smogon Strategy</a>
+        `;
+      }
+      modal.style.display = 'flex';
+    }
+
+        let megaDropdown = "";
+        if (MEGA_MAP[jsonId]) {
+            let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
+            megaDropdown = `
+              <div style="margin: 10px 0; color: #aaddff; text-align: left;">
+                <strong>Hold Item:</strong> 
+                <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)">
+                  <option value="none">None</option>
+                  ${options}
+                </select>
+              </div>
+            `;
+        }
+
+        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
+
+        content.innerHTML = `
+          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
+          ${megaDropdown}
+          <div id="modal-dynamic-area">
+              <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
+              <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
+              ${abilitiesHtml}
+              <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
                 <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
                 <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
                 <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
@@ -974,7 +1031,7 @@
       modal.style.display = 'flex';
     }
 
-    function previewMega(baseId, displayName, baseSprite, megaId) {
+   function previewMega(baseId, displayName, baseSprite, megaId) {
         const dynamicArea = document.getElementById('modal-dynamic-area');
         const addBtn = document.getElementById('modal-add-btn');
 
@@ -996,6 +1053,14 @@
         let stats = megaData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
+        // VGC Level 50 Math for Megas
+        let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
+        let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
+        let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
+        let spa50 = Math.floor(0.5 * (2 * stats.spa + 31)) + 5;
+        let spd50 = Math.floor(0.5 * (2 * stats.spd + 31)) + 5;
+        let spe50 = Math.floor(0.5 * (2 * stats.spe + 31)) + 5;
+        
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Mega Ability:</strong></div>`;
         let megaAbilityName = "";
         for(let key in megaData.abilities) {
@@ -1012,9 +1077,7 @@
             break; 
         }
 
-        // Adds the hyphen for official Showdown files
         let showdownSpriteName = megaId.replace('mega', '-mega');
-        
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
@@ -1022,14 +1085,15 @@
           <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>
           ${abilitiesHtml}
           <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffcc00;">
-            <div class="stat-row"><span>HP:</span> <span>${stats.hp}</span></div>
-            <div class="stat-row"><span>Attack:</span> <span>${stats.atk}</span></div>
-            <div class="stat-row"><span>Defense:</span> <span>${stats.def}</span></div>
-            <div class="stat-row"><span>Sp. Atk:</span> <span>${stats.spa}</span></div>
-            <div class="stat-row"><span>Sp. Def:</span> <span>${stats.spd}</span></div>
-            <div class="stat-row"><span>Speed:</span> <span>${stats.spe}</span></div>
+            <div style="color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px;"><strong>Lv. 50 Stats (0 EVs)</strong></div>
+            <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div>
+            <div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
+            <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div>
+            <div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
+            <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div>
+            <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
             <hr style="border-color:#444; margin: 5px 0;">
-            <div class="stat-row" style="color:#aaddff;"><span>Total:</span> <span>${bst}</span></div>
+            <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
           </div>
         `;
 
@@ -1040,6 +1104,7 @@
         addBtn.innerText = "Add Mega to Team";
         addBtn.style.cursor = "pointer";
     }
+        
 
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
     window.onclick = function(event) {
@@ -1048,6 +1113,20 @@
     }
 
     // --- TEAM BUILDER LOGIC ---
+    // --- TEAM BUILDER LOGIC & AUTO-SAVE ---
+    function saveTeam() {
+      localStorage.setItem('myVGCTeam', JSON.stringify(currentTeam));
+    }
+
+    function loadTeam() {
+      const saved = localStorage.getItem('myVGCTeam');
+      if (saved) {
+        currentTeam = JSON.parse(saved);
+        renderTeamUI();
+        renderTypeChart();
+      }
+    }
+
     function submitToTeam() {
       if (currentTeam.length >= 6) {
         alert("Your team is already full! Remove a Pokémon first.");
@@ -1058,6 +1137,7 @@
       pendingMon.ability = selectedAbility;
       
       currentTeam.push(pendingMon);
+      saveTeam(); // Auto-save!
       closeModal();
       renderTeamUI();
       renderTypeChart();
@@ -1065,6 +1145,7 @@
 
     function removeFromTeam(index) {
       currentTeam.splice(index, 1);
+      saveTeam(); // Auto-save!
       renderTeamUI();
       renderTypeChart();
     }
@@ -1084,7 +1165,6 @@
         container.appendChild(slot);
       }
     }
-
     // --- EXPORT LOGIC ---
     function exportTeam() {
       if (currentTeam.length === 0) {
