@@ -167,6 +167,52 @@
     height: 16px;
     margin: 0 8px;
   }
+  /* --- ACCORDION STYLES --- */
+  details {
+    background-color: #222;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    border: 1px solid #444;
+  }
+  summary {
+    padding: 10px;
+    cursor: pointer;
+    font-size: 9px;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  summary:hover {
+    background-color: #333;
+  }
+  .summary-content {
+    padding: 10px;
+    border-top: 1px solid #444;
+    background-color: #111;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .summary-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .summary-sprites {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+  .summary-sprites img {
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    background: #222;
+    border-radius: 4px;
+    padding: 2px;
+    border: 1px solid #444;
+  }
 
   /* --- ROSTER STYLES --- */
   .grid-container {
@@ -327,24 +373,12 @@
       <div class="team-slots" id="team-container">
         </div>
     </div>
-    <div id="type-chart-container">
-      <h3 style="margin-top: 0; margin-bottom: 10px;">Type Analysis</h3>
-      <div style="display: flex; justify-content: space-between; font-size: 8px; color: #888; margin-bottom: 15px; background: #222; padding: 10px; border-radius: 4px;">
-        <div>
-          <strong>Defensive Breakdown</strong><br><br>
-          <span class="stat-badge bg-weak" style="display:inline-flex;"></span> Weak 
-          <span class="stat-badge bg-resist" style="display:inline-flex; margin-left:5px;"></span> Resist 
-          <span class="stat-badge bg-immune" style="display:inline-flex; margin-left:5px;"></span> Immune
-        </div>
-        <div style="text-align: right;">
-          <strong>Offensive STAB</strong><br><br>
-          <span class="stat-badge bg-se" style="display:inline-flex;"></span> Super Effective Hits
-        </div>
+   <div id="type-chart-container">
+      <h3 style="margin-top: 0; margin-bottom: 10px;">Type Summary</h3>
+      <div id="type-summary-container">
+        <p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>
       </div>
-      <div class="type-grid" id="type-grid-container">
-        </div>
     </div>
-  </div>
 
   <div id="roster-wrapper">
       <h2>1. The Confirmed Roster (117)</h2>
@@ -1038,57 +1072,81 @@
     }
 
         function renderTypeChart() {
-      const container = document.getElementById('type-grid-container');
+      const container = document.getElementById('type-summary-container');
       container.innerHTML = '';
-      
-      // Makes the columns slightly wider to comfortably fit the mini-sprites
-      container.style.gridTemplateColumns = "repeat(auto-fill, minmax(220px, 1fr))";
 
+      if (currentTeam.length === 0) {
+        container.innerHTML = '<p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>';
+        return;
+      }
+
+      let weaknesses = {};
+      let resistances = {};
+      let immunities = {};
+      let coverage = {};
+
+      // Initialize arrays for all 18 types
+      Object.keys(TYPE_DATA).forEach(t => {
+        weaknesses[t] = [];
+        resistances[t] = [];
+        immunities[t] = [];
+        coverage[t] = [];
+      });
+
+      // Sort the team data into the correct category arrays
       Object.keys(TYPE_DATA).forEach(targetType => {
-        let weakMons = [];
-        let resistMons = [];
-        let immuneMons = [];
-        let seMons = [];
-
         currentTeam.forEach(mon => {
           let defMult = getDefensiveMultiplier(mon.types, targetType);
-          if (defMult > 1) weakMons.push(mon);
-          else if (defMult === 0) immuneMons.push(mon);
-          else if (defMult < 1 && defMult > 0) resistMons.push(mon);
+          if (defMult > 1) weaknesses[targetType].push(mon);
+          else if (defMult < 1 && defMult > 0) resistances[targetType].push(mon);
+          else if (defMult === 0) immunities[targetType].push(mon);
 
           let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
-          if (hasSE) seMons.push(mon);
+          if (hasSE) coverage[targetType].push(mon);
         });
-
-        // Helper function to build the mini-sprite boxes
-        const makeSpriteHtml = (mons, bgColor) => {
-            if (mons.length === 0) return `<div class="stat-badge" style="background-color: #333; color: #555;">-</div>`;
-            return `<div style="display: flex; gap: 2px; background-color: ${bgColor}; padding: 2px 4px; border-radius: 3px; min-height: 16px; align-items: center;">` + 
-                   mons.map(m => `<img src="${m.sprite}" title="${m.name}" style="height: 18px; width: 18px; object-fit: contain; image-rendering: pixelated;">`).join('') + 
-                   `</div>`;
-        };
-
-        const row = document.createElement('div');
-        row.className = 'type-row';
-        row.innerHTML = `
-          <div class="type-label" style="background-color: ${TYPE_COLORS[targetType]}; width: 40px;">${targetType.substring(0,3).toUpperCase()}</div>
-          
-          <div class="type-stats" style="flex: 1; justify-content: flex-start; align-items: center; gap: 4px;">
-            ${makeSpriteHtml(weakMons, '#d82b2b')}
-            ${makeSpriteHtml(resistMons, '#4CAF50')}
-            ${makeSpriteHtml(immuneMons, '#4a90e2')}
-          </div>
-
-          <div class="divider-vert"></div>
-
-          <div class="type-stats" style="justify-content: flex-end; align-items: center;">
-             ${makeSpriteHtml(seMons, '#ff9800')}
-          </div>
-        `;
-        container.appendChild(row);
       });
-    }
 
+      // Helper function to build a dropdown accordion
+      const buildSection = (title, color, dataObj, emptyMsg) => {
+        // Filter out types with 0 pokemon, then sort by highest count first
+        let activeTypes = Object.keys(dataObj)
+            .filter(t => dataObj[t].length > 0)
+            .sort((a, b) => dataObj[b].length - dataObj[a].length);
+
+        let contentHtml = activeTypes.length === 0 
+            ? `<div style="color: #888; font-size: 8px;">${emptyMsg}</div>` 
+            : activeTypes.map(t => `
+                <div class="summary-row">
+                    <div class="type-label" style="background-color: ${TYPE_COLORS[t]}; width: 45px;">${t.substring(0,3).toUpperCase()}</div>
+                    <div class="summary-sprites">
+                        ${dataObj[t].map(m => `<img src="${m.sprite}" title="${m.name}">`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+        // Tally up total hits for the notification bubble
+        let totalCount = activeTypes.reduce((sum, t) => sum + dataObj[t].length, 0);
+
+        return `
+          <details>
+            <summary style="color: ${color};">
+              <strong>${title}</strong>
+              <span style="background: ${color}; color: #111; padding: 2px 6px; border-radius: 10px;">${totalCount}</span>
+            </summary>
+            <div class="summary-content">
+              ${contentHtml}
+            </div>
+          </details>
+        `;
+      };
+
+      container.innerHTML = `
+        ${buildSection('⚠️ Weaknesses', '#ff4444', weaknesses, 'No major weaknesses! Perfect defense.')}
+        ${buildSection('🛡️ Resistances', '#4CAF50', resistances, 'No resistances on this team.')}
+        ${buildSection('🚫 Immunities', '#4a90e2', immunities, 'No immunities on this team.')}
+        ${buildSection('⚔️ SE Coverage', '#ff9800', coverage, 'No super effective STAB coverage.')}
+      `;
+    }
   </script>
 
 </body>
