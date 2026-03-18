@@ -90,11 +90,11 @@
   }
 
   .team-slot:hover {
-    border-color: #ff0000;
+    border-color: #ffcc00;
   }
 
-  .team-slot.filled:hover::after {
-    content: "X";
+  .team-slot.filled .remove-x {
+    display: none;
     position: absolute;
     top: -5px;
     right: -5px;
@@ -104,6 +104,10 @@
     border-radius: 50%;
     font-size: 8px;
     z-index: 10;
+  }
+
+  .team-slot.filled:hover .remove-x {
+    display: block;
   }
 
   #type-chart-container {
@@ -309,6 +313,8 @@
 <script>window.exports = {};</script>
 <script src="https://play.pokemonshowdown.com/data/pokedex.js"></script>
 <script src="https://play.pokemonshowdown.com/data/abilities.js"></script>
+<script src="https://play.pokemonshowdown.com/data/moves.js"></script>
+<script src="https://play.pokemonshowdown.com/data/learnsets.js"></script>
 
 </head>
 <body>
@@ -331,6 +337,11 @@
       <div class="team-slots" id="team-container"></div>
     </div>
    <div id="type-chart-container">
+      <h3 style="margin-top: 0; margin-bottom: 10px;">Team Archetype</h3>
+      <div id="archetype-summary" style="background:#222; padding:10px; border-radius:4px; font-size:9px; line-height:1.4; margin-bottom:15px; border: 1px solid #ffcc00;">
+        <p style="color: #888; font-size: 8px; margin:0;">Add Pokémon and moves to analyze archetype.</p>
+      </div>
+
       <h3 style="margin-top: 0; margin-bottom: 10px;">Type Summary</h3>
       <div id="type-summary-container">
         <p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>
@@ -489,6 +500,7 @@
         <div class="poke-box">Flabébé <span class="arrow">▶</span> Floette <span class="arrow">▶</span> Florges</div>
         <div class="poke-box">Chingling <span class="arrow">▶</span> Chimecho</div>
         <div class="poke-box">Espurr <span class="arrow">▶</span> Meowstic</div>
+        <div class="poke-box">Indeedee</div>
         <div class="poke-box">Inkay <span class="arrow">▶</span> Malamar</div>
       </div>
 
@@ -539,7 +551,6 @@
         <div class="poke-box">Flamigo</div>
         <div class="poke-box">Smeargle</div>
         <div class="poke-box">Bronzor <span class="arrow">▶</span> Bronzong</div>
-        <div class="poke-box">Indeedee</div>
         <div class="poke-box">Makuhita <span class="arrow">▶</span> Hariyama</div>
         <div class="poke-box">Scraggy <span class="arrow">▶</span> Scrafty</div>
         <div class="poke-box">Vullaby <span class="arrow">▶</span> Mandibuzz</div>
@@ -565,12 +576,17 @@
         <div class="poke-box">Hisuian Braviary</div>
         <div class="poke-box">Hisuian Decidueye</div>
       </div>
-  </div> 
-
-  <div id="data-modal" class="modal">
+  </div> <div id="data-modal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal()">X</span>
       <div id="modal-info">Loading...</div>
+    </div>
+  </div>
+
+  <div id="edit-modal" class="modal">
+    <div class="modal-content" style="width: 280px;">
+      <span class="close-btn" onclick="closeEditModal()">X</span>
+      <div id="edit-modal-info">Loading...</div>
     </div>
   </div>
 
@@ -603,6 +619,7 @@
       Rock: '#B8A038', Ghost: '#705898', Dragon: '#7038F8', Dark: '#705848', Steel: '#B8B8D0', Fairy: '#EE99AC'
     };
 
+    // Upgraded to handle Megas AND Forms!
     const MEGA_MAP = {
       "abomasnow": [{ stone: "Abomasite", id: "abomasnowmega" }],
       "absol": [{ stone: "Absolite", id: "absolmega" }, { stone: "Absolite Z", id: "absolmegaz" }],
@@ -677,15 +694,28 @@
       "starmie": [{ stone: "Starminite", id: "starmiemega" }],
       "steelix": [{ stone: "Steelixite", id: "steelixmega" }],
       "swampert": [{ stone: "Swampertite", id: "swampertmega" }],
-      "tatsugiri": [
-      { stone: "Tatsugirinite (Droopy)", id: "tatsugirimegadroopy" },
-      { stone: "Tatsugirinite (Stretchy)", id: "tatsugirimegastretchy" },
-      { stone: "Tatsugirinite (Curly)", id: "tatsugirimegacurly" }
-    ],
       "tyranitar": [{ stone: "Tyranitarite", id: "tyranitarmega" }],
       "venusaur": [{ stone: "Venusaurite", id: "venusaurmega" }],
-      "victreebel": [{ stone: "Victreebelite", id: "victreebelmega" }]
+      "victreebel": [{ stone: "Victreebelite", id: "victreebelmega" }],
+      
+      // NEW ALTERNATE FORMS
+      "aegislash": [{ stone: "Blade Form", id: "aegislashblade" }],
+      "indeedee": [{ stone: "Female Form", id: "indeedeef" }],
+      "palafin": [{ stone: "Hero Form", id: "palafinhero" }],
+      "rotom": [
+          { stone: "Wash Rotom", id: "rotomwash" },
+          { stone: "Heat Rotom", id: "rotomheat" },
+          { stone: "Mow Rotom", id: "rotommow" },
+          { stone: "Frost Rotom", id: "rotomfrost" },
+          { stone: "Fan Rotom", id: "rotomfan" }
+      ],
+      "tatsugiri": [
+          { stone: "Droopy Form", id: "tatsugiridroopy" },
+          { stone: "Stretchy Form", id: "tatsugiristretchy" }
+          // Curly is base form!
+      ]
     };
+    
     const ABILITY_DEFENSES = {
       "Levitate": { immuneTo: ["Ground"] },
       "Earth Eater": { immuneTo: ["Ground"] },
@@ -703,8 +733,8 @@
       "Heatproof": { resists: ["Fire"] },
       "Water Bubble": { resists: ["Fire"] }
     };
+    
     const CUSTOM_SPRITES = {
-      // Row 1
       "raichumegax": "images/raichu-mega-x.png",
       "raichumegay": "images/raichu-mega-y.png",
       "clefablemega": "images/clefable-mega.png",
@@ -713,16 +743,12 @@
       "dragonitemega": "images/dragonite-mega.png",
       "meganiummega": "images/meganium-mega.png",
       "feraligatrmega": "images/feraligatr-mega.png",
-
-      // Row 2
       "skarmorymega": "images/skarmory-mega.png",
       "chimechomega": "images/chimecho-mega.png",
       "absolmegaz": "images/absol-mega-z.png",
       "staraptormega": "images/staraptor-mega.png",
       "froslassmega": "images/froslass-mega.png",
       "emboarmega": "images/emboar-mega.png",
-
-      // Row 3
       "excadrillmega": "images/excadrill-mega.png",
       "scolipedemega": "images/scolipede-mega.png",
       "scraftymega": "images/scrafty-mega.png",
@@ -731,8 +757,6 @@
       "golurkmega": "images/golurk-mega.png",
       "chesnaughtmega": "images/chesnaught-mega.png",
       "delphoxmega": "images/delphox-mega.png",
-
-      // Row 4
       "greninjamega": "images/greninja-mega.png",
       "pyroarmega": "images/pyroar-mega.png",
       "floettemega": "images/floette-mega.png",
@@ -741,38 +765,46 @@
       "barbaraclemega": "images/barbaracle-mega.png",
       "dragalgemega": "images/dragalge-mega.png",
       "hawluchamega": "images/hawlucha-mega.png",
-
-      // Row 5
       "crabominablemega": "images/crabominable-mega.png",
       "golisopodmega": "images/golisopod-mega.png",
       "drampamega": "images/drampa-mega.png",
       "falinksmega": "images/falinks-mega.png",
       "scovillainmega": "images/scovillain-mega.png",
-
-      // Row 6
       "glimmoramega": "images/glimmora-mega.png",
       "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
       "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
       "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
       "baxcaliburmega": "images/baxcalibur-mega.png",
-      "lucariomegaz": "images/lucario-mega-z.png"
+      "lucariomegaz": "images/lucario-mega-z.png",
+      
+      // SHOWDOWN FORM OVERRIDES TO PREVENT IMAGE ERRORS
+      "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png",
+      "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
+      "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png",
+      "rotomwash": "https://play.pokemonshowdown.com/sprites/gen5/rotom-wash.png",
+      "rotomheat": "https://play.pokemonshowdown.com/sprites/gen5/rotom-heat.png",
+      "rotommow": "https://play.pokemonshowdown.com/sprites/gen5/rotom-mow.png",
+      "rotomfrost": "https://play.pokemonshowdown.com/sprites/gen5/rotom-frost.png",
+      "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
     };
 
     let showdownData = {};
     let abilitiesData = {};
+    let movesData = {};
+    let learnsetsData = {};
     let currentTeam = []; 
     let pendingMon = null; 
 
     // --- INITIALIZATION ---
     window.addEventListener('load', () => {
-      if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities) {
+      if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities && window.exports.BattleMovedex && window.exports.BattleLearnsets) {
           showdownData = window.exports.BattlePokedex;
           abilitiesData = window.exports.BattleAbilities;
+          movesData = window.exports.BattleMovedex;
+          learnsetsData = window.exports.BattleLearnsets;
           
           document.getElementById('loading-overlay').style.display = 'none';
           buildRosterUI();
-          renderTeamUI();
-          renderTypeChart();
           loadTeam(); // Loads the saved team on boot!
       } else {
           document.getElementById('loading-overlay').innerHTML = `
@@ -798,7 +830,6 @@
             
             let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
             
-            // Smart auto-formatter for Regional Forms
             let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
 
@@ -820,7 +851,6 @@
                 spriteName = base + "-paldea";
             }
 
-            // Manual fixes for weirdly named mons
             if (cleanName === 'Flabébé') { spriteName = 'flabebe'; jsonId = 'flabebe'; }
             if (cleanName === 'Porygon-Z') spriteName = 'porygon-z';
             if (cleanName === 'Mime Jr.') { spriteName = 'mimejr'; jsonId = 'mimejr'; }
@@ -862,7 +892,6 @@
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
-        // VGC Level 50 Math (Assuming 31 IVs, 0 EVs, Neutral Nature)
         let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
         let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
         let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
@@ -880,7 +909,6 @@
             let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
             
             if(first) initialDesc = aDesc;
-            
             let safeDesc = aDesc.replace(/"/g, '&quot;');
             
             abilitiesHtml += `
@@ -904,16 +932,18 @@
             let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
             megaDropdown = `
               <div style="margin: 10px 0; color: #aaddff; text-align: left;">
-                <strong>Hold Item:</strong> 
+                <strong>Form / Mega:</strong> 
                 <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)">
-                  <option value="none">None</option>
+                  <option value="none">Base Form</option>
                   ${options}
                 </select>
               </div>
             `;
         }
 
-        pendingMon = { id: jsonId, name: displayName, sprite: spriteUrl, types: monData.types };
+        // Use proper official name capitalization from Showdown Database
+        let finalName = monData.name || displayName;
+        pendingMon = { id: jsonId, name: finalName, sprite: spriteUrl, types: monData.types, moves: [] };
 
         content.innerHTML = `
           <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
@@ -932,11 +962,6 @@
                 <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
                 <hr style="border-color:#444; margin: 5px 0;">
                 <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
-                <div style="margin-top: 15px; color:#ffcc00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 5px;"><strong>Moveset</strong></div>
-                <input type="text" id="move1" placeholder="Move 1" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-                <input type="text" id="move2" placeholder="Move 2" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-                <input type="text" id="move3" placeholder="Move 3" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-                <input type="text" id="move4" placeholder="Move 4" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
               </div>
           </div>
           <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
@@ -957,10 +982,10 @@
 
         let megaData = showdownData[megaId];
         if (!megaData) {
-            dynamicArea.innerHTML = `<p style="color:#ff0000; margin-top:20px; font-size: 12px;">Error: Custom Mega data not found in official Showdown API.</p>`;
+            dynamicArea.innerHTML = `<p style="color:#ff0000; margin-top:20px; font-size: 12px;">Error: Custom Form data not found in official Showdown API.</p>`;
             addBtn.disabled = true;
             addBtn.style.opacity = "0.3";
-            addBtn.innerText = "Cannot Add Mega";
+            addBtn.innerText = "Cannot Add Form";
             addBtn.style.cursor = "not-allowed";
             return;
         }
@@ -968,7 +993,6 @@
         let stats = megaData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
-        // VGC Level 50 Math for Megas
         let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
         let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
         let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
@@ -976,25 +1000,40 @@
         let spd50 = Math.floor(0.5 * (2 * stats.spd + 31)) + 5;
         let spe50 = Math.floor(0.5 * (2 * stats.spe + 31)) + 5;
         
-        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Mega Ability:</strong></div>`;
+        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
+        let first = true;
+        let initialDesc = "";
         let megaAbilityName = "";
+        
         for(let key in megaData.abilities) {
             let aName = megaData.abilities[key];
             let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "Description not available.";
-            megaAbilityName = aName;
+            
+            if(first) {
+                initialDesc = aDesc;
+                megaAbilityName = aName;
+            }
+            
+            let safeDesc = aDesc.replace(/"/g, '&quot;');
+            
             abilitiesHtml += `
-              <div style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; color:#ddd; line-height:1.4;">
-                <strong>${aName}:</strong> ${aDesc}
-                <input type="radio" name="ability-select" value="${aName}" checked style="display:none;">
-              </div>
+              <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
+                 <input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} 
+                 data-desc="${safeDesc}" 
+                 onchange="document.getElementById('ability-desc-mega').innerText = this.getAttribute('data-desc')">
+                 ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}
+              </label>
             `;
-            break; 
+            first = false;
         }
+        abilitiesHtml += `
+          <div id="ability-desc-mega" style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; min-height:30px; margin-top:5px; color:#ddd; line-height:1.4;">
+            ${initialDesc}
+          </div>
+        `;
 
-        // Adds the hyphen for official Showdown files
         let showdownSpriteName = megaId.replace('mega', '-mega');
-        
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
@@ -1011,26 +1050,95 @@
             <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
             <hr style="border-color:#444; margin: 5px 0;">
             <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
-            <div style="margin-top: 15px; color:#ffcc00; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; margin-bottom: 5px;"><strong>Moveset</strong></div>
-            <input type="text" id="move1" placeholder="Move 1" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-            <input type="text" id="move2" placeholder="Move 2" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-            <input type="text" id="move3" placeholder="Move 3" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
-            <input type="text" id="move4" placeholder="Move 4" style="width: 90%; margin-bottom: 4px; background: #111; color: #fff; border: 1px solid #555; padding: 4px; font-family: 'Press Start 2P', monospace; font-size: 7px;">
           </div>
         `;
 
-        pendingMon = { id: megaId, name: displayName + " (Mega)", sprite: megaSprite, types: megaData.types, ability: megaAbilityName };
+        // Use the official form name from Showdown (e.g. "Indeedee-F", "Charizard-Mega-X")
+        let finalName = megaData.name || displayName + " (Form)";
+        pendingMon = { id: megaId, name: finalName, sprite: megaSprite, types: megaData.types, moves: [], ability: megaAbilityName };
 
         addBtn.disabled = false;
         addBtn.style.opacity = "1";
-        addBtn.innerText = "Add Mega to Team";
+        addBtn.innerText = "Add Form to Team";
         addBtn.style.cursor = "pointer";
     }
 
     function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
+    function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
+    
     window.onclick = function(event) {
-      const modal = document.getElementById('data-modal');
-      if (event.target == modal) modal.style.display = "none";
+      if (event.target == document.getElementById('data-modal')) closeModal();
+      if (event.target == document.getElementById('edit-modal')) closeEditModal();
+    }
+
+    // --- LEGAL MOVEPOOL ENGINE ---
+    function getLegalMoves(monId) {
+        let moves = new Set();
+        let currentId = monId;
+
+        while (currentId) {
+            let lset = learnsetsData[currentId]?.learnset;
+            let mon = showdownData[currentId];
+            
+            // If this specific form doesn't have a learnset, fallback to its base species!
+            if (!lset && mon && mon.baseSpecies) {
+                let baseId = mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
+                lset = learnsetsData[baseId]?.learnset;
+            }
+
+            if (lset) {
+                Object.keys(lset).forEach(m => moves.add(m));
+            }
+            
+            currentId = mon && mon.prevo ? mon.prevo.toLowerCase().replace(/[^a-z0-9]/g, '') : null;
+        }
+        
+        let moveArray = Array.from(moves).map(mId => {
+            return movesData[mId] ? { id: mId, name: movesData[mId].name } : { id: mId, name: mId };
+        });
+        moveArray.sort((a, b) => a.name.localeCompare(b.name));
+        return moveArray;
+    }
+
+    function openEditModal(index) {
+        let mon = currentTeam[index];
+        let legalMoves = getLegalMoves(mon.id);
+        
+        let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+
+        let html = `
+            <h2 style="color:#ffcc00; font-size:14px;">Edit ${mon.name}</h2>
+            <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
+            <p style="font-size:8px;">Select up to 4 legal moves:</p>
+            <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
+            <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
+            <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
+            <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: 'Press Start 2P', monospace; font-size:7px;">${moveOptions}</select>
+            <button class="btn-action btn-add" style="margin-top:15px; font-size:10px;" onclick="saveMoves(${index})">Save Team Member</button>
+        `;
+        document.getElementById('edit-modal-info').innerHTML = html;
+        
+        if (mon.moves) {
+            if (mon.moves[0]) document.getElementById('edit-move1').value = mon.moves[0];
+            if (mon.moves[1]) document.getElementById('edit-move2').value = mon.moves[1];
+            if (mon.moves[2]) document.getElementById('edit-move3').value = mon.moves[2];
+            if (mon.moves[3]) document.getElementById('edit-move4').value = mon.moves[3];
+        }
+        
+        document.getElementById('edit-modal').style.display = 'flex';
+    }
+
+    function saveMoves(index) {
+        let m1 = document.getElementById('edit-move1').value;
+        let m2 = document.getElementById('edit-move2').value;
+        let m3 = document.getElementById('edit-move3').value;
+        let m4 = document.getElementById('edit-move4').value;
+        
+        currentTeam[index].moves = [m1, m2, m3, m4].filter(m => m !== "");
+        saveTeam();
+        closeEditModal();
+        renderTeamUI();
+        analyzeArchetype();
     }
 
     // --- TEAM BUILDER LOGIC & AUTO-SAVE ---
@@ -1044,6 +1152,7 @@
         currentTeam = JSON.parse(saved);
         renderTeamUI();
         renderTypeChart();
+        analyzeArchetype();
       }
     }
 
@@ -1054,28 +1163,23 @@
       }
       
       let selectedAbility = document.querySelector('input[name="ability-select"]:checked').value;
-      
-      // Grab the moves from the text boxes
-      let m1 = document.getElementById('move1') ? document.getElementById('move1').value : "";
-      let m2 = document.getElementById('move2') ? document.getElementById('move2').value : "";
-      let m3 = document.getElementById('move3') ? document.getElementById('move3').value : "";
-      let m4 = document.getElementById('move4') ? document.getElementById('move4').value : "";
-
       pendingMon.ability = selectedAbility;
-      pendingMon.moves = [m1, m2, m3, m4].filter(m => m.trim() !== ""); // Saves only filled boxes
+      if (!pendingMon.moves) pendingMon.moves = [];
       
       currentTeam.push(pendingMon);
-      saveTeam(); // Auto-save!
+      saveTeam();
       closeModal();
       renderTeamUI();
       renderTypeChart();
+      analyzeArchetype();
     }
 
     function removeFromTeam(index) {
       currentTeam.splice(index, 1);
-      saveTeam(); // Auto-save!
+      saveTeam();
       renderTeamUI();
       renderTypeChart();
+      analyzeArchetype();
     }
 
     function renderTeamUI() {
@@ -1087,8 +1191,10 @@
         slot.className = 'team-slot';
         if (currentTeam[i]) {
           slot.classList.add('filled');
-          slot.innerHTML = `<img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="${currentTeam[i].name}\nAbility: ${currentTeam[i].ability}">`;
-          slot.onclick = () => removeFromTeam(i);
+          slot.innerHTML = `
+            <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit Moves\nAbility: ${currentTeam[i].ability}" onclick="openEditModal(${i})">
+            <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
+          `;
         }
         container.appendChild(slot);
       }
@@ -1103,14 +1209,10 @@
 
       let exportText = "";
       currentTeam.forEach(mon => {
-        // Formats the name correctly if it's a Mega
-        let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
-        
-        exportText += `${exportName}\n`;
+        // Because pendingMon.name now directly pulls the official Showdown name, we can just print it!
+        exportText += `${mon.name}\n`;
         exportText += `Level: 50\n`;
         exportText += `Ability: ${mon.ability}\n`;
-        
-        // Print the moves if they exist!
         if (mon.moves && mon.moves.length > 0) {
             mon.moves.forEach(move => {
                 exportText += `- ${move}\n`;
@@ -1131,9 +1233,78 @@
           btn.style.backgroundColor = ""; 
           btn.style.color = "";
         }, 2000);
-      }).catch(err => {
-        alert("Failed to copy to clipboard.");
       });
+    }
+
+    // --- ARCHETYPE ANALYZER ---
+    function analyzeArchetype() {
+        let container = document.getElementById('archetype-summary');
+        if (currentTeam.length === 0) {
+            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon and moves to analyze archetype.</p>';
+            return;
+        }
+        
+        let hasTrickRoom = false; let hasTailwind = false;
+        let hasDrizzle = false; let hasRainAbuser = false;
+        let hasDrought = false; let hasSunAbuser = false;
+        let hasSand = false; let hasSnow = false;
+        let hasPsychicTerrain = false;
+        let recoveryCount = 0; let avgSpeed = 0;
+
+        currentTeam.forEach(mon => {
+            let speed = showdownData[mon.id] ? showdownData[mon.id].baseStats.spe : 50;
+            avgSpeed += speed;
+            
+            if (mon.ability === 'Drizzle') hasDrizzle = true;
+            if (['Swift Swim'].includes(mon.ability)) hasRainAbuser = true;
+            if (mon.ability === 'Drought') hasDrought = true;
+            if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) hasSunAbuser = true;
+            if (mon.ability === 'Sand Stream') hasSand = true;
+            if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) hasSnow = true;
+            if (mon.ability === 'Psychic Surge') hasPsychicTerrain = true;
+            
+            if (mon.moves) {
+                if (mon.moves.includes('Trick Room')) hasTrickRoom = true;
+                if (mon.moves.includes('Tailwind')) hasTailwind = true;
+                if (mon.moves.includes('Recover') || mon.moves.includes('Roost') || mon.moves.includes('Soft-Boiled')) recoveryCount++;
+            }
+        });
+        
+        avgSpeed = avgSpeed / currentTeam.length;
+
+        let archetype = "Standard VGC Balance";
+        let desc = "Relies on high-value Pokémon with strong natural synergy, pivoting, and balanced offensive/defensive pressure.";
+
+        if (hasTrickRoom && avgSpeed < 75) {
+            archetype = "Hard Trick Room";
+            desc = "Utilizes Trick Room to turn low speed into an offensive advantage, supported by Fake Out or Redirection.";
+        } else if (hasTrickRoom && avgSpeed >= 75) {
+             archetype = "Hybrid Speed Control";
+             desc = "Features Trick Room as a secondary control option alongside inherently faster threats.";
+        } else if (hasDrizzle && hasRainAbuser) {
+            archetype = "Rain Offense";
+            desc = "Capitalizes on Drizzle to boost Water attacks and activate Swift Swim sweepers.";
+        } else if (hasDrought && hasSunAbuser) {
+            archetype = "Sun Offense";
+            desc = "Uses Drought to power up Fire moves and activate Chlorophyll or Protosynthesis.";
+        } else if (hasSand) {
+            archetype = "Sand Balance";
+            desc = "Uses Sandstorm for residual damage and Special Defense boosts for Rock types.";
+        } else if (hasSnow) {
+            archetype = "Snow Balance";
+            desc = "Sets Snow to boost Ice-type Defense and enable Aurora Veil support.";
+        } else if (hasPsychicTerrain) {
+            archetype = "Psychic Terrain Offense";
+            desc = "Uses Terrain to block priority and launch devastating Expanding Force attacks.";
+        } else if (hasTailwind && avgSpeed > 85) {
+            archetype = "Tailwind Hyper Offense";
+            desc = "Prioritizes extreme speed and raw damage to overwhelm the opponent quickly.";
+        } else if (recoveryCount >= 3) {
+            archetype = "Heavy Bulky Stall";
+            desc = "Aims to win through attrition, resource exhaustion, and passive damage.";
+        }
+
+        container.innerHTML = `<span style="color:#ffcc00; font-size:12px;">${archetype}</span><br><br><span style="color:#ccc;">${desc}</span>`;
     }
 
     // --- TYPE CALCULATION LOGIC ---
@@ -1157,53 +1328,38 @@
         return;
       }
 
-      let extremeWeak = {};
-      let weaknesses = {};
-      let resistances = {};
-      let mostlyIneffective = {};
-      let immunities = {};
-      let abilityImmune = {};
-      let abilityResist = {};
-      let coverage = {};
+      let extremeWeak = {}; let weaknesses = {}; let resistances = {}; let mostlyIneffective = {};
+      let immunities = {}; let abilityImmune = {}; let abilityResist = {}; let coverage = {};
 
-      // Initialize arrays for all 18 types
       Object.keys(TYPE_DATA).forEach(t => {
         extremeWeak[t] = []; weaknesses[t] = []; resistances[t] = []; mostlyIneffective[t] = [];
         immunities[t] = []; abilityImmune[t] = []; abilityResist[t] = []; coverage[t] = [];
       });
 
-      // Sort the team data into the correct category arrays
       Object.keys(TYPE_DATA).forEach(targetType => {
         currentTeam.forEach(mon => {
           let defMult = getDefensiveMultiplier(mon.types, targetType);
           
-          // Check standard type matchups
           if (defMult === 4) extremeWeak[targetType].push(mon);
           else if (defMult === 2) weaknesses[targetType].push(mon);
           else if (defMult === 0.5) resistances[targetType].push(mon);
           else if (defMult === 0.25) mostlyIneffective[targetType].push(mon);
           else if (defMult === 0) immunities[targetType].push(mon);
 
-          // Check Ability-based matchups
           if (mon.ability && ABILITY_DEFENSES[mon.ability]) {
              let abilDef = ABILITY_DEFENSES[mon.ability];
-             if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType)) {
-                 // Only add if they aren't already naturally immune
-                 if (defMult !== 0) abilityImmune[targetType].push(mon);
-             }
-             if (abilDef.resists && abilDef.resists.includes(targetType)) {
-                 abilityResist[targetType].push(mon);
-             }
+             if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType) && defMult !== 0) abilityImmune[targetType].push(mon);
+             if (abilDef.resists && abilDef.resists.includes(targetType)) abilityResist[targetType].push(mon);
           }
 
-          let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
-          if (hasSE) coverage[targetType].push(mon);
+          if (mon.moves) {
+              let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
+              if (hasSE) coverage[targetType].push(mon);
+          }
         });
       });
 
-      // Helper function to build a dropdown accordion
       const buildSection = (title, color, dataObj, emptyMsg) => {
-        // Filter out types with 0 pokemon, then sort by highest count first
         let activeTypes = Object.keys(dataObj)
             .filter(t => dataObj[t].length > 0)
             .sort((a, b) => dataObj[b].length - dataObj[a].length);
@@ -1219,7 +1375,6 @@
                 </div>
             `).join('');
 
-        // Tally up total hits for the notification bubble
         let totalCount = activeTypes.reduce((sum, t) => sum + dataObj[t].length, 0);
 
         return `
@@ -1228,9 +1383,7 @@
               <strong>${title}</strong>
               <span style="background: ${color}; color: #111; padding: 2px 6px; border-radius: 10px;">${totalCount}</span>
             </summary>
-            <div class="summary-content">
-              ${contentHtml}
-            </div>
+            <div class="summary-content">${contentHtml}</div>
           </details>
         `;
       };
@@ -1268,7 +1421,6 @@
                     }
                 }
                 
-                // Fade out non-matches so the grid doesn't collapse
                 if (hasAbility || input === '') {
                     container.style.opacity = "1";
                     container.style.pointerEvents = "auto";
@@ -1281,6 +1433,9 @@
             }
         });
     }
+  </script>
+</body>
+</html>
   </script>
 
 </body>
