@@ -2007,18 +2007,14 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
         POKEMON_AESTHETICS[id] = { letter, color };
     });
-
-
+        // --- VGC OPEN TEAM SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) {
             alert("Add some Pokémon to your team first!");
             return;
         }
 
-        let teamWord = ""; // Tracks the team acronym!
-
-        // --- AURA BLEND LOGIC ---
-        // Extract the Hex colors of the first 3 Pokémon on the team to build the gradient
+        let teamWord = ""; 
         let c1 = "#555", c2 = "#555", c3 = "#555";
         if (currentTeam[0]) {
             let a1 = POKEMON_AESTHETICS[currentTeam[0].id] || { color: TYPE_COLORS[currentTeam[0].types[0]] || "#555" };
@@ -2027,22 +2023,27 @@ Mega Victreebel,M,#78C850,Grass Green`;
         if (currentTeam[1]) {
             let a2 = POKEMON_AESTHETICS[currentTeam[1].id] || { color: TYPE_COLORS[currentTeam[1].types[0]] || "#555" };
             c2 = a2.color;
-        } else { c2 = c1; } // Fallback if team is less than 3
+        } else { c2 = c1; }
         if (currentTeam[2]) {
             let a3 = POKEMON_AESTHETICS[currentTeam[2].id] || { color: TYPE_COLORS[currentTeam[2].types[0]] || "#555" };
             c3 = a3.color;
         } else { c3 = c2; }
 
         let sheetHTML = `
+            <!DOCTYPE html>
             <html>
             <head>
                 <title>VGC Open Team Sheet</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
                 <style>
-                    /* Import the Cursive font for the flair */
                     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
                     
+                    html, body {
+                        min-height: 100vh; /* Forces the background to cover the whole page */
+                        margin: 0;
+                    }
+
                     body { 
-                        /* The Dynamic Aura Blend Background */
                         background: 
                             linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)),
                             linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%);
@@ -2051,11 +2052,18 @@ Mega Victreebel,M,#78C850,Grass Green`;
                         font-family: monospace; 
                         font-size: 14px; 
                         padding: 20px; 
+                        box-sizing: border-box;
                     }
 
-                    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
+                    /* Responsive Grid: 1 column on mobile, 2 columns on desktop */
+                    .team-grid { 
+                        display: grid; 
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+                        gap: 20px; 
+                        max-width: 900px; 
+                        margin: 0 auto; 
+                    }
                     
-                    /* Added a slight transparency to the boxes so the aura shows through */
                     .mon-container { display: flex; align-items: center; background: rgba(30, 30, 30, 0.6); padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
                     
                     .mon-crest {
@@ -2085,7 +2093,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
                     .mon-tera { color: #ff9900; }
                     .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.2); }
                     
-                    /* The Big Acronym Container */
                     .team-acronym-container {
                         max-width: 900px;
                         margin: 30px auto 0 auto;
@@ -2112,22 +2119,29 @@ Mega Victreebel,M,#78C850,Grass Green`;
                         text-shadow: 3px 3px 0px rgba(0,0,0,0.8);
                     }
 
-                    /* --- THE PDF PRINT FIX --- */
                     @media print {
+                        @page {
+                            size: A4 portrait;
+                            margin: 1cm;
+                        }
                         * {
-                            /* Forces the browser to keep backgrounds and colors when printing */
                             -webkit-print-color-adjust: exact !important;
                             print-color-adjust: exact !important;
                             color-adjust: exact !important;
                         }
-                        body { padding: 0; margin: 0; }
+                        body { padding: 0; margin: 0; min-height: 100vh; }
                         h2 { margin: 10px 0; }
+                        
+                        /* Force 2 columns for A4 paper layout */
                         .team-grid { grid-template-columns: 1fr 1fr; gap: 10px; max-width: 100%; }
                         
-                        /* Slightly darken the containers for print contrast against the aura */
+                        /* Shrink padding and graphics slightly to give text breathing room on PDF */
                         .mon-container { background: rgba(20, 20, 20, 0.8) !important; padding: 10px; margin: 0; border: 1px solid #444 !important; }
-                        .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; margin-top: 15px; padding: 10px; border: 1px solid #444 !important; }
+                        .mon-sprite { width: 70px; margin-right: 5px; }
+                        .mon-crest { width: 35px; height: 35px; font-size: 20px; margin-right: 10px; }
+                        .mon-name { font-size: 14px; }
                         
+                        .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; margin-top: 15px; padding: 10px; border: 1px solid #444 !important; }
                         .print-btn { display: none !important; }
                     }
                 </style>
@@ -2161,7 +2175,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
                         <img src="${mon.sprite}" alt="${mon.name}">
                     </div>
                     <div class="mon-details">
-                        <span class="mon-name">${exportName}</span> ${mon.item ? `<span class="mon-item">@ ${mon.item}</span>` : ''}<br>
+                        <span class="mon-name">${exportName}</span> ${mon.item ? `<span class="mon-item"><br>@ ${mon.item}</span>` : ''}<br>
                         <span class="mon-ability">Ability: ${mon.ability}</span><br>
                         ${mon.teraType ? `<span class="mon-tera">Tera Type: ${mon.teraType}</span><br>` : ''}
                         <div class="mon-moves">${movesHTML}</div>
@@ -2189,7 +2203,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         sheetWindow.document.write(sheetHTML);
         sheetWindow.document.close();
     }
-  
 
     // --- IMPROVED ARCHETYPE ANALYZER ---
    function analyzeArchetype() {
