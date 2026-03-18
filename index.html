@@ -709,6 +709,23 @@
       "venusaur": [{ stone: "Venusaurite", id: "venusaurmega" }],
       "victreebel": [{ stone: "Victreebelite", id: "victreebelmega" }]
     };
+    const ABILITY_DEFENSES = {
+      "Levitate": { immuneTo: ["Ground"] },
+      "Earth Eater": { immuneTo: ["Ground"] },
+      "Water Absorb": { immuneTo: ["Water"] },
+      "Storm Drain": { immuneTo: ["Water"] },
+      "Dry Skin": { immuneTo: ["Water"], weakTo: ["Fire"] },
+      "Volt Absorb": { immuneTo: ["Electric"] },
+      "Motor Drive": { immuneTo: ["Electric"] },
+      "Lightning Rod": { immuneTo: ["Electric"] },
+      "Flash Fire": { immuneTo: ["Fire"] },
+      "Well-Baked Body": { immuneTo: ["Fire"] },
+      "Sap Sipper": { immuneTo: ["Grass"] },
+      "Thick Fat": { resists: ["Fire", "Ice"] },
+      "Purifying Salt": { resists: ["Ghost"] },
+      "Heatproof": { resists: ["Fire"] },
+      "Water Bubble": { resists: ["Fire"] }
+    };
     const CUSTOM_SPRITES = {
   // Row 1
   "raichumegax": "images/raichu-mega-x.png",
@@ -1080,32 +1097,49 @@
         return;
       }
 
+      let extremeWeak = {};
       let weaknesses = {};
       let resistances = {};
+      let mostlyIneffective = {};
       let immunities = {};
+      let abilityImmune = {};
+      let abilityResist = {};
       let coverage = {};
 
       // Initialize arrays for all 18 types
       Object.keys(TYPE_DATA).forEach(t => {
-        weaknesses[t] = [];
-        resistances[t] = [];
-        immunities[t] = [];
-        coverage[t] = [];
+        extremeWeak[t] = []; weaknesses[t] = []; resistances[t] = []; mostlyIneffective[t] = [];
+        immunities[t] = []; abilityImmune[t] = []; abilityResist[t] = []; coverage[t] = [];
       });
 
       // Sort the team data into the correct category arrays
       Object.keys(TYPE_DATA).forEach(targetType => {
         currentTeam.forEach(mon => {
           let defMult = getDefensiveMultiplier(mon.types, targetType);
-          if (defMult > 1) weaknesses[targetType].push(mon);
-          else if (defMult < 1 && defMult > 0) resistances[targetType].push(mon);
+          
+          // Check standard type matchups
+          if (defMult === 4) extremeWeak[targetType].push(mon);
+          else if (defMult === 2) weaknesses[targetType].push(mon);
+          else if (defMult === 0.5) resistances[targetType].push(mon);
+          else if (defMult === 0.25) mostlyIneffective[targetType].push(mon);
           else if (defMult === 0) immunities[targetType].push(mon);
+
+          // Check Ability-based matchups
+          if (mon.ability && ABILITY_DEFENSES[mon.ability]) {
+             let abilDef = ABILITY_DEFENSES[mon.ability];
+             if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType)) {
+                 // Only add if they aren't already naturally immune
+                 if (defMult !== 0) abilityImmune[targetType].push(mon);
+             }
+             if (abilDef.resists && abilDef.resists.includes(targetType)) {
+                 abilityResist[targetType].push(mon);
+             }
+          }
 
           let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
           if (hasSE) coverage[targetType].push(mon);
         });
       });
-
       // Helper function to build a dropdown accordion
       const buildSection = (title, color, dataObj, emptyMsg) => {
         // Filter out types with 0 pokemon, then sort by highest count first
@@ -1141,9 +1175,13 @@
       };
 
       container.innerHTML = `
-        ${buildSection('⚠️ Weaknesses', '#ff4444', weaknesses, 'No major weaknesses! Perfect defense.')}
-        ${buildSection('🛡️ Resistances', '#4CAF50', resistances, 'No resistances on this team.')}
-        ${buildSection('🚫 Immunities', '#4a90e2', immunities, 'No immunities on this team.')}
+        ${buildSection('⚠️ 4x Extreme Weaknesses', '#cc0000', extremeWeak, 'No 4x weaknesses! Great job.')}
+        ${buildSection('🔻 2x Weaknesses', '#ff4444', weaknesses, 'No 2x weaknesses! Perfect defense.')}
+        ${buildSection('🛡️ 1/2x Resistances', '#4CAF50', resistances, 'No basic resistances.')}
+        ${buildSection('🧱 1/4x Mostly Ineffective', '#2E7D32', mostlyIneffective, 'No 4x resistances.')}
+        ${buildSection('🚫 Base Immunities', '#4a90e2', immunities, 'No natural immunities.')}
+        ${buildSection('✨ Ability Immunities', '#9c27b0', abilityImmune, 'No ability-based immunities.')}
+        ${buildSection('❄️ Ability Resistances', '#00bcd4', abilityResist, 'No ability-based resistances.')}
         ${buildSection('⚔️ SE Coverage', '#ff9800', coverage, 'No super effective STAB coverage.')}
       `;
     }
