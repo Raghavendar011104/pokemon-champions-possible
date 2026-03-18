@@ -2009,30 +2009,36 @@ Mega Victreebel,M,#78C850,Grass Green`;
     });
 
     // --- VGC OPEN TEAM SHEET GENERATOR ---
+    // --- VGC OPEN TEAM SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) {
             alert("Add some Pokémon to your team first!");
             return;
         }
 
+        let teamWord = ""; // Tracks the team acronym!
+
         let sheetHTML = `
             <html>
             <head>
                 <title>VGC Open Team Sheet</title>
                 <style>
+                    /* Import the Cursive font for the flair */
+                    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+                    
                     body { background-color: #111; color: #fff; font-family: monospace; font-size: 14px; padding: 20px; }
                     .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
                     .mon-container { display: flex; align-items: center; background: #1a1a1a; padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid #333; }
                     
                     .mon-crest {
-                        width: 40px;
-                        height: 40px;
+                        width: 45px;
+                        height: 45px;
                         border-radius: 50%;
                         display: flex;
                         align-items: center;
                         justify-content: center;
-                        font-family: 'Impact', 'Oswald', sans-serif;
-                        font-size: 24px;
+                        font-family: 'Pacifico', cursive; /* The new flair font */
+                        font-size: 26px;
                         color: #fff;
                         text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
                         margin-right: 15px;
@@ -2045,12 +2051,38 @@ Mega Victreebel,M,#78C850,Grass Green`;
                     .mon-sprite img { width: 100%; image-rendering: pixelated; }
                     
                     .mon-details { line-height: 1.6; width: 100%; }
-                    .mon-name { color: #fff; font-weight: bold; font-size: 16px; }
+                    .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; }
                     .mon-item { color: #ccc; font-style: italic; }
                     .mon-ability { color: #aaa; }
                     .mon-tera { color: #ff9900; }
                     .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid #555; }
                     
+                    /* The Big Acronym Container */
+                    .team-acronym-container {
+                        max-width: 900px;
+                        margin: 30px auto 0 auto;
+                        text-align: center;
+                        background: #1a1a1a;
+                        border: 1px solid #333;
+                        border-radius: 8px;
+                        padding: 20px;
+                    }
+                    .team-acronym-title {
+                        color: #888;
+                        font-family: sans-serif;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        letter-spacing: 2px;
+                        margin: 0 0 10px 0;
+                    }
+                    .team-acronym-word {
+                        font-family: 'Pacifico', cursive;
+                        font-size: 48px;
+                        color: #ffcc00;
+                        letter-spacing: 8px;
+                        text-shadow: 3px 3px 0px rgba(0,0,0,0.5);
+                    }
+
                     /* PRINT STYLES - Forces 1 Page with 2 Columns */
                     @media print {
                         body { background-color: #fff; color: #000; font-size: 12px; padding: 0; margin: 0; }
@@ -2059,6 +2091,10 @@ Mega Victreebel,M,#78C850,Grass Green`;
                         .mon-container { background: #fff; padding: 10px; margin: 0; border: 1px solid #ccc; }
                         .mon-name, .mon-tera { color: #000 !important; }
                         .mon-item, .mon-ability, .mon-moves { color: #333 !important; }
+                        
+                        .team-acronym-container { background: #fff; border: 1px solid #ccc; margin-top: 15px; padding: 10px; }
+                        .team-acronym-word { color: #000 !important; text-shadow: none; font-size: 36px; }
+                        
                         .print-btn { display: none; }
                     }
                 </style>
@@ -2082,6 +2118,9 @@ Mega Victreebel,M,#78C850,Grass Green`;
                 color: TYPE_COLORS[mon.types[0]] || "#555" 
             };
 
+            // Add the letter to our growing acronym
+            teamWord += aesthetic.letter;
+
             sheetHTML += `
                 <div class="mon-container" style="border-left: 8px solid ${aesthetic.color} !important;">
                     <div class="mon-crest" style="background-color: ${aesthetic.color};">
@@ -2100,8 +2139,15 @@ Mega Victreebel,M,#78C850,Grass Green`;
             `;
         });
 
+        // Add the Acronym Container before closing the body
         sheetHTML += `
                 </div>
+                
+                <div class="team-acronym-container">
+                    <p class="team-acronym-title">Team Acronym</p>
+                    <div class="team-acronym-word">${teamWord}</div>
+                </div>
+
                 <div style="text-align:center; margin-top:20px;" class="print-btn">
                     <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button>
                 </div>
