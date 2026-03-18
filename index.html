@@ -2038,33 +2038,61 @@ Mega Victreebel,M,#78C850,Grass Green`;
                 <style>
                     @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
                     
+                    /* Force background colors to print */
+                    * {
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                        color-adjust: exact !important;
+                    }
+
                     html, body {
-                        min-height: 100vh; /* Forces the background to cover the whole page */
                         margin: 0;
+                        padding: 0;
+                        min-height: 100vh;
+                        background-color: #1a1a1a;
                     }
 
                     body { 
-                        background: 
+                        background-image: 
                             linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)),
                             linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%);
-                        background-attachment: fixed;
                         color: #fff; 
                         font-family: monospace; 
                         font-size: 14px; 
-                        padding: 20px; 
                         box-sizing: border-box;
                     }
 
-                    /* Responsive Grid: 1 column on mobile, 2 columns on desktop */
-                    .team-grid { 
-                        display: grid; 
-                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-                        gap: 20px; 
-                        max-width: 900px; 
-                        margin: 0 auto; 
+                    .content-wrapper {
+                        padding: 20px;
+                        max-width: 900px;
+                        margin: 0 auto;
+                    }
+
+                    /* Replaced Grid with Flexbox for guaranteed print stability */
+                    .team-flex { 
+                        display: flex; 
+                        flex-wrap: wrap; 
+                        justify-content: space-between;
                     }
                     
-                    .mon-container { display: flex; align-items: center; background: rgba(30, 30, 30, 0.6); padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+                    .mon-container { 
+                        display: flex; 
+                        align-items: center; 
+                        background: rgba(30, 30, 30, 0.6); 
+                        padding: 15px; 
+                        border-radius: 8px; 
+                        page-break-inside: avoid; 
+                        border: 1px solid rgba(255, 255, 255, 0.1); 
+                        box-shadow: 0 4px 10px rgba(0,0,0,0.5); 
+                        width: 48.5%; /* 2 Columns */
+                        box-sizing: border-box;
+                        margin-bottom: 20px;
+                    }
+
+                    /* Switch to 1 column on mobile viewing */
+                    @media (max-width: 700px) {
+                        .mon-container { width: 100%; }
+                    }
                     
                     .mon-crest {
                         width: 45px;
@@ -2094,14 +2122,13 @@ Mega Victreebel,M,#78C850,Grass Green`;
                     .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.2); }
                     
                     .team-acronym-container {
-                        max-width: 900px;
-                        margin: 30px auto 0 auto;
                         text-align: center;
                         background: rgba(30, 30, 30, 0.6);
                         border: 1px solid rgba(255, 255, 255, 0.1);
                         border-radius: 8px;
                         padding: 20px;
                         box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+                        margin-top: 10px;
                     }
                     .team-acronym-title {
                         color: #aaa;
@@ -2119,36 +2146,46 @@ Mega Victreebel,M,#78C850,Grass Green`;
                         text-shadow: 3px 3px 0px rgba(0,0,0,0.8);
                     }
 
+                    /* --- PDF PRINT OVERRIDES --- */
                     @media print {
                         @page {
                             size: A4 portrait;
-                            margin: 1cm;
+                            margin: 0.5cm;
                         }
-                        * {
-                            -webkit-print-color-adjust: exact !important;
-                            print-color-adjust: exact !important;
-                            color-adjust: exact !important;
+                        
+                        body { 
+                            min-height: 297mm; /* Force full A4 height so background doesn't cut off */
+                            background-color: #1a1a1a !important;
+                            background-image: 
+                                linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)),
+                                linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%) !important;
                         }
-                        body { padding: 0; margin: 0; min-height: 100vh; }
-                        h2 { margin: 10px 0; }
+
+                        .content-wrapper { padding: 10px; }
+                        h2 { margin: 5px 0 15px 0; font-size: 18px; }
+
+                        /* Lock it into 2 columns for the PDF */
+                        .mon-container { 
+                            width: 48.5% !important; 
+                            background: rgba(20, 20, 20, 0.8) !important; 
+                            padding: 10px !important; 
+                            margin-bottom: 15px !important; 
+                            border: 1px solid #444 !important; 
+                        }
                         
-                        /* Force 2 columns for A4 paper layout */
-                        .team-grid { grid-template-columns: 1fr 1fr; gap: 10px; max-width: 100%; }
-                        
-                        /* Shrink padding and graphics slightly to give text breathing room on PDF */
-                        .mon-container { background: rgba(20, 20, 20, 0.8) !important; padding: 10px; margin: 0; border: 1px solid #444 !important; }
                         .mon-sprite { width: 70px; margin-right: 5px; }
                         .mon-crest { width: 35px; height: 35px; font-size: 20px; margin-right: 10px; }
                         .mon-name { font-size: 14px; }
                         
-                        .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; margin-top: 15px; padding: 10px; border: 1px solid #444 !important; }
+                        .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; padding: 10px; border: 1px solid #444 !important; }
                         .print-btn { display: none !important; }
                     }
                 </style>
             </head>
             <body>
-                <h2 style="text-align:center; color:#ffcc00; font-family: sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">VGC Open Team Sheet</h2>
-                <div class="team-grid">
+                <div class="content-wrapper">
+                    <h2 style="text-align:center; color:#ffcc00; font-family: sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">VGC Open Team Sheet</h2>
+                    <div class="team-flex">
         `;
 
         currentTeam.forEach(mon => {
@@ -2185,15 +2222,16 @@ Mega Victreebel,M,#78C850,Grass Green`;
         });
 
         sheetHTML += `
-                </div>
-                
-                <div class="team-acronym-container">
-                    <p class="team-acronym-title">Team Acronym</p>
-                    <div class="team-acronym-word">${teamWord}</div>
-                </div>
+                    </div>
+                    
+                    <div class="team-acronym-container">
+                        <p class="team-acronym-title">Team Acronym</p>
+                        <div class="team-acronym-word">${teamWord}</div>
+                    </div>
 
-                <div style="text-align:center; margin-top:20px;" class="print-btn">
-                    <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button>
+                    <div style="text-align:center; margin-top:20px;" class="print-btn">
+                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button>
+                    </div>
                 </div>
             </body>
             </html>
@@ -2203,7 +2241,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         sheetWindow.document.write(sheetHTML);
         sheetWindow.document.close();
     }
-
     // --- IMPROVED ARCHETYPE ANALYZER ---
    function analyzeArchetype() {
         let container = document.getElementById('archetype-summary');
