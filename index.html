@@ -1509,6 +1509,7 @@ Tera Type: Fire
     }
 
     // --- VGC OPEN TEAM SHEET GENERATOR ---
+    // --- VGC OPEN TEAM SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) {
             alert("Add some Pokémon to your team first!");
@@ -1521,30 +1522,32 @@ Tera Type: Fire
                 <title>VGC Open Team Sheet</title>
                 <style>
                     body { background-color: #111; color: #fff; font-family: monospace; font-size: 14px; padding: 20px; }
-                    .mon-container { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-                    .mon-sprite { width: 100px; text-align: center; }
+                    .team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 900px; margin: 0 auto; }
+                    .mon-container { display: flex; align-items: center; border: 1px solid #333; padding: 15px; border-radius: 8px; background: #1a1a1a; page-break-inside: avoid; }
+                    .mon-sprite { width: 100px; text-align: center; flex-shrink: 0; }
                     .mon-sprite img { width: 100%; image-rendering: pixelated; }
-                    .mon-details { margin-left: 20px; line-height: 1.6; }
+                    .mon-details { margin-left: 20px; line-height: 1.6; width: 100%; }
                     .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; }
                     .mon-item { color: #ccc; }
                     .mon-ability { color: #fff; }
                     .mon-tera { color: #ff9900; }
                     .mon-moves { color: #ddd; margin-top: 5px; }
+                    
+                    /* PRINT STYLES - Forces 1 Page with 2 Columns */
                     @media print {
-                        body { background-color: #fff; color: #000; }
-                        .mon-container { border-bottom: 1px solid #ddd; }
-                        .mon-name { color: #000; }
-                        .mon-item { color: #333; }
-                        .mon-ability { color: #000; }
-                        .mon-tera { color: #000; }
-                        .mon-moves { color: #000; }
+                        body { background-color: #fff; color: #000; font-size: 12px; padding: 0; margin: 0; }
+                        h2 { color: #000 !important; margin: 10px 0; }
+                        .team-grid { grid-template-columns: 1fr 1fr; gap: 10px; max-width: 100%; }
+                        .mon-container { border: 1px solid #ccc; background: #fff; padding: 10px; margin: 0; }
+                        .mon-name, .mon-tera { color: #000 !important; }
+                        .mon-item, .mon-ability, .mon-moves { color: #333 !important; }
                         .print-btn { display: none; }
                     }
                 </style>
             </head>
             <body>
                 <h2 style="text-align:center; color:#ffcc00; font-family: sans-serif;">VGC Open Team Sheet</h2>
-                <div style="max-width: 600px; margin: 0 auto;">
+                <div class="team-grid">
         `;
 
         currentTeam.forEach(mon => {
@@ -1583,9 +1586,8 @@ Tera Type: Fire
         sheetWindow.document.write(sheetHTML);
         sheetWindow.document.close();
     }
-
     // --- IMPROVED ARCHETYPE ANALYZER ---
-    function analyzeArchetype() {
+   function analyzeArchetype() {
         let container = document.getElementById('archetype-summary');
         if (currentTeam.length === 0) {
             container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>';
@@ -1632,7 +1634,7 @@ Tera Type: Fire
             if (mon.ability === 'Unaware') stats.unawareCount++;
 
             if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
-            if (mon.ability === 'Swift Swim') stats.hasRainAbuser = true;
+            if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
             if (mon.ability === 'Drought') stats.hasDrought = true;
             if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
             if (mon.ability === 'Sand Stream') stats.hasSand = true;
@@ -1664,51 +1666,51 @@ Tera Type: Fire
         
         stats.avgSpeed /= currentTeam.length;
 
+        // Collect all active synergies into an array
+        let detectedModes = [];
+
+        // Cores / Traps
+        if (stats.hasDondozo && stats.hasTatsugiri) detectedModes.push({name: "DozoGiri", desc: "Uses Commander to grant Dondozo double omni-boosts to sweep."});
+        if (stats.hasMagnezone && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
+        if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) detectedModes.push({name: "Perish Trap", desc: "Traps opponents and uses Perish Song to force KOs within 3 turns."});
+        
+        // Field Synergies
+        if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers."});
+        else if (stats.hasDrizzle) detectedModes.push({name: "Rain Mode", desc: "Utilizes Rain to boost Water attacks and mitigate Fire weaknesses."});
+        
+        if (stats.hasDrought && stats.hasSunAbuser) detectedModes.push({name: "Sun Offense", desc: "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate pressure."});
+        else if (stats.hasDrought) detectedModes.push({name: "Sun Mode", desc: "Utilizes Sun to boost Fire attacks and mitigate Water weaknesses."});
+
+        if (stats.hasSand) detectedModes.push({name: "Sand Mode", desc: "Uses Sandstorm for residual damage and to grant Special Defense boosts to Rock types."});
+        if (stats.hasSnow) detectedModes.push({name: "Snow Mode", desc: "Sets Snow to boost Ice-type Defense and enable Aurora Veil support."});
+        
+        if (stats.hasPsychicTerrain && stats.hasExpandingForce) detectedModes.push({name: "Psyspam", desc: "Abuses Psychic Terrain to block priority and fire off high-powered Expanding Force attacks."});
+
+        // Speed Control
+        if (stats.hasTailwind) detectedModes.push({name: "Tailwind Control", desc: "Utilizes Tailwind for an immediate, team-wide speed advantage."});
+        if (stats.hasTR && stats.avgSpeed < 75) detectedModes.push({name: "Hard Trick Room", desc: "Committed to speed inversion. Relies on slow juggernauts to sweep."});
+        else if (stats.hasTR) detectedModes.push({name: "Trick Room Mode", desc: "Features Trick Room as an alternate form of speed control for hybrid flexibility."});
+
+        // Add Playstyle defaults ONLY if there are no highly specific combo modes detected
+        if (detectedModes.length === 0) {
+            if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
+                detectedModes.push({name: "Stall / Semi-Stall", desc: "Wins through attrition, passive damage (hazards/status), and extreme defensive redundancy."});
+            } else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) {
+                detectedModes.push({name: "Hyper Offense (HO)", desc: "Total aggression. Uses a lead to set hazards/screens then chains sweepers to overwhelm the foe."});
+            } else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) {
+                detectedModes.push({name: "Bulky Offense / Pivot Balance", desc: "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control."});
+            }
+        }
+
+        // Output Generation
         let archetype = "Bulky Offense / Balance";
         let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
 
-        if (stats.hasDondozo && stats.hasTatsugiri) {
-            archetype = "DozoGiri (Commander)";
-            desc = "A VGC powerhouse that uses the Commander ability to grant Dondozo double omni-boosts to sweep.";
-        } else if (stats.hasMagnezone && stats.dragonCount >= 2) {
-            archetype = "DragMag";
-            desc = "An iconic Smogon archetype where Magnezone traps Steel-types to clear the path for Dragon sweepers.";
-        } else if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) {
-            archetype = "Perish Trap";
-            desc = "A control-heavy archetype that traps opponents and uses Perish Song to force KOs within 3 turns.";
-        } else if (stats.hasTailwind && stats.hasTR) {
-            archetype = "TailRoom (Hybrid)";
-            desc = "A flexible VGC archetype that adapts speed control to either outpace fast teams or reverse Trick Room.";
-        } else if (stats.hasTR && stats.avgSpeed < 75) {
-            archetype = "Hard Trick Room";
-            desc = "Committed to speed inversion. Needs redirection or Fake Out to safely set the dimension.";
-        } else if (stats.hasTR && stats.avgSpeed >= 75) {
-            archetype = "Hybrid Speed Control";
-            desc = "Features Trick Room as a secondary speed control option alongside inherently faster offensive threats.";
-        } else if (stats.hasPsychicTerrain && stats.hasExpandingForce) {
-            archetype = "Psyspam (Expanding Force)";
-            desc = "Abuses Psychic Terrain to fire off high-powered, spread Expanding Force attacks that bypass priority.";
-        } else if (stats.hasStickyWeb) {
-            archetype = "Sticky Web Offense";
-            desc = "A singles-focused offense that uses webs to lower opponent speed, enabling mid-speed heavy hitters.";
-        } else if (stats.hazardSetters >= 3 && stats.hasGholdengo) {
-            archetype = "Hazard Stack (Cheese)";
-            desc = "Builds progress by stacking layers of spikes/rocks, using Gholdengo to block all removal attempts.";
-        } else if (stats.hasDrizzle && stats.hasRainAbuser) {
-            archetype = "Rain Offense";
-            desc = "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers.";
-        } else if (stats.hasDrought && stats.hasSunAbuser) {
-            archetype = "Sun Offense";
-            desc = "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate offensive pressure.";
-        } else if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) {
-            archetype = "Stall / Semi-Stall";
-            desc = "Wins through attrition, passive damage (hazards/status), and extreme defensive redundancy.";
-        } else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) {
-            archetype = "Hyper Offense (HO)";
-            desc = "Total aggression. Uses a lead to set hazards/screens then chains sweepers to overwhelm the foe.";
-        } else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) {
-            archetype = "Bulky Offense / Pivot Balance";
-            desc = "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control.";
+        if (detectedModes.length > 0) {
+            // Join all names with " + " and append (Hybrid) if there's more than one mode
+            archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : "");
+            // Create a bulleted list for descriptions
+            desc = detectedModes.map(m => `• ${m.desc}`).join("<br>");
         }
 
         let cores = [];
@@ -1719,7 +1721,6 @@ Tera Type: Fire
 
         container.innerHTML = `<span style="color:#ffcc00; font-size:12px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:10px;">${desc}</span>${coreHtml}`;
     }
-
     // --- TYPE CALCULATION LOGIC ---
     function getDefensiveMultiplier(defendingTypes, attackingType) {
       let mult = 1;
