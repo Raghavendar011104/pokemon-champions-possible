@@ -2008,6 +2008,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         POKEMON_AESTHETICS[id] = { letter, color };
     });
         // --- VGC OPEN TEAM SHEET GENERATOR ---
+    // --- VGC OPEN TEAM SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) {
             alert("Add some Pokémon to your team first!");
@@ -2241,86 +2242,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         sheetWindow.document.write(sheetHTML);
         sheetWindow.document.close();
     }
-    // --- IMPROVED ARCHETYPE ANALYZER ---
-   function analyzeArchetype() {
-        let container = document.getElementById('archetype-summary');
-        if (currentTeam.length === 0) {
-            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>';
-            return;
-        }
-        
-        let totalMoves = 0;
-        currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
-        
-        if (totalMoves === 0) {
-            container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Awaiting move selection...</p>';
-            return;
-        }
-
-        let stats = {
-            hasTR: false, hasTailwind: false, hasStickyWeb: false,
-            hasDrizzle: false, hasRainAbuser: false,
-            hasDrought: false, hasSunAbuser: false,
-            hasSand: false, hasSnow: false,
-            hasPsychicTerrain: false, hasExpandingForce: false,
-            protectCount: 0, recoveryCount: 0, unawareCount: 0,
-            statDroppers: 0, perishSongCount: 0,
-            redirectorCount: 0, fakeOutCount: 0, pivotMoveCount: 0,
-            hazardSetters: 0, hazardRemovers: 0, hasGholdengo: false,
-            avgSpeed: 0, highSpeedCount: 0, suicideLeadPotential: false,
-            hasDondozo: false, hasTatsugiri: false,
-            hasMagnezone: false, dragonCount: 0, shadowTag: false
-        };
-
-        let typesPresent = new Set();
-
-        currentTeam.forEach(mon => {
-            let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
-            stats.avgSpeed += baseSpe;
-            if (baseSpe >= 110) stats.highSpeedCount++;
-            
-            mon.types.forEach(t => typesPresent.add(t));
-            
-            if (mon.id.includes('dondozo')) stats.hasDondozo = true;
-            if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
-            if (mon.id.includes('magnezone')) stats.hasMagnezone = true;
-            if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
-            if (mon.types.includes('Dragon')) stats.dragonCount++;
-            if (mon.ability === 'Unaware') stats.unawareCount++;
-
-            if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
-            if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
-            if (mon.ability === 'Drought') stats.hasDrought = true;
-            if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
-            if (mon.ability === 'Sand Stream') stats.hasSand = true;
-            if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
-            if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true;
-            if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
-
-            if (mon.moves) {
-                if (mon.moves.includes('Trick Room')) stats.hasTR = true;
-                if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
-                if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true;
-                if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
-                
-                if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
-                if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
-                if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
-                if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => mon.moves.includes(m))) stats.recoveryCount++;
-                if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => mon.moves.includes(m))) stats.protectCount++;
-                
-                if (mon.moves.includes('Perish Song')) stats.perishSongCount++;
-                if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
-                if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
-                
-                if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) {
-                    stats.suicideLeadPotential = true;
-                }
-            }
-        });
-        
-        stats.avgSpeed /= currentTeam.length;
-
         // Collect all active synergies into an array
         let detectedModes = [];
 
