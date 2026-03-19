@@ -1192,7 +1192,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         POKEMON_AESTHETICS[id] = { letter: letter.trim(), color: color.trim() };
     });
 
-    let showdownData = {}; let abilitiesData = {}; let movesData = {}; let learnsetsData = {}; let itemsData = {};
+    let showdownData = { }; let abilitiesData = {}; let movesData = {}; let learnsetsData = {}; let itemsData = {};
     
     // --- STATE MANAGEMENT ---
     let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", replays: "", teamName: `Team ${i+1}` }));
@@ -1855,7 +1855,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         return true;
     }
 
-    function getBestDefensiveFitForAutoBuild(usedIds) {
+    function getBestDefensiveFitForAutoBuild(usedIds, currentTeamBaseSpecies) {
         let typeBalance = {};
         Object.keys(TYPE_DATA).forEach(targetType => {
             let weakCount = 0; let resistCount = 0;
@@ -1873,11 +1873,16 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let candidates = [];
         Object.keys(POKEMON_AESTHETICS).forEach(id => {
             if(usedIds.has(id)) return;
+            
+            // STRICT SPECIES CHECK: Don't even consider it if we already have the species
+            let baseSp = getBaseSpecies(id);
+            if (currentTeamBaseSpecies.has(baseSp)) return;
+
             let mon = showdownData[id];
             if(!mon) return;
-            if(mon.evos && mon.evos.length > 0) return; 
-            if(id.includes('mega')) return; 
-            if(mon.requiredItem) return; 
+            if(mon.evos && mon.evos.length > 0) return; // Must be fully evolved
+            if(id.includes('mega')) return; // Megas are handled in step 1
+            if(mon.requiredItems || mon.requiredItem) return; // Fix: Catch Showdown's exact phrasing
             
             let score = 0;
             Object.keys(typeBalance).forEach(type => {
@@ -1902,11 +1907,18 @@ Mega Victreebel,M,#78C850,Grass Green`;
         
         currentTeam = []; 
         let usedIds = new Set();
+        let currentTeamBaseSpecies = new Set();
         
         function tryAdd(id) {
             if(currentTeam.length >= 6 || usedIds.has(id)) return false;
+            let baseSp = getBaseSpecies(id);
+            if(currentTeamBaseSpecies.has(baseSp)) return false; // Hard block duplicates here too
+
             let success = addMonToTeamQuietly(id);
-            if(success) usedIds.add(id);
+            if(success) {
+                usedIds.add(id);
+                currentTeamBaseSpecies.add(baseSp);
+            }
             return success;
         }
 
@@ -1937,7 +1949,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
         // STEP 2: Arch 1 Cores
         let needsA1Setter = true;
-        // If the chosen Mega is a Setter for Arch 1, SKIP adding a standard setter!
         if (chosenMega && ARCHETYPE_CORES[arch1].megaSetters.includes(chosenMega)) {
             needsA1Setter = false; 
         }
@@ -1953,7 +1964,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         // STEP 3: Arch 2 Cores
         if (arch2 !== 'None' && arch1 !== arch2 && ARCHETYPE_CORES[arch2]) {
             let needsA2Setter = true;
-            // If the chosen Mega is a Setter for Arch 2, SKIP adding a standard setter!
             if (chosenMega && ARCHETYPE_CORES[arch2].megaSetters.includes(chosenMega)) {
                 needsA2Setter = false; 
             }
@@ -1969,23 +1979,21 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
         // STEP 4: Fill to 6
         let attempts = 0;
-        while(currentTeam.length < 6 && attempts < 100) {
+        while(currentTeam.length < 6 && attempts < 200) { // Bumped failsafe to 200 just in case
             attempts++;
-            let bestFitId = getBestDefensiveFitForAutoBuild(usedIds);
-            if(bestFitId) tryAdd(bestFitId);
+            let bestFitId = getBestDefensiveFitForAutoBuild(usedIds, currentTeamBaseSpecies);
+            if(bestFitId) {
+                tryAdd(bestFitId);
+            } else {
+                // If the logic perfectly bottlenecks and finds ZERO ideal defensive fits, grab a random legal mon to finish the team
+                let fallback = Object.keys(POKEMON_AESTHETICS).find(id => !usedIds.has(id) && !currentTeamBaseSpecies.has(getBaseSpecies(id)) && !id.includes('mega') && (!showdownData[id] || !showdownData[id].evos || showdownData[id].evos.length === 0));
+                if (fallback) tryAdd(fallback);
+            }
         }
 
         saveTeam();
         renderAllUI();
         closeAutoBuildModal();
-    }
-    // --- PICK 4 SIMULATOR & TOP CUT EMULATOR & LEAD MATRIX ---
-    function loadTopCutTeam() {
-        let val = document.getElementById('top-cut-select').value;
-        if(val && TOP_CUT_TEAMS[val]) {
-            document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
-            loadSimOpponent();
-        }
     }
 
     function openSimModal() {
