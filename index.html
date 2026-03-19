@@ -1791,15 +1791,14 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
     // --- STRICT ARCHETYPE ENGINE DATA ---
     const ARCHETYPE_CORES = {
-        "Bulky Offense": { setters: ["incineroar", "arcanine"], abusers: ["rillaboom", "gholdengo", "amoonguss", "dragonite"], megas: ["kangaskhanmega", "venusaurmega", "scizormega", "metagrossmega", "dragonitemega", "meganiummega", "feraligatrmega", "excadrillmega", "scraftymega", "chesnaughtmega", "golisopodmega", "baxcaliburmega", "lucariomegaz", "absolmegaz"] },
-        "Rain": { setters: ["pelipper"], abusers: ["archaludon", "palafinhero", "basculegion", "gastrodon"], megas: ["swampertmega", "blastoisemega", "gyaradosmega", "starmiemega", "dragalgemega", "eelektrossmega"] },
-        "Sun": { setters: ["torkoal", "ninetales"], abusers: ["venusaur", "charizard", "skeledirge", "scovillain"], megas: ["charizardmegay", "houndoommega", "victreebelmega", "emboarmega", "delphoxmega", "scovillainmega", "pyroarmega"] },
-        "Sand": { setters: ["tyranitar"], abusers: ["excadrill", "garchomp"], megas: ["tyranitarmega", "garchompmega", "aerodactylmega", "excadrillmega", "barbaraclemega"] },
-        "Snow": { setters: ["ninetalesalola", "abomasnow"], abusers: ["baxcalibur", "glaceon", "froslass"], megas: ["abomasnowmega", "glaliemega", "froslassmega", "crabominablemega"] },
-        "Trick Room": { setters: ["hatterene", "farigiraf", "bronzong", "oranguru"], abusers: ["ursaluna", "torkoal", "amoonguss", "kingambit"], megas: ["cameruptmega", "mawilemega", "ampharosmega", "clefablemega", "golurkmega", "drampamega"] },
-        "Tailwind": { setters: ["talonflame", "corviknight", "pelipper"], abusers: ["gholdengo", "arcanine", "hydreigon"], megas: ["salamencemega", "pidgeotmega", "aerodactylmega", "staraptormega", "raichumegax", "raichumegay", "hawluchamega", "skarmorymega"] },
-        // Added "indeedee" (Male) alongside "indeedeef" (Female)
-        "Psyspam": { setters: ["indeedeef", "indeedee"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"] }
+        "Bulky Offense": { setters: ["incineroar", "arcanine"], abusers: ["rillaboom", "gholdengo", "amoonguss", "dragonite"], megas: ["kangaskhanmega", "venusaurmega", "scizormega", "metagrossmega", "dragonitemega", "meganiummega", "feraligatrmega", "excadrillmega", "scraftymega", "chesnaughtmega", "golisopodmega", "baxcaliburmega", "lucariomegaz", "absolmegaz"], megaSetters: [] },
+        "Rain": { setters: ["pelipper"], abusers: ["archaludon", "palafinhero", "basculegion", "gastrodon"], megas: ["swampertmega", "blastoisemega", "gyaradosmega", "starmiemega", "dragalgemega", "eelektrossmega"], megaSetters: [] },
+        "Sun": { setters: ["torkoal", "ninetales"], abusers: ["venusaur", "charizard", "skeledirge", "scovillain"], megas: ["charizardmegay", "houndoommega", "victreebelmega", "emboarmega", "delphoxmega", "scovillainmega", "pyroarmega"], megaSetters: ["charizardmegay"] },
+        "Sand": { setters: ["tyranitar"], abusers: ["excadrill", "garchomp"], megas: ["tyranitarmega", "garchompmega", "aerodactylmega", "excadrillmega", "barbaraclemega"], megaSetters: ["tyranitarmega"] },
+        "Snow": { setters: ["ninetalesalola", "abomasnow"], abusers: ["baxcalibur", "glaceon", "froslass"], megas: ["abomasnowmega", "glaliemega", "froslassmega", "crabominablemega"], megaSetters: ["abomasnowmega"] },
+        "Trick Room": { setters: ["hatterene", "farigiraf", "bronzong", "oranguru"], abusers: ["ursaluna", "torkoal", "amoonguss", "kingambit"], megas: ["cameruptmega", "mawilemega", "ampharosmega", "clefablemega", "golurkmega", "drampamega"], megaSetters: [] },
+        "Tailwind": { setters: ["talonflame", "corviknight", "pelipper"], abusers: ["gholdengo", "arcanine", "hydreigon"], megas: ["salamencemega", "pidgeotmega", "aerodactylmega", "staraptormega", "raichumegax", "raichumegay", "hawluchamega", "skarmorymega"], megaSetters: [] },
+        "Psyspam": { setters: ["indeedeef", "indeedee"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"], megaSetters: [] }
     };
 
     // --- VGC SPECIES CLAUSE HELPER ---
@@ -1832,12 +1831,10 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let ability = monData.abilities[0] || monData.abilities['0'];
         if (id === 'pelipper') ability = 'Drizzle';
         if (id === 'torkoal') ability = 'Drought';
-        // Updated to catch both Male and Female Indeedee
         if (id === 'indeedeef' || id === 'indeedee') ability = 'Psychic Surge';
         if (id === 'tyranitar') ability = 'Sand Stream';
         if (id === 'ninetalesalola') ability = 'Snow Warning';
-        if (id === 'rillaboom') ability = 'Grassy Surge';
-        
+        if (id === 'rillaboom') ability = 'Grassy Surge';    
         if (id === 'charizardmegay') ability = 'Drought';
         if (id === 'tyranitarmega') ability = 'Sand Stream';
         if (id === 'abomasnowmega') ability = 'Snow Warning';
@@ -1913,27 +1910,64 @@ Mega Victreebel,M,#78C850,Grass Green`;
             return success;
         }
 
+        // STEP 1: Select exactly 1 Mega Evolution
         let possibleMegas = [...ARCHETYPE_CORES[arch1].megas];
+        
+        // Increase the spawn chance of a dual-role Mega Setter if the archetype uses one
+        if (ARCHETYPE_CORES[arch1].megaSetters.length > 0) {
+            possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters);
+            possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters); 
+        }
+
         if (arch2 !== 'None' && ARCHETYPE_CORES[arch2]) {
             possibleMegas = possibleMegas.concat(ARCHETYPE_CORES[arch2].megas);
+            if (ARCHETYPE_CORES[arch2].megaSetters.length > 0) {
+                possibleMegas.push(...ARCHETYPE_CORES[arch2].megaSetters);
+            }
         }
+        
         possibleMegas.sort(() => 0.5 - Math.random());
-        for(let m of possibleMegas) { if(tryAdd(m)) break; }
+        let chosenMega = null;
+        for(let m of possibleMegas) { 
+            if(tryAdd(m)) {
+                chosenMega = m;
+                break;
+            } 
+        }
 
-        let a1Setters = [...ARCHETYPE_CORES[arch1].setters].sort(() => 0.5 - Math.random());
-        for(let s of a1Setters) { if(tryAdd(s)) break; }
+        // STEP 2: Arch 1 Cores
+        let needsA1Setter = true;
+        // If the chosen Mega is a Setter for Arch 1, SKIP adding a standard setter!
+        if (chosenMega && ARCHETYPE_CORES[arch1].megaSetters.includes(chosenMega)) {
+            needsA1Setter = false; 
+        }
+        
+        if (needsA1Setter) {
+            let a1Setters = [...ARCHETYPE_CORES[arch1].setters].sort(() => 0.5 - Math.random());
+            for(let s of a1Setters) { if(tryAdd(s)) break; }
+        }
         
         let a1Abusers = [...ARCHETYPE_CORES[arch1].abusers].sort(() => 0.5 - Math.random());
         for(let a of a1Abusers) { if(tryAdd(a)) break; }
 
+        // STEP 3: Arch 2 Cores
         if (arch2 !== 'None' && arch1 !== arch2 && ARCHETYPE_CORES[arch2]) {
-            let a2Setters = [...ARCHETYPE_CORES[arch2].setters].sort(() => 0.5 - Math.random());
-            for(let s of a2Setters) { if(tryAdd(s)) break; }
+            let needsA2Setter = true;
+            // If the chosen Mega is a Setter for Arch 2, SKIP adding a standard setter!
+            if (chosenMega && ARCHETYPE_CORES[arch2].megaSetters.includes(chosenMega)) {
+                needsA2Setter = false; 
+            }
+
+            if (needsA2Setter) {
+                let a2Setters = [...ARCHETYPE_CORES[arch2].setters].sort(() => 0.5 - Math.random());
+                for(let s of a2Setters) { if(tryAdd(s)) break; }
+            }
             
             let a2Abusers = [...ARCHETYPE_CORES[arch2].abusers].sort(() => 0.5 - Math.random());
             for(let a of a2Abusers) { if(tryAdd(a)) break; }
         }
 
+        // STEP 4: Fill to 6
         let attempts = 0;
         while(currentTeam.length < 6 && attempts < 100) {
             attempts++;
@@ -1945,7 +1979,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         renderAllUI();
         closeAutoBuildModal();
     }
-
     // --- PICK 4 SIMULATOR & TOP CUT EMULATOR & LEAD MATRIX ---
     function loadTopCutTeam() {
         let val = document.getElementById('top-cut-select').value;
