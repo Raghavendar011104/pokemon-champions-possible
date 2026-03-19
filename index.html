@@ -228,7 +228,7 @@
 
       <h2>2. Completing the Sets (28)</h2>
       <div class="grid-container">
-        <div class="poke-box">Eevee <span class="arrow">▶</span> Vaporeon/Jolteon/Flareon/Espeon/Umbreon/Glaceon</div>
+        <div class="poke-box">Eevee <span class="arrow">▶</span> Vaporeon/Jolteon/Flareon/Espeon/Umbreon/Leafeon/Glaceon/Sylveon</div>
         <div class="poke-box">Chikorita <span class="arrow">▶</span> Bayleef <span class="arrow">▶</span> Meganium</div>
         <div class="poke-box">Cyndaquil <span class="arrow">▶</span> Quilava <span class="arrow">▶</span> Typhlosion</div>
         <div class="poke-box">Turtwig <span class="arrow">▶</span> Grotle <span class="arrow">▶</span> Torterra</div>
@@ -537,8 +537,6 @@
       "tyranitar": [{ stone: "Tyranitarite", id: "tyranitarmega" }],
       "venusaur": [{ stone: "Venusaurite", id: "venusaurmega" }],
       "victreebel": [{ stone: "Victreebelite", id: "victreebelmega" }],
-      
-      // NEW ALTERNATE FORMS
       "aegislash": [{ stone: "Blade Form", id: "aegislashblade" }],
       "indeedee": [{ stone: "Female Form", id: "indeedeef" }],
       "palafin": [{ stone: "Hero Form", id: "palafinhero" }],
@@ -575,55 +573,24 @@
     };
     
     const CUSTOM_SPRITES = {
-      "raichumegax": "images/raichu-mega-x.png",
-      "raichumegay": "images/raichu-mega-y.png",
-      "clefablemega": "images/clefable-mega.png",
-      "victreebelmega": "images/victreebel-mega.png",
-      "starmiemega": "images/starmie-mega.png",
-      "dragonitemega": "images/dragonite-mega.png",
-      "meganiummega": "images/meganium-mega.png",
-      "feraligatrmega": "images/feraligatr-mega.png",
-      "skarmorymega": "images/skarmory-mega.png",
-      "chimechomega": "images/chimecho-mega.png",
-      "absolmegaz": "images/absol-mega-z.png",
-      "staraptormega": "images/staraptor-mega.png",
-      "froslassmega": "images/froslass-mega.png",
-      "emboarmega": "images/emboar-mega.png",
-      "excadrillmega": "images/excadrill-mega.png",
-      "scolipedemega": "images/scolipede-mega.png",
-      "scraftymega": "images/scrafty-mega.png",
-      "eelektrossmega": "images/eelektross-mega.png", 
-      "chandeluremega": "images/chandelure-mega.png",
-      "golurkmega": "images/golurk-mega.png",
-      "chesnaughtmega": "images/chesnaught-mega.png",
-      "delphoxmega": "images/delphox-mega.png",
-      "greninjamega": "images/greninja-mega.png",
-      "pyroarmega": "images/pyroar-mega.png",
-      "floettemega": "images/floette-mega.png",
-      "meowsticmega": "images/meowstic-mega.png",
-      "malamarmega": "images/malamar-mega.png",
-      "barbaraclemega": "images/barbaracle-mega.png",
-      "dragalgemega": "images/dragalge-mega.png",
-      "hawluchamega": "images/hawlucha-mega.png",
-      "crabominablemega": "images/crabominable-mega.png",
-      "golisopodmega": "images/golisopod-mega.png",
-      "drampamega": "images/drampa-mega.png",
-      "falinksmega": "images/falinks-mega.png",
-      "scovillainmega": "images/scovillain-mega.png",
-      "glimmoramega": "images/glimmora-mega.png",
-      "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
-      "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
-      "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
-      "baxcaliburmega": "images/baxcalibur-mega.png",
-      "lucariomegaz": "images/lucario-mega-z.png",
-      "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png",
-      "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
-      "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png",
-      "rotomwash": "https://play.pokemonshowdown.com/sprites/gen5/rotom-wash.png",
-      "rotomheat": "https://play.pokemonshowdown.com/sprites/gen5/rotom-heat.png",
-      "rotommow": "https://play.pokemonshowdown.com/sprites/gen5/rotom-mow.png",
-      "rotomfrost": "https://play.pokemonshowdown.com/sprites/gen5/rotom-frost.png",
-      "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
+      "raichumegax": "images/raichu-mega-x.png", "raichumegay": "images/raichu-mega-y.png", "clefablemega": "images/clefable-mega.png",
+      "victreebelmega": "images/victreebel-mega.png", "starmiemega": "images/starmie-mega.png", "dragonitemega": "images/dragonite-mega.png",
+      "meganiummega": "images/meganium-mega.png", "feraligatrmega": "images/feraligatr-mega.png", "skarmorymega": "images/skarmory-mega.png",
+      "chimechomega": "images/chimecho-mega.png", "absolmegaz": "images/absol-mega-z.png", "staraptormega": "images/staraptor-mega.png",
+      "froslassmega": "images/froslass-mega.png", "emboarmega": "images/emboar-mega.png", "excadrillmega": "images/excadrill-mega.png",
+      "scolipedemega": "images/scolipede-mega.png", "scraftymega": "images/scrafty-mega.png", "eelektrossmega": "images/eelektross-mega.png", 
+      "chandeluremega": "images/chandelure-mega.png", "golurkmega": "images/golurk-mega.png", "chesnaughtmega": "images/chesnaught-mega.png",
+      "delphoxmega": "images/delphox-mega.png", "greninjamega": "images/greninja-mega.png", "pyroarmega": "images/pyroar-mega.png",
+      "floettemega": "images/floette-mega.png", "meowsticmega": "images/meowstic-mega.png", "malamarmega": "images/malamar-mega.png",
+      "barbaraclemega": "images/barbaracle-mega.png", "dragalgemega": "images/dragalge-mega.png", "hawluchamega": "images/hawlucha-mega.png",
+      "crabominablemega": "images/crabominable-mega.png", "golisopodmega": "images/golisopod-mega.png", "drampamega": "images/drampa-mega.png",
+      "falinksmega": "images/falinks-mega.png", "scovillainmega": "images/scovillain-mega.png", "glimmoramega": "images/glimmora-mega.png",
+      "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png", "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
+      "tatsugirimegacurly": "images/tatsugiri-mega-curly.png", "baxcaliburmega": "images/baxcalibur-mega.png", "lucariomegaz": "images/lucario-mega-z.png",
+      "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png", "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
+      "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png", "rotomwash": "https://play.pokemonshowdown.com/sprites/gen5/rotom-wash.png",
+      "rotomheat": "https://play.pokemonshowdown.com/sprites/gen5/rotom-heat.png", "rotommow": "https://play.pokemonshowdown.com/sprites/gen5/rotom-mow.png",
+      "rotomfrost": "https://play.pokemonshowdown.com/sprites/gen5/rotom-frost.png", "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
     };
 
     const TERA_TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'];
@@ -752,7 +719,9 @@ Jolteon,J,#F8D030,Electric Yellow
 Flareon,F,#F08030,Fire Orange
 Espeon,E,#F85888,Psychic Pink
 Umbreon,U,#705848,Dark Umber
+Leafeon,L,#78C850,Grass Green
 Glaceon,G,#98D8D8,Ice Cyan
+Sylveon,S,#EE99AC,Fairy Rose
 Chikorita,C,#78C850,Grass Green
 Bayleef,B,#78C850,Grass Green
 Meganium,M,#78C850,Grass Green
@@ -1449,7 +1418,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function renderTeamUI() {
       const container = document.getElementById('team-container');
       container.innerHTML = '';
-      
       for (let i = 0; i < 6; i++) {
         const slot = document.createElement('div');
         slot.className = 'team-slot';
@@ -1458,12 +1426,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
         if (currentTeam[i]) {
           slot.classList.add('filled');
           slot.setAttribute('draggable', 'true');
-          slot.ondragstart = handleDragStart; 
-          slot.ondragover = handleDragOver; 
-          slot.ondragleave = handleDragLeave; 
-          slot.ondrop = handleDrop;
+          slot.ondragstart = handleDragStart; slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
           
-          // FIX: Attach the click to the slot container, but ignore clicks on the "X" button
           slot.onclick = function(e) {
               if (e.target.classList.contains('remove-x')) return;
               openEditModal(i);
@@ -1474,13 +1438,12 @@ Mega Victreebel,M,#78C850,Grass Green`;
             <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
           `;
         } else {
-          slot.ondragover = handleDragOver; 
-          slot.ondragleave = handleDragLeave; 
-          slot.ondrop = handleDrop;
+          slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
         }
         container.appendChild(slot);
       }
     }
+
     function renderSpeedTiers() {
         let container = document.getElementById('speed-tier-container');
         if (currentTeam.length === 0) { container.innerHTML = '<p style="color:#888; font-size:8px; margin:0;">Add Pokémon to see speed tiers.</p>'; return; }
@@ -1559,7 +1522,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
                             <h4 style="margin:0; color:#ffcc00; font-size:10px;">${cand.name}</h4>
                             <p style="margin:4px 0 0 0; font-size:8px; color:#aaa; line-height:1.4;">Plugs weaknesses to: <span style="color:#ff4444;">${cand.goodAgainst.join(', ')}</span></p>
                         </div>
-                        <button class="btn-action" style="padding:5px 10px; font-size:8px;" onclick="addSuggestion('${cand.id}', '${cand.name}', '${spriteUrl}')">Select</button>
+                        <button class="btn-action" style="padding:5px 10px; font-size:8px;" onclick="addSuggestion('${cand.id}', '${cand.name.replace(/'/g, "\\'")}', '${spriteUrl}')">Select</button>
                     </div>
                 `;
             });
@@ -1678,9 +1641,9 @@ Mega Victreebel,M,#78C850,Grass Green`;
             }
         });
 
-        resDiv.innerHTML = `<div style="display:flex; justify-content:space-between; gap:10px;">
-            <div style="flex:1; background:#222; padding:10px; border-radius:4px;">${offenseText}</div>
-            <div style="flex:1; background:#222; padding:10px; border-radius:4px;">${defenseText}</div>
+        resDiv.innerHTML = `<div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${offenseText}</div>
+            <div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${defenseText}</div>
         </div>`;
     }
 
