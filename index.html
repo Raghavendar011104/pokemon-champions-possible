@@ -11,11 +11,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
   :root {
-    /* Scaled-Up Golden Ratio Typography */
-    --text-xs: 12px;
-    --text-sm: 16px;
-    --text-md: 26px; /* 16 * 1.618 */
-    --text-lg: 42px; /* 26 * 1.618 */
+    --text-xs: 12px; --text-sm: 16px; --text-md: 26px; --text-lg: 42px;
   }
 
   body { background-color: #1e3a5f; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: var(--text-sm); line-height: 1.6; padding: 20px; margin: 0; }
@@ -24,20 +20,16 @@
   h2 { color: #ff9900; text-shadow: 2px 2px 0 #111; border-bottom: 3px solid #cbd5e1; padding-bottom: 10px; margin-top: 40px; font-size: var(--text-md); }
   h3 { color: #aaddff; font-family: 'Press Start 2P', monospace; font-size: 13px; margin-top: 20px; margin-bottom: 15px; line-height: 1.4; }
 
-  /* --- DASHBOARD --- */
   #dashboard { display: flex; flex-wrap: wrap; gap: 20px; background-color: #0f172a; border: 3px solid #ffcc00; padding: 20px; border-radius: 12px; margin-bottom: 40px; box-shadow: 8px 8px 0 #070f1a; }
-  #team-builder { flex: 1.618; min-width: 320px; } /* Golden Ratio Layout */
+  #team-builder { flex: 1.618; min-width: 320px; }
   .team-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
-  /* --- TABS --- */
   #team-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
   .btn-tab { background-color: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 16px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
   .btn-tab.active { background-color: #ffcc00; color: #0f172a; border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
   .btn-tab:hover:not(.active) { background-color: #334155; color: #fff; }
 
   .team-slots { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; justify-content: center; }
-
-  /* --- DRAG & DROP SLOTS --- */
   .team-slot { width: 75px !important; height: 85px !important; flex-direction: column !important; justify-content: center !important; gap: 4px !important; background-color: #1e293b; border: 2px dashed #475569; border-radius: 8px; display: flex; align-items: center; cursor: grab; position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
   .team-slot:active { cursor: grabbing; transform: scale(0.95); }
   .team-slot.drag-over { border-color: #4CAF50; background-color: #14532d; transform: scale(1.05); }
@@ -47,7 +39,6 @@
   .team-slot.filled:hover .remove-x { display: block; }
 
   #type-chart-container { flex: 1; min-width: 300px; background-color: #0f172a; padding: 20px; border-radius: 12px; border: 2px solid #334155; height: fit-content; }
-
   details { background-color: #1e293b; margin-bottom: 8px; border-radius: 6px; border: 1px solid #334155; }
   summary { padding: 12px; cursor: pointer; font-size: 14px; font-weight: 600; outline: none; display: flex; justify-content: space-between; align-items: center; }
   summary:hover { background-color: #334155; }
@@ -67,7 +58,6 @@
   .poke-sprite { image-rendering: pixelated; max-height: 60px; margin-bottom: 4px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); }
   .branch-divider { color: #64748b; margin: 0 8px; font-weight: bold; font-size: 16px !important; }
 
-  /* --- MODALS & BUTTONS --- */
   .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
   .modal-content { background-color: #0f172a; border: 3px solid #ffcc00; padding: 25px; width: 340px; text-align: center; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto; }
   .close-btn { position: absolute; top: 12px; right: 18px; color: #ef4444; font-size: 20px; font-weight: bold; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; }
@@ -81,12 +71,10 @@
   
   input, select, textarea { font-family: 'Inter', sans-serif; border-radius: 6px; padding: 10px !important; font-size: 14px !important; box-sizing: border-box; height: auto !important; }
 
-  /* Pick 4 Sim Styles */
   .sim-slot { width: 55px; height: 55px; border: 2px solid #475569; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #1e293b; margin: 5px; cursor: pointer; transition: 0.2s; }
   .sim-slot img { max-height: 45px; image-rendering: pixelated; pointer-events: none; }
   .sim-slot.selected { border-color: #4CAF50; background: #14532d; transform: scale(1.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); }
 
-  /* Lead Matrix Styles */
   .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px !important; font-weight: bold; text-align: center; white-space: nowrap; }
   .matrix-table th, .matrix-table td { border: 1px solid #334155; padding: 10px !important; }
   .matrix-table th { background: #1e293b; color: #aaddff; }
@@ -97,7 +85,6 @@
   .matrix-neutral { background: rgba(255, 255, 255, 0.03); color: #94a3b8; }
   .matrix-sprite { height: 32px; image-rendering: pixelated; margin-bottom: 4px; }
 
-  /* --- MOBILE POLISH (RESPONSIVE DESIGN) --- */
   @media (max-width: 800px) {
       #dashboard { flex-direction: column; padding: 10px; gap: 10px; }
       #team-builder, #type-chart-container { min-width: 100%; }
@@ -110,7 +97,6 @@
       .stage-container { flex-wrap: wrap; justify-content: center; }
   }
 
-  /* --- TYPOGRAPHY OVERRIDES (Fixing tiny inline styles) --- */
   .poke-sprite-container span { font-size: 13px !important; font-weight: 700 !important; margin-top: 4px !important; }
   #archetype-summary { font-size: 14px !important; padding: 15px !important; line-height: 1.6 !important; }
   #archetype-summary span, #archetype-summary p { font-size: 14px !important; line-height: 1.6 !important; }
@@ -118,24 +104,29 @@
   .stat-row, .stat-row span { font-size: 13px !important; }
   #pokedex-entry-container, #pokedex-entry-container div { font-size: 12px !important; line-height: 1.5 !important; }
   #suggest-results p, #suggest-results h4, #suggest-results span { font-size: 13px !important; }
-/* 6. Scale up the Matrix Legend text */
   #sim-matrix-results h4 { font-size: 16px !important; margin-bottom: 10px !important; font-family: 'Inter', sans-serif !important; }
   #sim-matrix-results ul { font-size: 14px !important; padding-left: 20px !important; color: #e2e8f0 !important; }
   #sim-matrix-results li { margin-bottom: 6px !important; line-height: 1.6 !important; }
-/* 7. Pokédex Data Modal fixes (Types, Abilities, Description) */
   #modal-dynamic-area p { font-size: 15px !important; margin: 8px 0 !important; }
   .modal-content strong { font-size: 15px !important; }
   #modal-dynamic-area label { font-size: 15px !important; margin: 8px 0 !important; display: flex !important; align-items: center !important; gap: 8px !important; }
   #ability-desc { font-size: 13px !important; padding: 12px !important; margin-top: 8px !important; line-height: 1.6 !important; }
-</style>
 
-<script>window.exports = {};</script>
+  .stat-card { text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffcc00; }
+  .stat-card-header { color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; }
+  .pokedex-entry-box { margin-top: 15px; font-size: 8px; color: #ccc; text-align: left; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444; }
+  .team-name-label { color: #ff9900; font-size: 12px; font-family: 'Press Start 2P', monospace; }
+  .speed-tier-row { display:flex; align-items:center; gap:15px; margin-bottom:8px; background:#1e293b; padding:8px 12px; border-radius:6px; border-left:4px solid #ffcc00; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+  .speed-tier-value { color:#ffcc00; width:45px; text-align:right; font-size:14px; font-weight:bold; font-family:'Press Start 2P', monospace; }
+  .speed-tier-name { font-size:15px; font-family:'Inter', sans-serif; font-weight:600; color:#fff; }
+  .speed-tier-item { color:#94a3b8; font-weight:400; font-size:13px; }
+  .speed-tier-sprite { height:36px; image-rendering:pixelated; }
+</style>
 <script src="https://play.pokemonshowdown.com/data/pokedex.js"></script>
 <script src="https://play.pokemonshowdown.com/data/abilities.js"></script>
 <script src="https://play.pokemonshowdown.com/data/moves.js"></script>
 <script src="https://play.pokemonshowdown.com/data/learnsets.js"></script>
 <script src="https://play.pokemonshowdown.com/data/items.js"></script>
-
 </head>
 <body>
 
@@ -150,11 +141,11 @@
   <div style="text-align: center; margin-bottom: 25px;">
       <input type="text" id="universal-search" placeholder="🔍 Search Name, Type, or Ability (e.g. Charizard, Fire, Intimidate)..." onkeyup="universalSearch()" style="padding: 14px; width: 80%; max-width: 500px; background: #0f172a; color: #fff; border: 2px solid #4a90e2; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.5); outline: none; transition: border-color 0.2s;">
   </div>
+  
   <div id="dashboard">
     <div id="team-builder">
       <div class="team-header">
         <h3 style="margin: 0;">Roster</h3>
-        
         <div id="team-tabs">
            <button id="tab-team-0" class="btn-tab active" onclick="switchTeam(0)">Team 1</button>
            <button id="tab-team-1" class="btn-tab" onclick="switchTeam(1)">Team 2</button>
@@ -163,21 +154,18 @@
            <button id="tab-team-4" class="btn-tab" onclick="switchTeam(4)">Team 5</button>
            <button id="tab-team-5" class="btn-tab" onclick="switchTeam(5)">Team 6</button>
         </div>
-        
         <div style="width: 100%; margin-top: 8px; display: flex; align-items: center; gap: 10px;">
-            <span style="color: #ff9900; font-size: 12px; font-family: 'Press Start 2P', monospace;">Rename Team:</span>
+            <span class="team-name-label">Rename Team:</span>
             <input type="text" id="team-name-input" onchange="updateTeamName()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; font-family: 'Press Start 2P', monospace; font-size:10px !important; border-radius:4px; flex-grow: 1; max-width: 250px;">
         </div>
-
         <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
-           <button class="btn-action" style="padding: 8px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import</button>
-           <button class="btn-action" style="padding: 8px;" onclick="exportTeam()">Export</button>
-           <button class="btn-action" style="padding: 8px; background-color: #4CAF50; color: #fff;" onclick="openAutoBuildModal()">Auto-Build</button>
-           <button class="btn-action" style="padding: 8px; background-color: #9c27b0; color: #fff;" onclick="openSimModal()">Pick 4 Sim</button>
-           <button class="btn-action" style="padding: 8px; background-color: #ff9800; color: #111;" onclick="generateTeamSheet()">VGC Sheet</button>
+           <button class="btn-action" onclick="openImportModal()">Import</button>
+           <button class="btn-action" onclick="exportTeam()">Export</button>
+           <button class="btn-action" style="background-color: #4CAF50;" onclick="openAutoBuildModal()">Auto-Build</button>
+           <button class="btn-action" style="background-color: #9c27b0;" onclick="openSimModal()">Pick 4 Sim</button>
+           <button class="btn-action" style="background-color: #ff9800;" onclick="generateTeamSheet()">VGC Sheet</button>
         </div>
       </div>
-      
       <div class="team-slots" id="team-container"></div>
       
       <h3 style="margin-top: 30px; margin-bottom: 5px;">Speed War Matrix (Lv. 50)</h3>
@@ -186,7 +174,6 @@
           <label style="cursor:pointer;"><input type="checkbox" id="speed-trickroom" onchange="renderSpeedTiers()"> Trick Room</label>
           <label style="cursor:pointer;"><input type="checkbox" id="speed-drop" onchange="renderSpeedTiers()"> Icy Wind/Webs (-1 Stage)</label>
       </div>
-
       <div id="speed-tier-container" style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555; min-height: 40px; margin-bottom: 20px;">
          <p style="color: #888; font-size: 12px; margin:0;">Add Pokémon to see speed tiers.</p>
       </div>
@@ -203,7 +190,6 @@
       <div id="archetype-summary" style="background:#222; padding:10px; border-radius:4px; font-size:9px; line-height:1.4; margin-bottom:15px; border: 1px solid #ffcc00;">
         <p style="color: #888; font-size: 12px; margin:0;">Add Pokémon and moves to analyze archetype.</p>
       </div>
-
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <h3 style="margin-top: 0; margin-bottom: 10px;">Type Summary</h3>
         <button class="btn-action" style="padding: 6px; font-size: 8px; background-color: #ff9800; color: #111;" onclick="suggestTeammate()">Suggest Teammate</button>
@@ -214,237 +200,7 @@
     </div>
   </div>
 
-  <div id="roster-wrapper">
-      <h2>1. The Confirmed Roster (117)</h2>
-      <h3>Kanto</h3>
-      <div class="grid-container">
-        <div class="poke-box">Bulbasaur <span class="arrow">▶</span> Ivysaur <span class="arrow">▶</span> Venusaur</div>
-        <div class="poke-box">Charmander <span class="arrow">▶</span> Charmeleon <span class="arrow">▶</span> Charizard</div>
-        <div class="poke-box">Squirtle <span class="arrow">▶</span> Wartortle <span class="arrow">▶</span> Blastoise</div>
-        <div class="poke-box">Pichu <span class="arrow">▶</span> Pikachu <span class="arrow">▶</span> Raichu</div>
-        <div class="poke-box">Gastly <span class="arrow">▶</span> Haunter <span class="arrow">▶</span> Gengar</div>
-        <div class="poke-box">Kangaskhan</div>
-        <div class="poke-box">Staryu <span class="arrow">▶</span> Starmie</div>
-        <div class="poke-box">Pinsir</div>
-        <div class="poke-box">Magikarp <span class="arrow">▶</span> Gyarados</div>
-        <div class="poke-box">Dratini <span class="arrow">▶</span> Dragonair <span class="arrow">▶</span> Dragonite</div>
-      </div>
-
-      <h3>Johto</h3>
-      <div class="grid-container">
-        <div class="poke-box">Totodile <span class="arrow">▶</span> Croconaw <span class="arrow">▶</span> Feraligatr</div>
-        <div class="poke-box">Scyther <span class="arrow">▶</span> Scizor</div>
-        <div class="poke-box">Heracross</div>
-        <div class="poke-box">Larvitar <span class="arrow">▶</span> Pupitar <span class="arrow">▶</span> Tyranitar</div>
-      </div>
-
-      <h3>Hoenn</h3>
-      <div class="grid-container">
-        <div class="poke-box">Ralts <span class="arrow">▶</span> Kirlia <span class="arrow">▶</span> Gardevoir/Gallade</div>
-        <div class="poke-box">Feebas <span class="arrow">▶</span> Milotic</div>
-        <div class="poke-box">Beldum <span class="arrow">▶</span> Metang <span class="arrow">▶</span> Metagross</div>
-      </div>
-
-      <h3>Sinnoh</h3>
-      <div class="grid-container">
-        <div class="poke-box">Piplup <span class="arrow">▶</span> Prinplup <span class="arrow">▶</span> Empoleon</div>
-        <div class="poke-box">Gible <span class="arrow">▶</span> Gabite <span class="arrow">▶</span> Garchomp</div>
-        <div class="poke-box">Riolu <span class="arrow">▶</span> Lucario</div>
-      </div>
-
-      <h3>Unova</h3>
-      <div class="grid-container">
-        <div class="poke-box">Snivy <span class="arrow">▶</span> Servine <span class="arrow">▶</span> Serperior</div>
-        <div class="poke-box">Oshawott <span class="arrow">▶</span> Dewott <span class="arrow">▶</span> Samurott</div>
-        <div class="poke-box">Cottonee <span class="arrow">▶</span> Whimsicott</div>
-        <div class="poke-box">Emolga</div>
-        <div class="poke-box">Deino <span class="arrow">▶</span> Zweilous <span class="arrow">▶</span> Hydreigon</div>
-      </div>
-
-      <h3>Kalos</h3>
-      <div class="grid-container">
-        <div class="poke-box">Chespin <span class="arrow">▶</span> Quilladin <span class="arrow">▶</span> Chesnaught</div>
-        <div class="poke-box">Fennekin <span class="arrow">▶</span> Braixen <span class="arrow">▶</span> Delphox</div>
-        <div class="poke-box">Froakie <span class="arrow">▶</span> Frogadier <span class="arrow">▶</span> Greninja</div>
-        <div class="poke-box">Fletchling <span class="arrow">▶</span> Fletchinder <span class="arrow">▶</span> Talonflame</div>
-        <div class="poke-box">Honedge <span class="arrow">▶</span> Doublade <span class="arrow">▶</span> Aegislash</div>
-        <div class="poke-box">Hawlucha</div>
-      </div>
-
-      <h3>Alola</h3>
-      <div class="grid-container">
-        <div class="poke-box">Litten <span class="arrow">▶</span> Torracat <span class="arrow">▶</span> Incineroar</div>
-        <div class="poke-box">Bounsweet <span class="arrow">▶</span> Steenee <span class="arrow">▶</span> Tsareena</div>
-        <div class="poke-box">Oranguru</div>
-        <div class="poke-box">Jangmo-o <span class="arrow">▶</span> Hakamo-o <span class="arrow">▶</span> Kommo-o</div>
-      </div>
-
-      <h3>Galar & Hisui</h3>
-      <div class="grid-container">
-        <div class="poke-box">Hatenna <span class="arrow">▶</span> Hattrem <span class="arrow">▶</span> Hatterene</div>
-        <div class="poke-box">Dreepy <span class="arrow">▶</span> Drakloak <span class="arrow">▶</span> Dragapult</div>
-        <div class="poke-box">Teddiursa <span class="arrow">▶</span> Ursaring <span class="arrow">▶</span> Ursaluna</div>
-        <div class="poke-box">Basculin <span class="arrow">▶</span> Basculegion</div>
-        <div class="poke-box">Hisuian Sneasel <span class="arrow">▶</span> Sneasler</div>
-      </div>
-
-      <h3>Paldea</h3>
-      <div class="grid-container">
-        <div class="poke-box">Tandemaus <span class="arrow">▶</span> Maushold</div>
-        <div class="poke-box">Tinkatink <span class="arrow">▶</span> Tinkatuff <span class="arrow">▶</span> Tinkaton</div>
-        <div class="poke-box">Finizen <span class="arrow">▶</span> Palafin</div>
-        <div class="poke-box">Dondozo</div>
-        <div class="poke-box">Tatsugiri</div>
-        <div class="poke-box">Pawniard <span class="arrow">▶</span> Bisharp <span class="arrow">▶</span> Kingambit</div>
-        <div class="poke-box">Poltchageist <span class="arrow">▶</span> Sinistcha</div>
-        <div class="poke-box">Duraludon <span class="arrow">▶</span> Archaludon</div>
-      </div>
-
-      <h2>2. Completing the Sets (28)</h2>
-      <div class="grid-container">
-        <div class="poke-box">Eevee <span class="arrow">▶</span> Vaporeon/Jolteon/Flareon/Espeon/Umbreon/Leafeon/Glaceon/Sylveon</div>
-        <div class="poke-box">Chikorita <span class="arrow">▶</span> Bayleef <span class="arrow">▶</span> Meganium</div>
-        <div class="poke-box">Cyndaquil <span class="arrow">▶</span> Quilava <span class="arrow">▶</span> Typhlosion</div>
-        <div class="poke-box">Turtwig <span class="arrow">▶</span> Grotle <span class="arrow">▶</span> Torterra</div>
-        <div class="poke-box">Chimchar <span class="arrow">▶</span> Monferno <span class="arrow">▶</span> Infernape</div>
-        <div class="poke-box">Tepig <span class="arrow">▶</span> Pignite <span class="arrow">▶</span> Emboar</div>
-        <div class="poke-box">Rowlet <span class="arrow">▶</span> Dartrix <span class="arrow">▶</span> Decidueye</div>
-        <div class="poke-box">Popplio <span class="arrow">▶</span> Brionne <span class="arrow">▶</span> Primarina</div>
-      </div>
-
-      <h2>3. Candidates & New DLC Megas (93)</h2>
-      <h3>Hoenn Starters & Kanto/Johto Megas</h3>
-      <div class="grid-container">
-        <div class="poke-box">Treecko <span class="arrow">▶</span> Grovyle <span class="arrow">▶</span> Sceptile</div>
-        <div class="poke-box">Torchic <span class="arrow">▶</span> Combusken <span class="arrow">▶</span> Blaziken</div>
-        <div class="poke-box">Mudkip <span class="arrow">▶</span> Marshtomp <span class="arrow">▶</span> Swampert</div>
-        <div class="poke-box">Weedle <span class="arrow">▶</span> Kakuna <span class="arrow">▶</span> Beedrill</div>
-        <div class="poke-box">Pidgey <span class="arrow">▶</span> Pidgeotto <span class="arrow">▶</span> Pidgeot</div>
-        <div class="poke-box">Abra <span class="arrow">▶</span> Kadabra <span class="arrow">▶</span> Alakazam</div>
-        <div class="poke-box">Slowpoke <span class="arrow">▶</span> Slowbro</div>
-        <div class="poke-box">Aerodactyl</div>
-        <div class="poke-box">Mareep <span class="arrow">▶</span> Flaaffy <span class="arrow">▶</span> Ampharos</div>
-        <div class="poke-box">Onix <span class="arrow">▶</span> Steelix</div>
-        <div class="poke-box">Houndour <span class="arrow">▶</span> Houndoom</div>
-        <div class="poke-box">Bellsprout <span class="arrow">▶</span> Weepinbell <span class="arrow">▶</span> Victreebel</div>
-      </div>
-
-      <h3>Hoenn, Sinnoh & Unova Megas</h3>
-      <div class="grid-container">
-        <div class="poke-box">Aron <span class="arrow">▶</span> Lairon <span class="arrow">▶</span> Aggron</div>
-        <div class="poke-box">Meditite <span class="arrow">▶</span> Medicham</div>
-        <div class="poke-box">Electrike <span class="arrow">▶</span> Manectric</div>
-        <div class="poke-box">Carvanha <span class="arrow">▶</span> Sharpedo</div>
-        <div class="poke-box">Numel <span class="arrow">▶</span> Camerupt</div>
-        <div class="poke-box">Swablu <span class="arrow">▶</span> Altaria</div>
-        <div class="poke-box">Shuppet <span class="arrow">▶</span> Banette</div>
-        <div class="poke-box">Absol</div>
-        <div class="poke-box">Snorunt <span class="arrow">▶</span> Glalie/Froslass</div>
-        <div class="poke-box">Bagon <span class="arrow">▶</span> Shelgon <span class="arrow">▶</span> Salamence</div>
-        <div class="poke-box">Mawile</div>
-        <div class="poke-box">Sableye</div>
-        <div class="poke-box">Buneary <span class="arrow">▶</span> Lopunny</div>
-        <div class="poke-box">Snover <span class="arrow">▶</span> Abomasnow</div>
-        <div class="poke-box">Audino</div>
-        <div class="poke-box">Starly <span class="arrow">▶</span> Staravia <span class="arrow">▶</span> Staraptor</div>
-      </div>
-
-      <h3>New DLC Additions</h3>
-      <div class="grid-container">
-        <div class="poke-box">Skarmory</div>
-        <div class="poke-box">Venipede <span class="arrow">▶</span> Whirlipede <span class="arrow">▶</span> Scolipede</div>
-        <div class="poke-box">Skrelp <span class="arrow">▶</span> Dragalge</div>
-        <div class="poke-box">Litleo <span class="arrow">▶</span> Pyroar</div>
-        <div class="poke-box">Crabrawler <span class="arrow">▶</span> Crabominable</div>
-        <div class="poke-box">Capsakid <span class="arrow">▶</span> Scovillain</div>
-        <div class="poke-box">Golett <span class="arrow">▶</span> Golurk</div>
-        <div class="poke-box">Drampa</div>
-        <div class="poke-box">Tynamo <span class="arrow">▶</span> Eelektrik <span class="arrow">▶</span> Eelektross</div>
-        <div class="poke-box">Falinks</div>
-        <div class="poke-box">Binacle <span class="arrow">▶</span> Barbaracle</div>
-        <div class="poke-box">Flabébé <span class="arrow">▶</span> Floette <span class="arrow">▶</span> Florges</div>
-        <div class="poke-box">Chingling <span class="arrow">▶</span> Chimecho</div>
-        <div class="poke-box">Espurr <span class="arrow">▶</span> Meowstic</div>
-        <div class="poke-box">Indeedee</div>
-        <div class="poke-box">Inkay <span class="arrow">▶</span> Malamar</div>
-      </div>
-
-      <h2>4. VGC "Glue" & Weather Setters (37)</h2>
-      <div class="grid-container">
-        <div class="poke-box">Foongus <span class="arrow">▶</span> Amoonguss</div>
-        <div class="poke-box">Cleffa <span class="arrow">▶</span> Clefairy <span class="arrow">▶</span> Clefable</div>
-        <div class="poke-box">Togepi <span class="arrow">▶</span> Togetic <span class="arrow">▶</span> Togekiss</div>
-        <div class="poke-box">Impidimp <span class="arrow">▶</span> Morgrem <span class="arrow">▶</span> Grimmsnarl</div>
-        <div class="poke-box">Wingull <span class="arrow">▶</span> Pelipper</div>
-        <div class="poke-box">Torkoal</div>
-        <div class="poke-box">Vulpix <span class="arrow">▶</span> Ninetales</div>
-        <div class="poke-box">Porygon <span class="arrow">▶</span> Porygon2 <span class="arrow">▶</span> Porygon-Z</div>
-        <div class="poke-box">Girafarig <span class="arrow">▶</span> Farigiraf</div>
-        <div class="poke-box">Growlithe <span class="arrow">▶</span> Arcanine</div>
-        <div class="poke-box">Mankey <span class="arrow">▶</span> Primeape <span class="arrow">▶</span> Annihilape</div>
-        <div class="poke-box">Gimmighoul <span class="arrow">▶</span> Gholdengo</div>
-        <div class="poke-box">Grookey <span class="arrow">▶</span> Thwackey <span class="arrow">▶</span> Rillaboom</div>
-        <div class="poke-box">Scorbunny <span class="arrow">▶</span> Raboot <span class="arrow">▶</span> Cinderace</div>
-        <div class="poke-box">Sobble <span class="arrow">▶</span> Drizzile <span class="arrow">▶</span> Inteleon</div>
-      </div>
-
-      <h2>5. Regional Favorites & Type Balancing (70)</h2>
-      <div class="grid-container">
-        <div class="poke-box">Sprigatito <span class="arrow">▶</span> Floragato <span class="arrow">▶</span> Meowscarada</div>
-        <div class="poke-box">Fuecoco <span class="arrow">▶</span> Crocalor <span class="arrow">▶</span> Skeledirge</div>
-        <div class="poke-box">Quaxly <span class="arrow">▶</span> Quaxwell <span class="arrow">▶</span> Quaquaval</div>
-        <div class="poke-box">Charcadet <span class="arrow">▶</span> Armarouge/Ceruledge</div>
-        <div class="poke-box">Paldean Wooper <span class="arrow">▶</span> Clodsire</div>
-        <div class="poke-box">Nacli <span class="arrow">▶</span> Naclstack <span class="arrow">▶</span> Garganacl</div>
-        <div class="poke-box">Frigibax <span class="arrow">▶</span> Arctibax <span class="arrow">▶</span> Baxcalibur</div>
-        <div class="poke-box">Applin <span class="arrow">▶</span> Flapple/Appletun/Dipplin <span class="arrow">▶</span> Hydrapple</div>
-        <div class="poke-box">Munchlax <span class="arrow">▶</span> Snorlax</div>
-        <div class="poke-box">Lapras</div>
-        <div class="poke-box">Ditto</div>
-        <div class="poke-box">Rotom</div>
-        <div class="poke-box">Magnemite <span class="arrow">▶</span> Magneton <span class="arrow">▶</span> Magnezone</div>
-        <div class="poke-box">Azurill <span class="arrow">▶</span> Marill <span class="arrow">▶</span> Azumarill</div>
-        <div class="poke-box">Koffing <span class="arrow">▶</span> Weezing</div>
-        <div class="poke-box">Grimer <span class="arrow">▶</span> Muk</div>
-        <div class="poke-box">Zorua <span class="arrow">▶</span> Zoroark</div>
-        <div class="poke-box">Wimpod <span class="arrow">▶</span> Golisopod</div>
-        <div class="poke-box">Dewpider <span class="arrow">▶</span> Araquanid</div>
-        <div class="poke-box">Mimikyu</div>
-        <div class="poke-box">Shroomish <span class="arrow">▶</span> Breloom</div>
-        <div class="poke-box">Mareanie <span class="arrow">▶</span> Toxapex</div>
-        <div class="poke-box">Rookidee <span class="arrow">▶</span> Corvisquire <span class="arrow">▶</span> Corviknight</div>
-        <div class="poke-box">Shellos <span class="arrow">▶</span> Gastrodon</div>
-        <div class="poke-box">Drilbur <span class="arrow">▶</span> Excadrill</div>
-        <div class="poke-box">Glimmet <span class="arrow">▶</span> Glimmora</div>
-        <div class="poke-box">Flamigo</div>
-        <div class="poke-box">Smeargle</div>
-        <div class="poke-box">Bronzor <span class="arrow">▶</span> Bronzong</div>
-        <div class="poke-box">Makuhita <span class="arrow">▶</span> Hariyama</div>
-        <div class="poke-box">Scraggy <span class="arrow">▶</span> Scrafty</div>
-        <div class="poke-box">Vullaby <span class="arrow">▶</span> Mandibuzz</div>
-        <div class="poke-box">Rufflet <span class="arrow">▶</span> Braviary</div>
-        <div class="poke-box">Gothita <span class="arrow">▶</span> Gothorita <span class="arrow">▶</span> Gothitelle</div>
-        <div class="poke-box">Litwick <span class="arrow">▶</span> Lampent <span class="arrow">▶</span> Chandelure</div>
-      </div>
-
-    <h2>6. Regional Variants (Alola, Galar, Hisui, Paldea)</h2>
-      <div class="grid-container">
-        <div class="poke-box">Alolan Raichu</div>
-        <div class="poke-box">Alolan Sandshrew <span class="arrow">▶</span> Alolan Sandslash</div>
-        <div class="poke-box">Alolan Vulpix <span class="arrow">▶</span> Alolan Ninetales</div>
-        <div class="poke-box">Alolan Grimer <span class="arrow">▶</span> Alolan Muk</div>
-        
-        <div class="poke-box">Galarian Slowpoke <span class="arrow">▶</span> Galarian Slowbro</div>
-        <div class="poke-box">Galarian Weezing</div>
-        
-        <div class="poke-box">Hisuian Growlithe <span class="arrow">▶</span> Hisuian Arcanine</div>
-        <div class="poke-box">Hisuian Typhlosion</div>
-        <div class="poke-box">Hisuian Samurott</div>
-        <div class="poke-box">Hisuian Zorua <span class="arrow">▶</span> Hisuian Zoroark</div>
-        <div class="poke-box">Hisuian Braviary</div>
-        <div class="poke-box">Hisuian Decidueye</div>
-      </div>
-  </div> 
+  <div id="roster-wrapper"></div> 
 
   <div id="data-modal" class="modal">
     <div class="modal-content">
@@ -562,7 +318,49 @@
   </div>
 
   <script>
-    // --- TOP CUT TEAMS DATABASE ---
+    // =========================================================
+    // --- HELPER: DRY Level 50 Stat Calculator ---
+    // =========================================================
+    function calcLv50Stat(baseStat, isHP = false) {
+        if (isHP && baseStat === 1) return 1; // Shedinja exception
+        if (isHP) return Math.floor(0.5 * (2 * baseStat + 31)) + 60;
+        return Math.floor(0.5 * (2 * baseStat + 31)) + 5;
+    }
+
+    // =========================================================
+    // --- DATA DICTIONARIES ---
+    // =========================================================
+    const ROSTER_SECTIONS = [
+      { heading: "h2", text: "1. The Confirmed Roster (117)", subsections: [
+          { heading: "h3", text: "Kanto", lines: ["Bulbasaur / Ivysaur / Venusaur", "Charmander / Charmeleon / Charizard", "Squirtle / Wartortle / Blastoise", "Pichu / Pikachu / Raichu", "Gastly / Haunter / Gengar", "Kangaskhan", "Staryu / Starmie", "Pinsir", "Magikarp / Gyarados", "Dratini / Dragonair / Dragonite"] },
+          { heading: "h3", text: "Johto", lines: ["Totodile / Croconaw / Feraligatr", "Scyther / Scizor", "Heracross", "Larvitar / Pupitar / Tyranitar"] },
+          { heading: "h3", text: "Hoenn", lines: ["Ralts / Kirlia / Gardevoir|Gallade", "Feebas / Milotic", "Beldum / Metang / Metagross"] },
+          { heading: "h3", text: "Sinnoh", lines: ["Piplup / Prinplup / Empoleon", "Gible / Gabite / Garchomp", "Riolu / Lucario"] },
+          { heading: "h3", text: "Unova", lines: ["Snivy / Servine / Serperior", "Oshawott / Dewott / Samurott", "Cottonee / Whimsicott", "Emolga", "Deino / Zweilous / Hydreigon"] },
+          { heading: "h3", text: "Kalos", lines: ["Chespin / Quilladin / Chesnaught", "Fennekin / Braixen / Delphox", "Froakie / Frogadier / Greninja", "Fletchling / Fletchinder / Talonflame", "Honedge / Doublade / Aegislash", "Hawlucha"] },
+          { heading: "h3", text: "Alola", lines: ["Litten / Torracat / Incineroar", "Bounsweet / Steenee / Tsareena", "Oranguru", "Jangmo-o / Hakamo-o / Kommo-o"] },
+          { heading: "h3", text: "Galar & Hisui", lines: ["Hatenna / Hattrem / Hatterene", "Dreepy / Drakloak / Dragapult", "Teddiursa / Ursaring / Ursaluna", "Basculin / Basculegion", "Hisuian Sneasel / Sneasler"] },
+          { heading: "h3", text: "Paldea", lines: ["Tandemaus / Maushold", "Tinkatink / Tinkatuff / Tinkaton", "Finizen / Palafin", "Dondozo", "Tatsugiri", "Pawniard / Bisharp / Kingambit", "Poltchageist / Sinistcha", "Duraludon / Archaludon"] }
+      ]},
+      { heading: "h2", text: "2. Completing the Sets (28)", subsections: [
+          { heading: null, text: null, lines: ["Eevee / Vaporeon|Jolteon|Flareon|Espeon|Umbreon|Leafeon|Glaceon|Sylveon", "Chikorita / Bayleef / Meganium", "Cyndaquil / Quilava / Typhlosion", "Turtwig / Grotle / Torterra", "Chimchar / Monferno / Infernape", "Tepig / Pignite / Emboar", "Rowlet / Dartrix / Decidueye", "Popplio / Brionne / Primarina"] }
+      ]},
+      { heading: "h2", text: "3. Candidates & New DLC Megas (93)", subsections: [
+          { heading: "h3", text: "Hoenn Starters & Kanto/Johto Megas", lines: ["Treecko / Grovyle / Sceptile", "Torchic / Combusken / Blaziken", "Mudkip / Marshtomp / Swampert", "Weedle / Kakuna / Beedrill", "Pidgey / Pidgeotto / Pidgeot", "Abra / Kadabra / Alakazam", "Slowpoke / Slowbro", "Aerodactyl", "Mareep / Flaaffy / Ampharos", "Onix / Steelix", "Houndour / Houndoom", "Bellsprout / Weepinbell / Victreebel"] },
+          { heading: "h3", text: "Hoenn, Sinnoh & Unova Megas", lines: ["Aron / Lairon / Aggron", "Meditite / Medicham", "Electrike / Manectric", "Carvanha / Sharpedo", "Numel / Camerupt", "Swablu / Altaria", "Shuppet / Banette", "Absol", "Snorunt / Glalie|Froslass", "Bagon / Shelgon / Salamence", "Mawile", "Sableye", "Buneary / Lopunny", "Snover / Abomasnow", "Audino", "Starly / Staravia / Staraptor"] },
+          { heading: "h3", text: "New DLC Additions", lines: ["Skarmory", "Venipede / Whirlipede / Scolipede", "Skrelp / Dragalge", "Litleo / Pyroar", "Crabrawler / Crabominable", "Capsakid / Scovillain", "Golett / Golurk", "Drampa", "Tynamo / Eelektrik / Eelektross", "Falinks", "Binacle / Barbaracle", "Flabébé / Floette / Florges", "Chingling / Chimecho", "Espurr / Meowstic", "Indeedee", "Inkay / Malamar"] }
+      ]},
+      { heading: "h2", text: "4. VGC \"Glue\" & Weather Setters (37)", subsections: [
+          { heading: null, text: null, lines: ["Foongus / Amoonguss", "Cleffa / Clefairy / Clefable", "Togepi / Togetic / Togekiss", "Impidimp / Morgrem / Grimmsnarl", "Wingull / Pelipper", "Torkoal", "Vulpix / Ninetales", "Porygon / Porygon2 / Porygon-Z", "Girafarig / Farigiraf", "Growlithe / Arcanine", "Mankey / Primeape / Annihilape", "Gimmighoul / Gholdengo", "Grookey / Thwackey / Rillaboom", "Scorbunny / Raboot / Cinderace", "Sobble / Drizzile / Inteleon"] }
+      ]},
+      { heading: "h2", text: "5. Regional Favorites & Type Balancing (70)", subsections: [
+          { heading: null, text: null, lines: ["Sprigatito / Floragato / Meowscarada", "Fuecoco / Crocalor / Skeledirge", "Quaxly / Quaxwell / Quaquaval", "Charcadet / Armarouge|Ceruledge", "Paldean Wooper / Clodsire", "Nacli / Naclstack / Garganacl", "Frigibax / Arctibax / Baxcalibur", "Applin / Flapple|Appletun|Dipplin / Hydrapple", "Munchlax / Snorlax", "Lapras", "Ditto", "Rotom", "Magnemite / Magneton / Magnezone", "Azurill / Marill / Azumarill", "Koffing / Weezing", "Grimer / Muk", "Zorua / Zoroark", "Wimpod / Golisopod", "Dewpider / Araquanid", "Mimikyu", "Shroomish / Breloom", "Mareanie / Toxapex", "Rookidee / Corvisquire / Corviknight", "Shellos / Gastrodon", "Drilbur / Excadrill", "Glimmet / Glimmora", "Flamigo", "Smeargle", "Bronzor / Bronzong", "Makuhita / Hariyama", "Scraggy / Scrafty", "Vullaby / Mandibuzz", "Rufflet / Braviary", "Gothita / Gothorita / Gothitelle", "Litwick / Lampent / Chandelure"] }
+      ]},
+      { heading: "h2", text: "6. Regional Variants (Alola, Galar, Hisui, Paldea)", subsections: [
+          { heading: null, text: null, lines: ["Alolan Raichu", "Alolan Sandshrew / Alolan Sandslash", "Alolan Vulpix / Alolan Ninetales", "Alolan Grimer / Alolan Muk", "Galarian Slowpoke / Galarian Slowbro", "Galarian Weezing", "Hisuian Growlithe / Hisuian Arcanine", "Hisuian Typhlosion", "Hisuian Samurott", "Hisuian Zorua / Hisuian Zoroark", "Hisuian Braviary", "Hisuian Decidueye"] }
+      ]}
+    ];
+
     const TOP_CUT_TEAMS = {
         "worlds2024": `Calyrex-Ice @ Clear Amulet\nAbility: As One (Glastrier)\nLevel: 50\nTera Type: Grass\n- Glacial Lance\n- High Horsepower\n- Trick Room\n- Protect\n\nUrshifu-Rapid-Strike @ Focus Sash\nAbility: Unseen Fist\nLevel: 50\nTera Type: Water\n- Surging Strikes\n- Close Combat\n- Aqua Jet\n- Protect\n\nAmoonguss @ Rocky Helmet\nAbility: Regenerator\nLevel: 50\nTera Type: Water\n- Spore\n- Pollen Puff\n- Rage Powder\n- Protect\n\nIncineroar @ Safety Goggles\nAbility: Intimidate\nLevel: 50\nTera Type: Ghost\n- Flare Blitz\n- Knock Off\n- Parting Shot\n- Fake Out\n\nRaging Bolt @ Assault Vest\nAbility: Protosynthesis\nLevel: 50\nTera Type: Fairy\n- Electro Shot\n- Draco Meteor\n- Thunderbolt\n- Snarl\n\nOgerpon-Hearthflame @ Hearthflame Mask\nAbility: Mold Breaker\nLevel: 50\nTera Type: Fire\n- Ivy Cudgel\n- Horn Leech\n- Spiky Shield\n- Follow Me`,
         "naic2024": `Calyrex-Ice @ Clear Amulet\nAbility: As One (Glastrier)\nLevel: 50\nTera Type: Water\n- Glacial Lance\n- High Horsepower\n- Trick Room\n- Protect\n\nAmoonguss @ Rocky Helmet\nAbility: Regenerator\nLevel: 50\nTera Type: Water\n- Spore\n- Sludge Bomb\n- Rage Powder\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nTera Type: Ghost\n- Weather Ball\n- Hurricane\n- Tailwind\n- Wide Guard\n\nUrshifu-Rapid-Strike @ Choice Scarf\nAbility: Unseen Fist\nLevel: 50\nTera Type: Water\n- Surging Strikes\n- Close Combat\n- U-turn\n- Aqua Jet\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nTera Type: Grass\n- Flare Blitz\n- Knock Off\n- Parting Shot\n- Fake Out\n\nRaging Bolt @ Assault Vest\nAbility: Protosynthesis\nLevel: 50\nTera Type: Bug\n- Electro Shot\n- Dragon Pulse\n- Thunderbolt\n- Snarl`,
@@ -573,7 +371,6 @@
         "worlds2014": `Pachirisu @ Sitrus Berry\nAbility: Volt Absorb\nLevel: 50\n- Nuzzle\n- Follow Me\n- Super Fang\n- Protect\n\nGothitelle @ Leftovers\nAbility: Shadow Tag\nLevel: 50\n- Psyshock\n- Thunder Wave\n- Tickle\n- Protect\n\nGardevoir @ Choice Scarf\nAbility: Telepathy\nLevel: 50\n- Dazzling Gleam\n- Psychic\n- Moonblast\n- Swagger\n\nGyarados-Mega @ Gyaradosite\nAbility: Intimidate\nLevel: 50\n- Dragon Dance\n- Waterfall\n- Earthquake\n- Protect\n\nTalonflame @ Life Orb\nAbility: Gale Wings\nLevel: 50\n- Brave Bird\n- Overheat\n- Taunt\n- Quick Guard\n\nGarchomp @ Focus Sash\nAbility: Rough Skin\nLevel: 50\n- Earthquake\n- Dragon Claw\n- Rock Slide\n- Protect`
     };
 
-    // --- TYPE MATRIX ---
     const TYPE_DATA = {
       Normal: { weakTo: ['Fighting'], resists: [], immuneTo: ['Ghost'] },
       Fire: { weakTo: ['Water', 'Ground', 'Rock'], resists: ['Fire', 'Grass', 'Ice', 'Bug', 'Steel', 'Fairy'], immuneTo: [] },
@@ -769,553 +566,215 @@
 
     const TERA_TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'];
 
-    const RAW_AESTHETICS_CSV = `Pokemon_Name,Signature_Letter,Hex_Color,Color_Vibe
-Bulbasaur,B,#78C850,Grass Green
-Ivysaur,I,#78C850,Grass Green
-Venusaur,V,#78C850,Grass Green
-Charmander,C,#F08030,Fire Orange
-Charmeleon,C,#F08030,Fire Orange
-Charizard,C,#F08030,Fire Orange
-Squirtle,S,#6890F0,Water Blue
-Wartortle,W,#6890F0,Water Blue
-Blastoise,B,#6890F0,Water Blue
-Pichu,P,#F8D030,Electric Yellow
-Pikachu,P,#F8D030,Electric Yellow
-Raichu,R,#F8D030,Electric Yellow
-Gastly,G,#705898,Ghost Purple
-Haunter,H,#705898,Ghost Purple
-Gengar,G,#705898,Ghost Purple
-Kangaskhan,K,#A8A878,Normal Khaki
-Staryu,S,#6890F0,Water Blue
-Starmie,S,#F85888,Psychic Pink
-Pinsir,P,#A8B820,Bug Olive
-Magikarp,M,#F08030,Fire Orange
-Gyarados,G,#6890F0,Water Blue
-Dratini,D,#7038F8,Dragon Indigo
-Dragonair,D,#7038F8,Dragon Indigo
-Dragonite,D,#F08030,Dragon Orange
-Totodile,T,#6890F0,Water Blue
-Croconaw,C,#6890F0,Water Blue
-Feraligatr,F,#6890F0,Water Blue
-Scyther,S,#A8B820,Bug Olive
-Scizor,S,#C03028,Steel Red
-Heracross,H,#C03028,Fighting Crimson
-Larvitar,L,#B8A038,Rock Tan
-Pupitar,P,#B8A038,Rock Tan
-Tyranitar,T,#705848,Dark Umber
-Ralts,R,#F85888,Psychic Pink
-Kirlia,K,#F85888,Psychic Pink
-Gardevoir,G,#F85888,Psychic Pink
-Gallade,G,#C03028,Fighting Crimson
-Feebas,F,#A8A878,Normal Khaki
-Milotic,M,#6890F0,Water Blue
-Beldum,B,#B8B8D0,Steel Silver
-Metang,M,#B8B8D0,Steel Silver
-Metagross,M,#B8B8D0,Steel Silver
-Piplup,P,#6890F0,Water Blue
-Prinplup,P,#6890F0,Water Blue
-Empoleon,E,#B8B8D0,Steel Silver
-Gible,G,#7038F8,Dragon Indigo
-Gabite,G,#7038F8,Dragon Indigo
-Garchomp,G,#7038F8,Dragon Indigo
-Riolu,R,#C03028,Fighting Crimson
-Lucario,L,#B8B8D0,Steel Silver
-Snivy,S,#78C850,Grass Green
-Servine,S,#78C850,Grass Green
-Serperior,S,#78C850,Grass Green
-Oshawott,O,#6890F0,Water Blue
-Dewott,D,#6890F0,Water Blue
-Samurott,S,#6890F0,Water Blue
-Cottonee,C,#78C850,Grass Green
-Whimsicott,W,#EE99AC,Fairy Rose
-Emolga,E,#F8D030,Electric Yellow
-Deino,D,#705848,Dark Umber
-Zweilous,Z,#705848,Dark Umber
-Hydreigon,H,#705848,Dark Umber
-Chespin,C,#78C850,Grass Green
-Quilladin,Q,#78C850,Grass Green
-Chesnaught,C,#78C850,Grass Green
-Fennekin,F,#F08030,Fire Orange
-Braixen,B,#F08030,Fire Orange
-Delphox,D,#F85888,Psychic Pink
-Froakie,F,#6890F0,Water Blue
-Frogadier,F,#6890F0,Water Blue
-Greninja,G,#705848,Dark Umber
-Fletchling,F,#A8A878,Normal Khaki
-Fletchinder,F,#F08030,Fire Orange
-Talonflame,T,#F08030,Fire Orange
-Honedge,H,#B8B8D0,Steel Silver
-Doublade,D,#B8B8D0,Steel Silver
-Aegislash,A,#B8B8D0,Steel Silver
-Hawlucha,H,#C03028,Fighting Crimson
-Litten,L,#F08030,Fire Orange
-Torracat,T,#F08030,Fire Orange
-Incineroar,I,#705848,Dark Umber
-Bounsweet,B,#78C850,Grass Green
-Steenee,S,#78C850,Grass Green
-Tsareena,T,#78C850,Grass Green
-Oranguru,O,#A8A878,Normal Khaki
-Jangmo-o,J,#7038F8,Dragon Indigo
-Hakamo-o,H,#7038F8,Dragon Indigo
-Kommo-o,K,#7038F8,Dragon Indigo
-Hatenna,H,#F85888,Psychic Pink
-Hattrem,H,#F85888,Psychic Pink
-Hatterene,H,#EE99AC,Fairy Rose
-Dreepy,D,#705898,Ghost Purple
-Drakloak,D,#705898,Ghost Purple
-Dragapult,D,#705898,Ghost Purple
-Teddiursa,T,#A8A878,Normal Khaki
-Ursaring,U,#A8A878,Normal Khaki
-Ursaluna,U,#E0C068,Ground Tan
-Basculin,B,#6890F0,Water Blue
-Basculegion,B,#705898,Ghost Purple
-Hisuian Sneasel,H,#C03028,Fighting Crimson
-Sneasler,S,#C03028,Fighting Crimson
-Tandemaus,T,#A8A878,Normal Khaki
-Maushold,M,#A8A878,Normal Khaki
-Tinkatink,T,#EE99AC,Fairy Rose
-Tinkatuff,T,#EE99AC,Fairy Rose
-Tinkaton,T,#EE99AC,Fairy Rose
-Finizen,F,#6890F0,Water Blue
-Palafin,P,#6890F0,Water Blue
-Dondozo,D,#6890F0,Water Blue
-Tatsugiri,T,#7038F8,Dragon Indigo
-Pawniard,P,#705848,Dark Umber
-Bisharp,B,#705848,Dark Umber
-Kingambit,K,#705848,Dark Umber
-Poltchageist,P,#78C850,Grass Green
-Sinistcha,S,#78C850,Grass Green
-Duraludon,D,#B8B8D0,Steel Silver
-Archaludon,A,#B8B8D0,Steel Silver
-Eevee,E,#A8A878,Normal Khaki
-Vaporeon,V,#6890F0,Water Blue
-Jolteon,J,#F8D030,Electric Yellow
-Flareon,F,#F08030,Fire Orange
-Espeon,E,#F85888,Psychic Pink
-Umbreon,U,#705848,Dark Umber
-Leafeon,L,#78C850,Grass Green
-Glaceon,G,#98D8D8,Ice Cyan
-Sylveon,S,#EE99AC,Fairy Rose
-Chikorita,C,#78C850,Grass Green
-Bayleef,B,#78C850,Grass Green
-Meganium,M,#78C850,Grass Green
-Cyndaquil,C,#F08030,Fire Orange
-Quilava,Q,#F08030,Fire Orange
-Typhlosion,T,#F08030,Fire Orange
-Turtwig,T,#78C850,Grass Green
-Grotle,G,#78C850,Grass Green
-Torterra,T,#78C850,Grass Green
-Chimchar,C,#F08030,Fire Orange
-Monferno,M,#F08030,Fire Orange
-Infernape,I,#F08030,Fire Orange
-Tepig,T,#F08030,Fire Orange
-Pignite,P,#F08030,Fire Orange
-Emboar,E,#F08030,Fire Orange
-Rowlet,R,#78C850,Grass Green
-Dartrix,D,#78C850,Grass Green
-Decidueye,D,#705898,Ghost Purple
-Popplio,P,#6890F0,Water Blue
-Brionne,B,#6890F0,Water Blue
-Primarina,P,#EE99AC,Fairy Rose
-Treecko,T,#78C850,Grass Green
-Grovyle,G,#78C850,Grass Green
-Sceptile,S,#78C850,Grass Green
-Torchic,T,#F08030,Fire Orange
-Combusken,C,#F08030,Fire Orange
-Blaziken,B,#F08030,Fire Orange
-Mudkip,M,#6890F0,Water Blue
-Marshtomp,M,#6890F0,Water Blue
-Swampert,S,#6890F0,Water Blue
-Weedle,W,#A8B820,Bug Olive
-Kakuna,K,#A8B820,Bug Olive
-Beedrill,B,#A8B820,Bug Olive
-Pidgey,P,#A8A878,Normal Khaki
-Pidgeotto,P,#A8A878,Normal Khaki
-Pidgeot,P,#A8A878,Normal Khaki
-Abra,A,#F85888,Psychic Pink
-Kadabra,K,#F85888,Psychic Pink
-Alakazam,A,#F85888,Psychic Pink
-Slowpoke,S,#6890F0,Water Blue
-Slowbro,S,#6890F0,Water Blue
-Aerodactyl,A,#B8A038,Rock Tan
-Mareep,M,#F8D030,Electric Yellow
-Flaaffy,F,#F8D030,Electric Yellow
-Ampharos,A,#F8D030,Electric Yellow
-Onix,O,#B8A038,Rock Tan
-Steelix,S,#B8B8D0,Steel Silver
-Houndour,H,#705848,Dark Umber
-Houndoom,H,#705848,Dark Umber
-Bellsprout,B,#78C850,Grass Green
-Weepinbell,W,#78C850,Grass Green
-Victreebel,V,#78C850,Grass Green
-Aron,A,#B8B8D0,Steel Silver
-Lairon,L,#B8B8D0,Steel Silver
-Aggron,A,#B8B8D0,Steel Silver
-Meditite,M,#C03028,Fighting Crimson
-Medicham,M,#C03028,Fighting Crimson
-Electrike,E,#F8D030,Electric Yellow
-Manectric,M,#F8D030,Electric Yellow
-Carvanha,C,#6890F0,Water Blue
-Sharpedo,S,#6890F0,Water Blue
-Numel,N,#F08030,Fire Orange
-Camerupt,C,#F08030,Fire Orange
-Swablu,S,#A8A878,Normal Khaki
-Altaria,A,#7038F8,Dragon Indigo
-Shuppet,S,#705898,Ghost Purple
-Banette,B,#705898,Ghost Purple
-Absol,A,#705848,Dark Umber
-Snorunt,S,#98D8D8,Ice Cyan
-Glalie,G,#98D8D8,Ice Cyan
-Froslass,F,#705898,Ghost Purple
-Bagon,B,#7038F8,Dragon Indigo
-Shelgon,S,#7038F8,Dragon Indigo
-Salamence,S,#7038F8,Dragon Indigo
-Mawile,M,#B8B8D0,Steel Silver
-Sableye,S,#705848,Dark Umber
-Buneary,B,#A8A878,Normal Khaki
-Lopunny,L,#A8A878,Normal Khaki
-Snover,S,#78C850,Grass Green
-Abomasnow,A,#98D8D8,Ice Cyan
-Audino,A,#A8A878,Normal Khaki
-Starly,S,#A8A878,Normal Khaki
-Staravia,S,#A8A878,Normal Khaki
-Staraptor,S,#A8A878,Normal Khaki
-Skarmory,S,#B8B8D0,Steel Silver
-Venipede,V,#A8B820,Bug Olive
-Whirlipede,W,#A8B820,Bug Olive
-Scolipede,S,#A8B820,Bug Olive
-Skrelp,S,#A040A0,Poison Violet
-Dragalge,D,#A040A0,Poison Violet
-Litleo,L,#F08030,Fire Orange
-Pyroar,P,#F08030,Fire Orange
-Crabrawler,C,#C03028,Fighting Crimson
-Crabominable,C,#98D8D8,Ice Cyan
-Capsakid,C,#78C850,Grass Green
-Scovillain,S,#78C850,Grass Green
-Golett,G,#E0C068,Ground Tan
-Golurk,G,#E0C068,Ground Tan
-Drampa,D,#A8A878,Normal Khaki
-Tynamo,T,#F8D030,Electric Yellow
-Eelektrik,E,#F8D030,Electric Yellow
-Eelektross,E,#F8D030,Electric Yellow
-Falinks,F,#C03028,Fighting Crimson
-Binacle,B,#B8A038,Rock Tan
-Barbaracle,B,#B8A038,Rock Tan
-Flabébé,F,#EE99AC,Fairy Rose
-Floette,F,#EE99AC,Fairy Rose
-Florges,F,#EE99AC,Fairy Rose
-Chingling,C,#F85888,Psychic Pink
-Chimecho,C,#F85888,Psychic Pink
-Espurr,E,#F85888,Psychic Pink
-Meowstic,M,#F85888,Psychic Pink
-Indeedee,I,#F85888,Psychic Pink
-Inkay,I,#705848,Dark Umber
-Malamar,M,#705848,Dark Umber
-Foongus,F,#78C850,Grass Green
-Amoonguss,A,#78C850,Grass Green
-Cleffa,C,#EE99AC,Fairy Rose
-Clefairy,C,#EE99AC,Fairy Rose
-Clefable,C,#EE99AC,Fairy Rose
-Togepi,T,#EE99AC,Fairy Rose
-Togetic,T,#EE99AC,Fairy Rose
-Togekiss,T,#EE99AC,Fairy Rose
-Impidimp,I,#705848,Dark Umber
-Morgrem,M,#705848,Dark Umber
-Grimmsnarl,G,#705848,Dark Umber
-Wingull,W,#6890F0,Water Blue
-Pelipper,P,#6890F0,Water Blue
-Torkoal,T,#F08030,Fire Orange
-Vulpix,V,#F08030,Fire Orange
-Ninetales,N,#F08030,Fire Orange
-Porygon,P,#A8A878,Normal Khaki
-Porygon2,P,#A8A878,Normal Khaki
-Porygon-Z,P,#A8A878,Normal Khaki
-Girafarig,G,#A8A878,Normal Khaki
-Farigiraf,F,#A8A878,Normal Khaki
-Growlithe,G,#F08030,Fire Orange
-Arcanine,A,#F08030,Fire Orange
-Mankey,M,#C03028,Fighting Crimson
-Primeape,P,#C03028,Fighting Crimson
-Annihilape,A,#705898,Ghost Purple
-Gimmighoul,G,#705898,Ghost Purple
-Gholdengo,G,#B8B8D0,Steel Silver
-Grookey,G,#78C850,Grass Green
-Thwackey,T,#78C850,Grass Green
-Rillaboom,R,#78C850,Grass Green
-Scorbunny,S,#F08030,Fire Orange
-Raboot,R,#F08030,Fire Orange
-Cinderace,C,#F08030,Fire Orange
-Sobble,S,#6890F0,Water Blue
-Drizzile,D,#6890F0,Water Blue
-Inteleon,I,#6890F0,Water Blue
-Sprigatito,S,#78C850,Grass Green
-Floragato,F,#78C850,Grass Green
-Meowscarada,M,#78C850,Grass Green
-Fuecoco,F,#F08030,Fire Orange
-Crocalor,C,#F08030,Fire Orange
-Skeledirge,S,#F08030,Fire Orange
-Quaxly,Q,#6890F0,Water Blue
-Quaxwell,Q,#6890F0,Water Blue
-Quaquaval,Q,#6890F0,Water Blue
-Charcadet,C,#F08030,Fire Orange
-Armarouge,A,#F08030,Fire Orange
-Ceruledge,C,#F08030,Fire Orange
-Paldean Wooper,P,#A040A0,Poison Violet
-Clodsire,C,#A040A0,Poison Violet
-Nacli,N,#B8A038,Rock Tan
-Naclstack,N,#B8A038,Rock Tan
-Garganacl,G,#B8A038,Rock Tan
-Frigibax,F,#7038F8,Dragon Indigo
-Arctibax,A,#7038F8,Dragon Indigo
-Baxcalibur,B,#7038F8,Dragon Indigo
-Applin,A,#78C850,Grass Green
-Flapple,F,#78C850,Grass Green
-Appletun,A,#78C850,Grass Green
-Dipplin,D,#78C850,Grass Green
-Hydrapple,H,#78C850,Grass Green
-Munchlax,M,#A8A878,Normal Khaki
-Snorlax,S,#A8A878,Normal Khaki
-Lapras,L,#6890F0,Water Blue
-Ditto,D,#A8A878,Normal Khaki
-Rotom,R,#F8D030,Electric Yellow
-Magnemite,M,#F8D030,Electric Yellow
-Magneton,M,#F8D030,Electric Yellow
-Magnezone,M,#F8D030,Electric Yellow
-Azurill,A,#A8A878,Normal Khaki
-Marill,M,#6890F0,Water Blue
-Azumarill,A,#6890F0,Water Blue
-Koffing,K,#A040A0,Poison Violet
-Weezing,W,#A040A0,Poison Violet
-Grimer,G,#A040A0,Poison Violet
-Muk,M,#A040A0,Poison Violet
-Zorua,Z,#705848,Dark Umber
-Zoroark,Z,#705848,Dark Umber
-Wimpod,W,#A8B820,Bug Olive
-Golisopod,G,#A8B820,Bug Olive
-Dewpider,D,#6890F0,Water Blue
-Araquanid,A,#6890F0,Water Blue
-Mimikyu,M,#705898,Ghost Purple
-Shroomish,S,#78C850,Grass Green
-Breloom,B,#78C850,Grass Green
-Mareanie,M,#A040A0,Poison Violet
-Toxapex,T,#A040A0,Poison Violet
-Rookidee,R,#A8A878,Normal Khaki
-Corvisquire,C,#A8A878,Normal Khaki
-Corviknight,C,#B8B8D0,Steel Silver
-Shellos,S,#6890F0,Water Blue
-Gastrodon,G,#6890F0,Water Blue
-Drilbur,D,#E0C068,Ground Tan
-Excadrill,E,#E0C068,Ground Tan
-Glimmet,G,#B8A038,Rock Tan
-Glimmora,G,#B8A038,Rock Tan
-Flamigo,F,#A8A878,Normal Khaki
-Smeargle,S,#A8A878,Normal Khaki
-Bronzor,B,#B8B8D0,Steel Silver
-Bronzong,B,#B8B8D0,Steel Silver
-Makuhita,M,#C03028,Fighting Crimson
-Hariyama,H,#C03028,Fighting Crimson
-Scraggy,S,#705848,Dark Umber
-Scrafty,S,#705848,Dark Umber
-Vullaby,V,#705848,Dark Umber
-Mandibuzz,M,#705848,Dark Umber
-Rufflet,R,#A8A878,Normal Khaki
-Braviary,B,#A8A878,Normal Khaki
-Gothita,G,#F85888,Psychic Pink
-Gothorita,G,#F85888,Psychic Pink
-Gothitelle,G,#F85888,Psychic Pink
-Litwick,L,#705898,Ghost Purple
-Lampent,L,#705898,Ghost Purple
-Chandelure,C,#705898,Ghost Purple
-Alolan Raichu,A,#F8D030,Electric Yellow
-Alolan Sandshrew,A,#98D8D8,Ice Cyan
-Alolan Sandslash,A,#98D8D8,Ice Cyan
-Alolan Vulpix,A,#98D8D8,Ice Cyan
-Alolan Ninetales,A,#98D8D8,Ice Cyan
-Alolan Grimer,A,#A040A0,Poison Violet
-Alolan Muk,A,#A040A0,Poison Violet
-Galarian Slowpoke,G,#F85888,Psychic Pink
-Galarian Slowbro,G,#A040A0,Poison Violet
-Galarian Weezing,G,#EE99AC,Fairy Rose
-Hisuian Growlithe,H,#F08030,Fire Orange
-Hisuian Arcanine,H,#F08030,Fire Orange
-Hisuian Typhlosion,H,#705898,Ghost Purple
-Hisuian Samurott,H,#705848,Dark Umber
-Hisuian Zorua,H,#A8A878,Normal Khaki
-Hisuian Zoroark,H,#A8A878,Normal Khaki
-Hisuian Braviary,H,#F85888,Psychic Pink
-Hisuian Decidueye,H,#C03028,Fighting Crimson
-Aegislash (Blade),A,#B8B8D0,Steel Silver
-Indeedee (Female),I,#F85888,Psychic Pink
-Palafin (Hero),P,#6890F0,Water Blue
-Tatsugiri (Droopy),T,#7038F8,Dragon Indigo
-Tatsugiri (Stretchy),T,#7038F8,Dragon Indigo
-Tatsugiri (Curly),T,#7038F8,Dragon Indigo
-Rotom (Wash),R,#6890F0,Water Blue
-Rotom (Heat),R,#F08030,Fire Orange
-Rotom (Mow),R,#78C850,Grass Green
-Rotom (Frost),R,#98D8D8,Ice Cyan
-Rotom (Fan),R,#A8A878,Normal Khaki
-Mega Abomasnow,M,#98D8D8,Ice Cyan
-Mega Absol,M,#705848,Dark Umber
-Absol Z,A,#705848,Dark Umber
-Mega Aerodactyl,M,#B8A038,Rock Tan
-Mega Aggron,M,#B8B8D0,Steel Silver
-Mega Alakazam,M,#F85888,Psychic Pink
-Mega Altaria,M,#EE99AC,Fairy Rose
-Mega Ampharos,M,#7038F8,Dragon Indigo
-Mega Audino,M,#EE99AC,Fairy Rose
-Mega Banette,M,#705898,Ghost Purple
-Mega Barbaracle,M,#B8A038,Rock Tan
-Mega Baxcalibur,M,#7038F8,Dragon Indigo
-Mega Beedrill,M,#A040A0,Poison Violet
-Mega Blastoise,M,#6890F0,Water Blue
-Mega Blaziken,M,#F08030,Fire Orange
-Mega Camerupt,M,#F08030,Fire Orange
-Mega Chandelure,M,#705898,Ghost Purple
-Mega Charizard X,M,#7038F8,Dragon Indigo
-Mega Charizard Y,M,#F08030,Fire Orange
-Mega Chesnaught,M,#78C850,Grass Green
-Mega Chimecho,M,#F85888,Psychic Pink
-Mega Clefable,M,#EE99AC,Fairy Rose
-Mega Crabominable,M,#98D8D8,Ice Cyan
-Mega Delphox,M,#F85888,Psychic Pink
-Mega Dragalge,M,#A040A0,Poison Violet
-Mega Dragonite,M,#7038F8,Dragon Indigo
-Mega Drampa,M,#A8A878,Normal Khaki
-Mega Eelektross,M,#F8D030,Electric Yellow
-Mega Emboar,M,#F08030,Fire Orange
-Mega Excadrill,M,#E0C068,Ground Tan
-Mega Falinks,M,#C03028,Fighting Crimson
-Mega Feraligatr,M,#6890F0,Water Blue
-Mega Floette,M,#EE99AC,Fairy Rose
-Mega Froslass,M,#705898,Ghost Purple
-Mega Gallade,M,#C03028,Fighting Crimson
-Mega Garchomp,M,#7038F8,Dragon Indigo
-Mega Gardevoir,M,#EE99AC,Fairy Rose
-Mega Gengar,M,#705898,Ghost Purple
-Mega Glalie,M,#98D8D8,Ice Cyan
-Mega Glimmora,M,#B8A038,Rock Tan
-Mega Golisopod,M,#A8B820,Bug Olive
-Mega Golurk,M,#E0C068,Ground Tan
-Mega Greninja,M,#6890F0,Water Blue
-Mega Gyarados,M,#705848,Dark Umber
-Mega Hawlucha,M,#C03028,Fighting Crimson
-Mega Heracross,M,#A8B820,Bug Olive
-Mega Houndoom,M,#705848,Dark Umber
-Mega Kangaskhan,M,#A8A878,Normal Khaki
-Mega Lopunny,M,#C03028,Fighting Crimson
-Mega Lucario,M,#B8B8D0,Steel Silver
-Lucario Z,L,#B8B8D0,Steel Silver
-Mega Malamar,M,#705848,Dark Umber
-Mega Manectric,M,#F8D030,Electric Yellow
-Mega Mawile,M,#EE99AC,Fairy Rose
-Mega Medicham,M,#C03028,Fighting Crimson
-Mega Meganium,M,#78C850,Grass Green
-Mega Meowstic,M,#F85888,Psychic Pink
-Mega Metagross,M,#B8B8D0,Steel Silver
-Mega Pidgeot,M,#A8A878,Normal Khaki
-Mega Pinsir,M,#A8B820,Bug Olive
-Mega Pyroar,M,#F08030,Fire Orange
-Mega Raichu X,M,#F8D030,Electric Yellow
-Mega Raichu Y,M,#F8D030,Electric Yellow
-Mega Sableye,M,#705848,Dark Umber
-Mega Salamence,M,#7038F8,Dragon Indigo
-Mega Sceptile,M,#7038F8,Dragon Indigo
-Mega Scizor,M,#C03028,Steel Red
-Mega Scolipede,M,#A8B820,Bug Olive
-Mega Scovillain,M,#78C850,Grass Green
-Mega Scrafty,M,#705848,Dark Umber
-Mega Sharpedo,M,#6890F0,Water Blue
-Mega Skarmory,M,#B8B8D0,Steel Silver
-Mega Slowbro,M,#6890F0,Water Blue
-Mega Staraptor,M,#A8A878,Normal Khaki
-Mega Starmie,M,#6890F0,Water Blue
-Mega Steelix,M,#B8B8D0,Steel Silver
-Mega Swampert,M,#6890F0,Water Blue
-Mega Tyranitar,M,#705848,Dark Umber
-Mega Venusaur,M,#78C850,Grass Green
-Mega Victreebel,M,#78C850,Grass Green`;
-const POKEMON_AESTHETICS = {};
-    RAW_AESTHETICS_CSV.trim().split('\n').forEach((line, index) => {
-        if (index === 0) return; 
-        let [name, letter, color] = line.split(',');
-        if (!name || !letter || !color) return;
-        name = name.trim();
-        
-        let id = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-        
-        if (name.includes('Mega ')) {
-            let base = name.replace('Mega ', '').toLowerCase().replace(/[^a-z0-9]/g, '');
-            id = base + 'mega';
-            if (id.includes('xmega')) id = id.replace('xmega', 'megax');
-            if (id.includes('ymega')) id = id.replace('ymega', 'megay');
-        }
-        if (name.includes('Alolan ')) id = name.replace('Alolan ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'alola';
-        if (name.includes('Galarian ')) id = name.replace('Galarian ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'galar';
-        if (name.includes('Hisuian ')) id = name.replace('Hisuian ', '').toLowerCase().replace(/[^a-z0-9]/g, '') + 'hisui';
-        
-        if (name === "Aegislash (Blade)") id = "aegislashblade";
-        if (name === "Indeedee (Female)") id = "indeedeef";
-        if (name === "Palafin (Hero)") id = "palafinhero";
-        
-        let rotomMatch = name.match(/Rotom \(([^)]+)\)/);
-        if (rotomMatch) id = 'rotom' + rotomMatch[1].toLowerCase();
-        
-        let tatsuMatch = name.match(/Tatsugiri \(([^)]+)\)/);
-        if (tatsuMatch) id = 'tatsugiri' + tatsuMatch[1].toLowerCase();
-
-        POKEMON_AESTHETICS[id] = { letter: letter.trim(), color: color.trim() };
-    });
+    const POKEMON_AESTHETICS = {
+      "bulbasaur": { letter: "B", color: "#78C850" }, "ivysaur": { letter: "I", color: "#78C850" }, "venusaur": { letter: "V", color: "#78C850" },
+      "charmander": { letter: "C", color: "#F08030" }, "charmeleon": { letter: "C", color: "#F08030" }, "charizard": { letter: "C", color: "#F08030" },
+      "squirtle": { letter: "S", color: "#6890F0" }, "wartortle": { letter: "W", color: "#6890F0" }, "blastoise": { letter: "B", color: "#6890F0" },
+      "pichu": { letter: "P", color: "#F8D030" }, "pikachu": { letter: "P", color: "#F8D030" }, "raichu": { letter: "R", color: "#F8D030" },
+      "gastly": { letter: "G", color: "#705898" }, "haunter": { letter: "H", color: "#705898" }, "gengar": { letter: "G", color: "#705898" },
+      "kangaskhan": { letter: "K", color: "#A8A878" }, "staryu": { letter: "S", color: "#6890F0" }, "starmie": { letter: "S", color: "#F85888" },
+      "pinsir": { letter: "P", color: "#A8B820" }, "magikarp": { letter: "M", color: "#F08030" }, "gyarados": { letter: "G", color: "#6890F0" },
+      "dratini": { letter: "D", color: "#7038F8" }, "dragonair": { letter: "D", color: "#7038F8" }, "dragonite": { letter: "D", color: "#F08030" },
+      "totodile": { letter: "T", color: "#6890F0" }, "croconaw": { letter: "C", color: "#6890F0" }, "feraligatr": { letter: "F", color: "#6890F0" },
+      "scyther": { letter: "S", color: "#A8B820" }, "scizor": { letter: "S", color: "#C03028" }, "heracross": { letter: "H", color: "#C03028" },
+      "larvitar": { letter: "L", color: "#B8A038" }, "pupitar": { letter: "P", color: "#B8A038" }, "tyranitar": { letter: "T", color: "#705848" },
+      "ralts": { letter: "R", color: "#F85888" }, "kirlia": { letter: "K", color: "#F85888" }, "gardevoir": { letter: "G", color: "#F85888" }, "gallade": { letter: "G", color: "#C03028" },
+      "feebas": { letter: "F", color: "#A8A878" }, "milotic": { letter: "M", color: "#6890F0" }, "beldum": { letter: "B", color: "#B8B8D0" },
+      "metang": { letter: "M", color: "#B8B8D0" }, "metagross": { letter: "M", color: "#B8B8D0" }, "piplup": { letter: "P", color: "#6890F0" },
+      "prinplup": { letter: "P", color: "#6890F0" }, "empoleon": { letter: "E", color: "#B8B8D0" }, "gible": { letter: "G", color: "#7038F8" },
+      "gabite": { letter: "G", color: "#7038F8" }, "garchomp": { letter: "G", color: "#7038F8" }, "riolu": { letter: "R", color: "#C03028" }, "lucario": { letter: "L", color: "#B8B8D0" },
+      "snivy": { letter: "S", color: "#78C850" }, "servine": { letter: "S", color: "#78C850" }, "serperior": { letter: "S", color: "#78C850" },
+      "oshawott": { letter: "O", color: "#6890F0" }, "dewott": { letter: "D", color: "#6890F0" }, "samurott": { letter: "S", color: "#6890F0" },
+      "cottonee": { letter: "C", color: "#78C850" }, "whimsicott": { letter: "W", color: "#EE99AC" }, "emolga": { letter: "E", color: "#F8D030" },
+      "deino": { letter: "D", color: "#705848" }, "zweilous": { letter: "Z", color: "#705848" }, "hydreigon": { letter: "H", color: "#705848" },
+      "chespin": { letter: "C", color: "#78C850" }, "quilladin": { letter: "Q", color: "#78C850" }, "chesnaught": { letter: "C", color: "#78C850" },
+      "fennekin": { letter: "F", color: "#F08030" }, "braixen": { letter: "B", color: "#F08030" }, "delphox": { letter: "D", color: "#F85888" },
+      "froakie": { letter: "F", color: "#6890F0" }, "frogadier": { letter: "F", color: "#6890F0" }, "greninja": { letter: "G", color: "#705848" },
+      "fletchling": { letter: "F", color: "#A8A878" }, "fletchinder": { letter: "F", color: "#F08030" }, "talonflame": { letter: "T", color: "#F08030" },
+      "honedge": { letter: "H", color: "#B8B8D0" }, "doublade": { letter: "D", color: "#B8B8D0" }, "aegislash": { letter: "A", color: "#B8B8D0" }, "hawlucha": { letter: "H", color: "#C03028" },
+      "litten": { letter: "L", color: "#F08030" }, "torracat": { letter: "T", color: "#F08030" }, "incineroar": { letter: "I", color: "#705848" },
+      "bounsweet": { letter: "B", color: "#78C850" }, "steenee": { letter: "S", color: "#78C850" }, "tsareena": { letter: "T", color: "#78C850" },
+      "oranguru": { letter: "O", color: "#A8A878" }, "jangmoo": { letter: "J", color: "#7038F8" }, "hakamoo": { letter: "H", color: "#7038F8" }, "kommoo": { letter: "K", color: "#7038F8" },
+      "hatenna": { letter: "H", color: "#F85888" }, "hattrem": { letter: "H", color: "#F85888" }, "hatterene": { letter: "H", color: "#EE99AC" },
+      "dreepy": { letter: "D", color: "#705898" }, "drakloak": { letter: "D", color: "#705898" }, "dragapult": { letter: "D", color: "#705898" },
+      "teddiursa": { letter: "T", color: "#A8A878" }, "ursaring": { letter: "U", color: "#A8A878" }, "ursaluna": { letter: "U", color: "#E0C068" },
+      "basculin": { letter: "B", color: "#6890F0" }, "basculegion": { letter: "B", color: "#705898" }, "sneaselhisui": { letter: "H", color: "#C03028" }, "sneasler": { letter: "S", color: "#C03028" },
+      "tandemaus": { letter: "T", color: "#A8A878" }, "maushold": { letter: "M", color: "#A8A878" }, "tinkatink": { letter: "T", color: "#EE99AC" },
+      "tinkatuff": { letter: "T", color: "#EE99AC" }, "tinkaton": { letter: "T", color: "#EE99AC" }, "finizen": { letter: "F", color: "#6890F0" }, "palafin": { letter: "P", color: "#6890F0" },
+      "dondozo": { letter: "D", color: "#6890F0" }, "tatsugiri": { letter: "T", color: "#7038F8" }, "pawniard": { letter: "P", color: "#705848" },
+      "bisharp": { letter: "B", color: "#705848" }, "kingambit": { letter: "K", color: "#705848" }, "poltchageist": { letter: "P", color: "#78C850" },
+      "sinistcha": { letter: "S", color: "#78C850" }, "duraludon": { letter: "D", color: "#B8B8D0" }, "archaludon": { letter: "A", color: "#B8B8D0" },
+      "eevee": { letter: "E", color: "#A8A878" }, "vaporeon": { letter: "V", color: "#6890F0" }, "jolteon": { letter: "J", color: "#F8D030" },
+      "flareon": { letter: "F", color: "#F08030" }, "espeon": { letter: "E", color: "#F85888" }, "umbreon": { letter: "U", color: "#705848" },
+      "leafeon": { letter: "L", color: "#78C850" }, "glaceon": { letter: "G", color: "#98D8D8" }, "sylveon": { letter: "S", color: "#EE99AC" },
+      "chikorita": { letter: "C", color: "#78C850" }, "bayleef": { letter: "B", color: "#78C850" }, "meganium": { letter: "M", color: "#78C850" },
+      "cyndaquil": { letter: "C", color: "#F08030" }, "quilava": { letter: "Q", color: "#F08030" }, "typhlosion": { letter: "T", color: "#F08030" },
+      "turtwig": { letter: "T", color: "#78C850" }, "grotle": { letter: "G", color: "#78C850" }, "torterra": { letter: "T", color: "#78C850" },
+      "chimchar": { letter: "C", color: "#F08030" }, "monferno": { letter: "M", color: "#F08030" }, "infernape": { letter: "I", color: "#F08030" },
+      "tepig": { letter: "T", color: "#F08030" }, "pignite": { letter: "P", color: "#F08030" }, "emboar": { letter: "E", color: "#F08030" },
+      "rowlet": { letter: "R", color: "#78C850" }, "dartrix": { letter: "D", color: "#78C850" }, "decidueye": { letter: "D", color: "#705898" },
+      "popplio": { letter: "P", color: "#6890F0" }, "brionne": { letter: "B", color: "#6890F0" }, "primarina": { letter: "P", color: "#EE99AC" },
+      "treecko": { letter: "T", color: "#78C850" }, "grovyle": { letter: "G", color: "#78C850" }, "sceptile": { letter: "S", color: "#78C850" },
+      "torchic": { letter: "T", color: "#F08030" }, "combusken": { letter: "C", color: "#F08030" }, "blaziken": { letter: "B", color: "#F08030" },
+      "mudkip": { letter: "M", color: "#6890F0" }, "marshtomp": { letter: "M", color: "#6890F0" }, "swampert": { letter: "S", color: "#6890F0" },
+      "weedle": { letter: "W", color: "#A8B820" }, "kakuna": { letter: "K", color: "#A8B820" }, "beedrill": { letter: "B", color: "#A8B820" },
+      "pidgey": { letter: "P", color: "#A8A878" }, "pidgeotto": { letter: "P", color: "#A8A878" }, "pidgeot": { letter: "P", color: "#A8A878" },
+      "abra": { letter: "A", color: "#F85888" }, "kadabra": { letter: "K", color: "#F85888" }, "alakazam": { letter: "A", color: "#F85888" },
+      "slowpoke": { letter: "S", color: "#6890F0" }, "slowbro": { letter: "S", color: "#6890F0" }, "aerodactyl": { letter: "A", color: "#B8A038" },
+      "mareep": { letter: "M", color: "#F8D030" }, "flaaffy": { letter: "F", color: "#F8D030" }, "ampharos": { letter: "A", color: "#F8D030" },
+      "onix": { letter: "O", color: "#B8A038" }, "steelix": { letter: "S", color: "#B8B8D0" }, "houndour": { letter: "H", color: "#705848" }, "houndoom": { letter: "H", color: "#705848" },
+      "bellsprout": { letter: "B", color: "#78C850" }, "weepinbell": { letter: "W", color: "#78C850" }, "victreebel": { letter: "V", color: "#78C850" },
+      "aron": { letter: "A", color: "#B8B8D0" }, "lairon": { letter: "L", color: "#B8B8D0" }, "aggron": { letter: "A", color: "#B8B8D0" },
+      "meditite": { letter: "M", color: "#C03028" }, "medicham": { letter: "M", color: "#C03028" }, "electrike": { letter: "E", color: "#F8D030" },
+      "manectric": { letter: "M", color: "#F8D030" }, "carvanha": { letter: "C", color: "#6890F0" }, "sharpedo": { letter: "S", color: "#6890F0" },
+      "numel": { letter: "N", color: "#F08030" }, "camerupt": { letter: "C", color: "#F08030" }, "swablu": { letter: "S", color: "#A8A878" },
+      "altaria": { letter: "A", color: "#7038F8" }, "shuppet": { letter: "S", color: "#705898" }, "banette": { letter: "B", color: "#705898" },
+      "absol": { letter: "A", color: "#705848" }, "snorunt": { letter: "S", color: "#98D8D8" }, "glalie": { letter: "G", color: "#98D8D8" },
+      "froslass": { letter: "F", color: "#705898" }, "bagon": { letter: "B", color: "#7038F8" }, "shelgon": { letter: "S", color: "#7038F8" },
+      "salamence": { letter: "S", color: "#7038F8" }, "mawile": { letter: "M", color: "#B8B8D0" }, "sableye": { letter: "S", color: "#705848" },
+      "buneary": { letter: "B", color: "#A8A878" }, "lopunny": { letter: "L", color: "#A8A878" }, "snover": { letter: "S", color: "#78C850" },
+      "abomasnow": { letter: "A", color: "#98D8D8" }, "audino": { letter: "A", color: "#A8A878" }, "starly": { letter: "S", color: "#A8A878" },
+      "staravia": { letter: "S", color: "#A8A878" }, "staraptor": { letter: "S", color: "#A8A878" }, "skarmory": { letter: "S", color: "#B8B8D0" },
+      "venipede": { letter: "V", color: "#A8B820" }, "whirlipede": { letter: "W", color: "#A8B820" }, "scolipede": { letter: "S", color: "#A8B820" },
+      "skrelp": { letter: "S", color: "#A040A0" }, "dragalge": { letter: "D", color: "#A040A0" }, "litleo": { letter: "L", color: "#F08030" },
+      "pyroar": { letter: "P", color: "#F08030" }, "crabrawler": { letter: "C", color: "#C03028" }, "crabominable": { letter: "C", color: "#98D8D8" },
+      "capsakid": { letter: "C", color: "#78C850" }, "scovillain": { letter: "S", color: "#78C850" }, "golett": { letter: "G", color: "#E0C068" },
+      "golurk": { letter: "G", color: "#E0C068" }, "drampa": { letter: "D", color: "#A8A878" }, "tynamo": { letter: "T", color: "#F8D030" },
+      "eelektrik": { letter: "E", color: "#F8D030" }, "eelektross": { letter: "E", color: "#F8D030" }, "falinks": { letter: "F", color: "#C03028" },
+      "binacle": { letter: "B", color: "#B8A038" }, "barbaracle": { letter: "B", color: "#B8A038" }, "flabebe": { letter: "F", color: "#EE99AC" },
+      "floette": { letter: "F", color: "#EE99AC" }, "florges": { letter: "F", color: "#EE99AC" }, "chingling": { letter: "C", color: "#F85888" },
+      "chimecho": { letter: "C", color: "#F85888" }, "espurr": { letter: "E", color: "#F85888" }, "meowstic": { letter: "M", color: "#F85888" },
+      "indeedee": { letter: "I", color: "#F85888" }, "inkay": { letter: "I", color: "#705848" }, "malamar": { letter: "M", color: "#705848" },
+      "foongus": { letter: "F", color: "#78C850" }, "amoonguss": { letter: "A", color: "#78C850" }, "cleffa": { letter: "C", color: "#EE99AC" },
+      "clefairy": { letter: "C", color: "#EE99AC" }, "clefable": { letter: "C", color: "#EE99AC" }, "togepi": { letter: "T", color: "#EE99AC" },
+      "togetic": { letter: "T", color: "#EE99AC" }, "togekiss": { letter: "T", color: "#EE99AC" }, "impidimp": { letter: "I", color: "#705848" },
+      "morgrem": { letter: "M", color: "#705848" }, "grimmsnarl": { letter: "G", color: "#705848" }, "wingull": { letter: "W", color: "#6890F0" },
+      "pelipper": { letter: "P", color: "#6890F0" }, "torkoal": { letter: "T", color: "#F08030" }, "vulpix": { letter: "V", color: "#F08030" },
+      "ninetales": { letter: "N", color: "#F08030" }, "porygon": { letter: "P", color: "#A8A878" }, "porygon2": { letter: "P", color: "#A8A878" },
+      "porygonz": { letter: "P", color: "#A8A878" }, "girafarig": { letter: "G", color: "#A8A878" }, "farigiraf": { letter: "F", color: "#A8A878" },
+      "growlithe": { letter: "G", color: "#F08030" }, "arcanine": { letter: "A", color: "#F08030" }, "mankey": { letter: "M", color: "#C03028" },
+      "primeape": { letter: "P", color: "#C03028" }, "annihilape": { letter: "A", color: "#705898" }, "gimmighoul": { letter: "G", color: "#705898" },
+      "gholdengo": { letter: "G", color: "#B8B8D0" }, "grookey": { letter: "G", color: "#78C850" }, "thwackey": { letter: "T", color: "#78C850" },
+      "rillaboom": { letter: "R", color: "#78C850" }, "scorbunny": { letter: "S", color: "#F08030" }, "raboot": { letter: "R", color: "#F08030" },
+      "cinderace": { letter: "C", color: "#F08030" }, "sobble": { letter: "S", color: "#6890F0" }, "drizzile": { letter: "D", color: "#6890F0" },
+      "inteleon": { letter: "I", color: "#6890F0" }, "sprigatito": { letter: "S", color: "#78C850" }, "floragato": { letter: "F", color: "#78C850" },
+      "meowscarada": { letter: "M", color: "#78C850" }, "fuecoco": { letter: "F", color: "#F08030" }, "crocalor": { letter: "C", color: "#F08030" },
+      "skeledirge": { letter: "S", color: "#F08030" }, "quaxly": { letter: "Q", color: "#6890F0" }, "quaxwell": { letter: "Q", color: "#6890F0" },
+      "quaquaval": { letter: "Q", color: "#6890F0" }, "charcadet": { letter: "C", color: "#F08030" }, "armarouge": { letter: "A", color: "#F08030" },
+      "ceruledge": { letter: "C", color: "#F08030" }, "paldeanwooper": { letter: "P", color: "#A040A0" }, "clodsire": { letter: "C", color: "#A040A0" },
+      "nacli": { letter: "N", color: "#B8A038" }, "naclstack": { letter: "N", color: "#B8A038" }, "garganacl": { letter: "G", color: "#B8A038" },
+      "frigibax": { letter: "F", color: "#7038F8" }, "arctibax": { letter: "A", color: "#7038F8" }, "baxcalibur": { letter: "B", color: "#7038F8" },
+      "applin": { letter: "A", color: "#78C850" }, "flapple": { letter: "F", color: "#78C850" }, "appletun": { letter: "A", color: "#78C850" },
+      "dipplin": { letter: "D", color: "#78C850" }, "hydrapple": { letter: "H", color: "#78C850" }, "munchlax": { letter: "M", color: "#A8A878" },
+      "snorlax": { letter: "S", color: "#A8A878" }, "lapras": { letter: "L", color: "#6890F0" }, "ditto": { letter: "D", color: "#A8A878" },
+      "rotom": { letter: "R", color: "#F8D030" }, "magnemite": { letter: "M", color: "#F8D030" }, "magneton": { letter: "M", color: "#F8D030" },
+      "magnezone": { letter: "M", color: "#F8D030" }, "azurill": { letter: "A", color: "#A8A878" }, "marill": { letter: "M", color: "#6890F0" },
+      "azumarill": { letter: "A", color: "#6890F0" }, "koffing": { letter: "K", color: "#A040A0" }, "weezing": { letter: "W", color: "#A040A0" },
+      "grimer": { letter: "G", color: "#A040A0" }, "muk": { letter: "M", color: "#A040A0" }, "zorua": { letter: "Z", color: "#705848" },
+      "zoroark": { letter: "Z", color: "#705848" }, "wimpod": { letter: "W", color: "#A8B820" }, "golisopod": { letter: "G", color: "#A8B820" },
+      "dewpider": { letter: "D", color: "#6890F0" }, "araquanid": { letter: "A", color: "#6890F0" }, "mimikyu": { letter: "M", color: "#705898" },
+      "shroomish": { letter: "S", color: "#78C850" }, "breloom": { letter: "B", color: "#78C850" }, "mareanie": { letter: "M", color: "#A040A0" },
+      "toxapex": { letter: "T", color: "#A040A0" }, "rookidee": { letter: "R", color: "#A8A878" }, "corvisquire": { letter: "C", color: "#A8A878" },
+      "corviknight": { letter: "C", color: "#B8B8D0" }, "shellos": { letter: "S", color: "#6890F0" }, "gastrodon": { letter: "G", color: "#6890F0" },
+      "drilbur": { letter: "D", color: "#E0C068" }, "excadrill": { letter: "E", color: "#E0C068" }, "glimmet": { letter: "G", color: "#B8A038" },
+      "glimmora": { letter: "G", color: "#B8A038" }, "flamigo": { letter: "F", color: "#A8A878" }, "smeargle": { letter: "S", color: "#A8A878" },
+      "bronzor": { letter: "B", color: "#B8B8D0" }, "bronzong": { letter: "B", color: "#B8B8D0" }, "makuhita": { letter: "M", color: "#C03028" },
+      "hariyama": { letter: "H", color: "#C03028" }, "scraggy": { letter: "S", color: "#705848" }, "scrafty": { letter: "S", color: "#705848" },
+      "vullaby": { letter: "V", color: "#705848" }, "mandibuzz": { letter: "M", color: "#705848" }, "rufflet": { letter: "R", color: "#A8A878" },
+      "braviary": { letter: "B", color: "#A8A878" }, "gothita": { letter: "G", color: "#F85888" }, "gothorita": { letter: "G", color: "#F85888" },
+      "gothitelle": { letter: "G", color: "#F85888" }, "litwick": { letter: "L", color: "#705898" }, "lampent": { letter: "L", color: "#705898" },
+      "chandelure": { letter: "C", color: "#705898" }, "raichualola": { letter: "A", color: "#F8D030" }, "sandshrewalola": { letter: "A", color: "#98D8D8" },
+      "sandslashalola": { letter: "A", color: "#98D8D8" }, "vulpixalola": { letter: "A", color: "#98D8D8" }, "ninetalesalola": { letter: "A", color: "#98D8D8" },
+      "grimeralola": { letter: "A", color: "#A040A0" }, "mukalola": { letter: "A", color: "#A040A0" }, "slowpokegalar": { letter: "G", color: "#F85888" },
+      "slowbrogalar": { letter: "G", color: "#A040A0" }, "weezinggalar": { letter: "G", color: "#EE99AC" }, "growlithehisui": { letter: "H", color: "#F08030" },
+      "arcaninehisui": { letter: "H", color: "#F08030" }, "typhlosionhisui": { letter: "H", color: "#705898" }, "samurotthisui": { letter: "H", color: "#705848" },
+      "zoruahisui": { letter: "H", color: "#A8A878" }, "zoroarkhisui": { letter: "H", color: "#A8A878" }, "braviaryhisui": { letter: "H", color: "#F85888" },
+      "decidueyehisui": { letter: "H", color: "#C03028" }, "aegislashblade": { letter: "A", color: "#B8B8D0" }, "indeedeef": { letter: "I", color: "#F85888" },
+      "palafinhero": { letter: "P", color: "#6890F0" }, "rotomwash": { letter: "R", color: "#6890F0" }, "rotomheat": { letter: "R", color: "#F08030" },
+      "rotommow": { letter: "R", color: "#78C850" }, "rotomfrost": { letter: "R", color: "#98D8D8" }, "rotomfan": { letter: "R", color: "#A8A878" },
+      "tatsugiridroopy": { letter: "T", color: "#7038F8" }, "tatsugiristretchy": { letter: "T", color: "#7038F8" }, "tatsugiricurly": { letter: "T", color: "#7038F8" },
+      "abomasnowmega": { letter: "M", color: "#98D8D8" }, "absolmega": { letter: "M", color: "#705848" }, "absolz": { letter: "A", color: "#705848" },
+      "aerodactylmega": { letter: "M", color: "#B8A038" }, "aggronmega": { letter: "M", color: "#B8B8D0" }, "alakazammega": { letter: "M", color: "#F85888" },
+      "altariamega": { letter: "M", color: "#EE99AC" }, "ampharosmega": { letter: "M", color: "#7038F8" }, "audinomega": { letter: "M", color: "#EE99AC" },
+      "banettemega": { letter: "M", color: "#705898" }, "barbaraclemega": { letter: "M", color: "#B8A038" }, "baxcaliburmega": { letter: "M", color: "#7038F8" },
+      "beedrillmega": { letter: "M", color: "#A040A0" }, "blastoisemega": { letter: "M", color: "#6890F0" }, "blazikenmega": { letter: "M", color: "#F08030" },
+      "cameruptmega": { letter: "M", color: "#F08030" }, "chandeluremega": { letter: "M", color: "#705898" }, "charizardmegax": { letter: "M", color: "#7038F8" },
+      "charizardmegay": { letter: "M", color: "#F08030" }, "chesnaughtmega": { letter: "M", color: "#78C850" }, "chimechomega": { letter: "M", color: "#F85888" },
+      "clefablemega": { letter: "M", color: "#EE99AC" }, "crabominablemega": { letter: "M", color: "#98D8D8" }, "delphomegax": { letter: "M", color: "#F85888" },
+      "dragalgemega": { letter: "M", color: "#A040A0" }, "dragonitemega": { letter: "M", color: "#7038F8" }, "drampamega": { letter: "M", color: "#A8A878" },
+      "eelektrossmega": { letter: "M", color: "#F8D030" }, "emboarmega": { letter: "M", color: "#F08030" }, "excadrillmega": { letter: "M", color: "#E0C068" },
+      "falinksmega": { letter: "M", color: "#C03028" }, "feraligatrmega": { letter: "M", color: "#6890F0" }, "floettemega": { letter: "M", color: "#EE99AC" },
+      "froslassmega": { letter: "M", color: "#705898" }, "gallademega": { letter: "M", color: "#C03028" }, "garchompmega": { letter: "M", color: "#7038F8" },
+      "gardevoirmega": { letter: "M", color: "#EE99AC" }, "gengarmega": { letter: "M", color: "#705898" }, "glaliemega": { letter: "M", color: "#98D8D8" },
+      "glimmoramega": { letter: "M", color: "#B8A038" }, "golisopodmega": { letter: "M", color: "#A8B820" }, "golurkmega": { letter: "M", color: "#E0C068" },
+      "greninjamega": { letter: "M", color: "#6890F0" }, "gyaradosmega": { letter: "M", color: "#705848" }, "hawluchamega": { letter: "M", color: "#C03028" },
+      "heracrossmega": { letter: "M", color: "#A8B820" }, "houndoommega": { letter: "M", color: "#705848" }, "kangaskhanmega": { letter: "M", color: "#A8A878" },
+      "lopunnmegay": { letter: "M", color: "#C03028" }, "lucariomega": { letter: "M", color: "#B8B8D0" }, "lucarioz": { letter: "L", color: "#B8B8D0" },
+      "malamarmega": { letter: "M", color: "#705848" }, "manectricmega": { letter: "M", color: "#F8D030" }, "mawilemega": { letter: "M", color: "#EE99AC" },
+      "medichammega": { letter: "M", color: "#C03028" }, "meganiummega": { letter: "M", color: "#78C850" }, "meowsticmega": { letter: "M", color: "#F85888" },
+      "metagrossmega": { letter: "M", color: "#B8B8D0" }, "pidgeotmega": { letter: "M", color: "#A8A878" }, "pinsirmega": { letter: "M", color: "#A8B820" },
+      "pyroarmega": { letter: "M", color: "#F08030" }, "raichumegax": { letter: "M", color: "#F8D030" }, "raichumegay": { letter: "M", color: "#F8D030" },
+      "sableyemega": { letter: "M", color: "#705848" }, "salamencemega": { letter: "M", color: "#7038F8" }, "sceptilemega": { letter: "M", color: "#7038F8" },
+      "scizormega": { letter: "M", color: "#C03028" }, "scolipedemega": { letter: "M", color: "#A8B820" }, "scovillainmega": { letter: "M", color: "#78C850" },
+      "scraftmegay": { letter: "M", color: "#705848" }, "sharpedomega": { letter: "M", color: "#6890F0" }, "skarmormegay": { letter: "M", color: "#B8B8D0" },
+      "slowbromega": { letter: "M", color: "#6890F0" }, "staraptormega": { letter: "M", color: "#A8A878" }, "starmiemega": { letter: "M", color: "#6890F0" },
+      "steelimegax": { letter: "M", color: "#B8B8D0" }, "swampertmega": { letter: "M", color: "#6890F0" }, "tyranitarmega": { letter: "M", color: "#705848" },
+      "venusaurmega": { letter: "M", color: "#78C850" }, "victreebelmega": { letter: "M", color: "#78C850" }
+    };
 
     let showdownData = { }; let abilitiesData = {}; let movesData = {}; let learnsetsData = {}; let itemsData = {};
-    
-    // --- STATE MANAGEMENT ---
     let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", replays: "", teamName: `Team ${i+1}` }));
-    let currentTeamIndex = 0;
-    let currentTeam = []; 
-    let pendingMon = null; 
+    let currentTeamIndex = 0; let currentTeam = []; let pendingMon = null; let draggedSlotIndex = null;
+    let simYourSelection = []; let simOppTeam = [];
 
-    let draggedSlotIndex = null;
-    let simYourSelection = [];
-    let simOppTeam = [];
-
-    // --- SPRITE URL GENERATOR ---
-    function getSpriteUrl(monId) {
-        if (CUSTOM_SPRITES[monId]) return CUSTOM_SPRITES[monId];
-        let spriteId = monId;
-        if (monId.includes('mega')) {
-            if (monId.endsWith('x') || monId.endsWith('y') || monId.endsWith('z')) {
-                spriteId = monId.replace(/mega([xyz])$/, '-mega$1');
-            } else if (monId.match(/mega(droopy|stretchy|curly)$/)) {
-                spriteId = monId.replace(/mega(.*)$/, '-mega');
-            } else {
-                spriteId = monId.replace('mega', '-mega');
-            }
-        }
-        return `https://play.pokemonshowdown.com/sprites/gen5/${spriteId}.png`;
+    // --- CORE RENDERING ---
+    function renderRoster() {
+        let html = '';
+        ROSTER_SECTIONS.forEach(sec => {
+            html += `<${sec.heading}>${sec.text}</${sec.heading}>`;
+            sec.subsections.forEach(sub => {
+                if (sub.heading) html += `<${sub.heading}>${sub.text}</${sub.heading}>`;
+                html += `<div class="grid-container">`;
+                sub.lines.forEach(line => {
+                    html += `<div class="poke-box">` + line.split(' / ').map(stage => {
+                        return `<div class="stage-container">` + stage.split('|').map(name => {
+                            let clean = name.trim(); let id = clean.toLowerCase().replace(/[^a-z0-9]/g, ''); let spr = id;
+                            if (clean.includes("Alolan ")) { id = clean.replace("Alolan ", "").toLowerCase() + "alola"; spr = id.replace('alola', '-alola'); }
+                            else if (clean.includes("Galarian ")) { id = clean.replace("Galarian ", "").toLowerCase() + "galar"; spr = id.replace('galar', '-galar'); }
+                            else if (clean.includes("Hisuian ")) { id = clean.replace("Hisuian ", "").toLowerCase() + "hisui"; spr = id.replace('hisui', '-hisui'); }
+                            else if (clean.includes("Paldean ")) { id = clean.replace("Paldean ", "").toLowerCase() + "paldea"; spr = id.replace('paldea', '-paldea'); }
+                            
+                            if (clean === 'Flabébé') { spr = 'flabebe'; id = 'flabebe'; }
+                            if (clean === 'Porygon-Z') spr = 'porygon-z';
+                            if (clean === 'Mime Jr.') { spr = 'mimejr'; id = 'mimejr'; }
+                            if (clean === 'Mr. Mime') { spr = 'mrmime'; id = 'mrmime'; }
+                            if (clean === 'Jangmo-o') { spr = 'jangmoo'; id = 'jangmoo'; }
+                            if (clean === 'Hakamo-o') { spr = 'hakamoo'; id = 'hakamoo'; }
+                            if (clean === 'Kommo-o') { spr = 'kommoo'; id = 'kommoo'; }
+                            
+                            let url = `https://play.pokemonshowdown.com/sprites/gen5/${spr}.png`;
+                            return `<div class="poke-sprite-container" onclick="showData('${id}', '${clean.replace(/'/g, "\\'")}', '${url}')">
+                                <img src="${url}" alt="${clean}" class="poke-sprite" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
+                                <span>${clean}</span>
+                            </div>`;
+                        }).join('<div class="branch-divider">/</div>') + `</div>`;
+                    }).join('<span class="arrow">▶</span>') + `</div>`;
+                });
+                html += `</div>`;
+            });
+        });
+        document.getElementById('roster-wrapper').innerHTML = html;
     }
 
-    function getBaseSprite(monId) {
-        let baseId = monId.replace(/mega.*/, '');
-        return `https://play.pokemonshowdown.com/sprites/gen5/${baseId}.png`;
-    }
-
-    // --- INITIALIZATION ---
     window.addEventListener('load', () => {
       if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities && window.exports.BattleMovedex && window.exports.BattleLearnsets && window.exports.BattleItems) {
-          showdownData = window.exports.BattlePokedex;
-          abilitiesData = window.exports.BattleAbilities;
-          movesData = window.exports.BattleMovedex;
-          learnsetsData = window.exports.BattleLearnsets;
-          itemsData = window.exports.BattleItems;
+          showdownData = window.exports.BattlePokedex; abilitiesData = window.exports.BattleAbilities; movesData = window.exports.BattleMovedex;
+          learnsetsData = window.exports.BattleLearnsets; itemsData = window.exports.BattleItems;
           
           let itemOptions = "";
-          Object.values(itemsData).forEach(item => {
-              if (item.name && !item.megaStone && !item.zMove) itemOptions += `<option value="${item.name}">`;
-          });
+          Object.values(itemsData).forEach(item => { if (item.name && !item.megaStone && !item.zMove) itemOptions += `<option value="${item.name}">`; });
           document.getElementById('item-list').innerHTML = itemOptions;
 
-          // DYNAMIC MEGA INJECTION: Ensure new Megas have data even if Showdown hasn't updated yet.
           Object.keys(CUSTOM_SPRITES).forEach(megaId => {
               if (megaId.includes('mega') && !showdownData[megaId]) {
                   let baseId = megaId.replace(/mega[a-z]?$/, '');
@@ -1323,171 +782,66 @@ const POKEMON_AESTHETICS = {};
                       let clone = JSON.parse(JSON.stringify(showdownData[baseId]));
                       let letter = megaId.match(/mega([xyz])$/) ? " " + megaId.slice(-1).toUpperCase() : "";
                       clone.name = clone.name + "-Mega" + letter;
-                      clone.baseStats.hp += 0; clone.baseStats.atk += 20; clone.baseStats.def += 20;
-                      clone.baseStats.spa += 20; clone.baseStats.spd += 20; clone.baseStats.spe += 20;
+                      clone.baseStats.hp += 0; clone.baseStats.atk += 20; clone.baseStats.def += 20; clone.baseStats.spa += 20; clone.baseStats.spd += 20; clone.baseStats.spe += 20;
                       showdownData[megaId] = clone;
                   }
               }
           });
 
           document.getElementById('loading-overlay').style.display = 'none';
-          
-          buildRosterUI();
+          renderRoster();
           loadTeam();
       } else {
-          document.getElementById('loading-overlay').innerHTML = `
-            <h2 style="color:#ff0000;">Data Blocked by Browser</h2>
-            <p>Your browser's adblocker or tracking protection blocked the Pokémon Showdown scripts.</p>
-            <p style="color:#ffcc00;">Please turn off the shields for this site and refresh.</p>
-          `;
+          document.getElementById('loading-overlay').innerHTML = `<h2 style="color:#ff0000;">Data Blocked by Browser</h2><p>Your browser's adblocker blocked the Pokémon Showdown scripts.</p>`;
       }
     });
 
-    function formatVersionName(name) {
-        return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-    }
+    function formatVersionName(name) { return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '); }
 
     function fetchPokedexEntries(dexNum) {
         let container = document.getElementById('pokedex-entry-container');
         if (!container) return;
-        
-        if (!dexNum || dexNum <= 0) {
-            container.innerHTML = "<div style='text-align:center;'>No Pokédex entry available.</div>";
-            return;
-        }
+        if (!dexNum || dexNum <= 0) { container.innerHTML = "<div style='text-align:center;'>No Pokédex entry available.</div>"; return; }
 
-        fetch(`https://pokeapi.co/api/v2/pokemon-species/${dexNum}/`)
-        .then(res => res.json())
-        .then(data => {
+        fetch(`https://pokeapi.co/api/v2/pokemon-species/${dexNum}/`).then(res => res.json()).then(data => {
             let entries = data.flavor_text_entries.filter(e => e.language.name === 'en');
-            let uniqueEntries = [];
-            let seenTexts = new Set();
-            
+            let uniqueEntries = []; let seenTexts = new Set();
             for (let i = entries.length - 1; i >= 0; i--) {
-                let e = entries[i];
-                let cleanText = e.flavor_text.replace(/[\n\f\r]/g, ' ').replace(/\s{2,}/g, ' ');
-                if (!seenTexts.has(cleanText)) {
-                    seenTexts.add(cleanText);
-                    uniqueEntries.push({ text: cleanText, version: formatVersionName(e.version.name) });
-                }
+                let cleanText = entries[i].flavor_text.replace(/[\n\f\r]/g, ' ').replace(/\s{2,}/g, ' ');
+                if (!seenTexts.has(cleanText)) { seenTexts.add(cleanText); uniqueEntries.push({ text: cleanText, version: formatVersionName(entries[i].version.name) }); }
             }
-            
-            if (uniqueEntries.length === 0) {
-                container.innerHTML = "<div style='text-align:center;'>No English Pokédex entries found.</div>";
-                return;
-            }
+            if (uniqueEntries.length === 0) { container.innerHTML = "<div style='text-align:center;'>No English Pokédex entries found.</div>"; return; }
 
-            let latest = uniqueEntries[0];
-            let others = uniqueEntries.slice(1);
-
-            let html = `
-                <div style="font-size: 9px; font-style: italic; color: #fff; margin-bottom: 8px; line-height: 1.4;">
-                  "${latest.text}"
-                  <div style="text-align: right; color: #888; font-size: 7px; margin-top: 4px;">- Pokémon ${latest.version}</div>
-                </div>
-            `;
+            let latest = uniqueEntries[0]; let others = uniqueEntries.slice(1);
+            let html = `<div style="font-size: 9px; font-style: italic; color: #fff; margin-bottom: 8px; line-height: 1.4;">"${latest.text}"<div style="text-align: right; color: #888; font-size: 7px; margin-top: 4px;">- Pokémon ${latest.version}</div></div>`;
 
             if (others.length > 0) {
-                let othersHtml = others.map(e => `
-                  <div style="margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 8px; line-height: 1.4;">
-                    <div style="color: #ccc; font-size: 8px;">"${e.text}"</div>
-                    <div style="color: #888; text-align: right; font-size: 7px; margin-top: 4px;">- Pokémon ${e.version}</div>
-                  </div>
-                `).join('');
-
-                html += `
-                    <details style="background: #111; border: 1px solid #333; margin-top: 10px; border-radius: 4px;">
-                      <summary style="padding: 8px; font-size: 8px; color: #ffcc00; cursor: pointer; display: flex; justify-content: space-between; outline: none; border-radius: 4px;">
-                        <span>View Past Entries</span>
-                        <span style="color: #666;">(${others.length})</span>
-                      </summary>
-                      <div style="padding: 10px; max-height: 150px; overflow-y: auto; border-top: 1px solid #333; text-align: left; border-radius: 0 0 4px 4px;">
-                        ${othersHtml}
-                      </div>
-                    </details>
-                `;
+                let othersHtml = others.map(e => `<div style="margin-bottom: 8px; border-bottom: 1px dashed #333; padding-bottom: 8px; line-height: 1.4;"><div style="color: #ccc; font-size: 8px;">"${e.text}"</div><div style="color: #888; text-align: right; font-size: 7px; margin-top: 4px;">- Pokémon ${e.version}</div></div>`).join('');
+                html += `<details style="background: #111; border: 1px solid #333; margin-top: 10px; border-radius: 4px;"><summary style="padding: 8px; font-size: 8px; color: #ffcc00; cursor: pointer; display: flex; justify-content: space-between; outline: none; border-radius: 4px;"><span>View Past Entries</span><span style="color: #666;">(${others.length})</span></summary><div style="padding: 10px; max-height: 150px; overflow-y: auto; border-top: 1px solid #333; text-align: left; border-radius: 0 0 4px 4px;">${othersHtml}</div></details>`;
             }
-
             container.innerHTML = html;
-        })
-        .catch(err => {
-            container.innerHTML = "<div style='text-align:center; color:#ff4444;'>Failed to load Pokédex entries.</div>";
-        });
-    }
-
-    function buildRosterUI() {
-      const boxes = document.querySelectorAll('.poke-box');
-      boxes.forEach(box => {
-        const stages = box.innerHTML.split(/<span class="arrow">▶<\/span>|▶/i);
-        const newStages = stages.map(stage => {
-          const mons = stage.split('/');
-          const monHTML = mons.map(monNameHTML => {
-            let cleanName = monNameHTML.replace(/<[^>]*>?/gm, '').trim(); 
-            let jsonId = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '');
-            let spriteName = cleanName.toLowerCase().replace(/[^a-z0-9-]/g, '');
-
-            if (cleanName.includes("Alolan ")) { let base = cleanName.replace("Alolan ", "").toLowerCase(); jsonId = base + "alola"; spriteName = base + "-alola"; }
-            else if (cleanName.includes("Galarian ")) { let base = cleanName.replace("Galarian ", "").toLowerCase(); jsonId = base + "galar"; spriteName = base + "-galar"; }
-            else if (cleanName.includes("Hisuian ")) { let base = cleanName.replace("Hisuian ", "").toLowerCase(); jsonId = base + "hisui"; spriteName = base + "-hisui"; }
-            else if (cleanName.includes("Paldean ")) { let base = cleanName.replace("Paldean ", "").toLowerCase(); jsonId = base + "paldea"; spriteName = base + "-paldea"; }
-
-            if (cleanName === 'Flabébé') { spriteName = 'flabebe'; jsonId = 'flabebe'; }
-            if (cleanName === 'Porygon-Z') spriteName = 'porygon-z';
-            if (cleanName === 'Mime Jr.') { spriteName = 'mimejr'; jsonId = 'mimejr'; }
-            if (cleanName === 'Mr. Mime') { spriteName = 'mrmime'; jsonId = 'mrmime'; }
-            if (cleanName === 'Jangmo-o') { spriteName = 'jangmoo'; jsonId = 'jangmoo'; }
-            if (cleanName === 'Hakamo-o') { spriteName = 'hakamoo'; jsonId = 'hakamoo'; }
-            if (cleanName === 'Kommo-o') { spriteName = 'kommoo'; jsonId = 'kommoo'; }
-
-            const spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
-            return `
-              <div class="poke-sprite-container" onclick="showData('${jsonId}', '${cleanName.replace(/'/g, "\\'")}', '${spriteUrl}')">
-                <img src="${spriteUrl}" alt="${cleanName}" class="poke-sprite" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
-                <span>${cleanName}</span>
-              </div>
-            `;
-          }).join('<div class="branch-divider">/</div>');
-          return `<div class="stage-container">${monHTML}</div>`;
-        });
-        box.innerHTML = newStages.join('<span class="arrow">▶</span>');
-      });
+        }).catch(err => { container.innerHTML = "<div style='text-align:center; color:#ff4444;'>Failed to load Pokédex entries.</div>"; });
     }
 
     function showData(jsonId, displayName, spriteUrl) {
-      const modal = document.getElementById('data-modal');
-      const content = document.getElementById('modal-info');
+      const modal = document.getElementById('data-modal'); const content = document.getElementById('modal-info');
       let monData = showdownData[jsonId];
-
-      if (!monData) {
-        content.innerHTML = `<h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2><p style="color:#ff0000;">Error: Data not found.</p>`;
-      } else {
+      if (!monData) { content.innerHTML = `<h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2><p style="color:#ff0000;">Error: Data not found.</p>`; } else {
         let stats = monData.baseStats;
         let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
         
-        let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
-        let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
-        let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
-        let spa50 = Math.floor(0.5 * (2 * stats.spa + 31)) + 5;
-        let spd50 = Math.floor(0.5 * (2 * stats.spd + 31)) + 5;
-        let spe50 = Math.floor(0.5 * (2 * stats.spe + 31)) + 5;
+        let hp50  = calcLv50Stat(stats.hp,  true); let atk50 = calcLv50Stat(stats.atk); let def50 = calcLv50Stat(stats.def);
+        let spa50 = calcLv50Stat(stats.spa); let spd50 = calcLv50Stat(stats.spd); let spe50 = calcLv50Stat(stats.spe);
 
         let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Select Ability:</strong></div>`;
         let first = true; let initialDesc = "";
         
         for(let key in monData.abilities) {
-            let aName = monData.abilities[key];
-            let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
+            let aName = monData.abilities[key]; let aId = aName.toLowerCase().replace(/[^a-z0-9]/g, '');
             let aDesc = abilitiesData[aId] ? (abilitiesData[aId].desc || abilitiesData[aId].shortDesc) : "N/A";
-            
             if(first) initialDesc = aDesc;
             let safeDesc = aDesc.replace(/"/g, '&quot;');
-            
-            abilitiesHtml += `
-              <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
-                 <input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} data-desc="${safeDesc}" onchange="document.getElementById('ability-desc').innerText = this.getAttribute('data-desc')">
-                 ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}
-              </label>
-            `;
+            abilitiesHtml += `<label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;"><input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''} data-desc="${safeDesc}" onchange="document.getElementById('ability-desc').innerText = this.getAttribute('data-desc')"> ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}</label>`;
             first = false;
         }
         abilitiesHtml += `<div id="ability-desc" style="background:#222; padding:8px; font-size:8px; border-radius:4px; text-align:left; min-height:30px; margin-top:5px; color:#ddd;">${initialDesc}</div>`;
@@ -1495,95 +849,57 @@ const POKEMON_AESTHETICS = {};
         let megaDropdown = "";
         if (MEGA_MAP[jsonId]) {
             let options = MEGA_MAP[jsonId].map(m => `<option value="${m.id}">${m.stone}</option>`).join('');
-            megaDropdown = `
-              <div style="margin: 10px 0; color: #aaddff; text-align: left;">
-                <strong>Form / Mega:</strong> 
-                <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)">
-                  <option value="none">Base Form</option>${options}
-                </select>
-              </div>
-            `;
+            megaDropdown = `<div style="margin: 10px 0; color: #aaddff; text-align: left;"><strong>Form / Mega:</strong> <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)"><option value="none">Base Form</option>${options}</select></div>`;
         }
 
         pendingMon = { id: jsonId, name: monData.name || displayName, sprite: spriteUrl, types: monData.types, moves: [], item: "", teraType: "" };
 
         content.innerHTML = `
-          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>
-          ${megaDropdown}
+          <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>${megaDropdown}
           <div id="modal-dynamic-area">
               <img src="${spriteUrl}" style="height:80px; image-rendering:pixelated;">
-              <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>
-              ${abilitiesHtml}
-              
-              <div id="pokedex-entry-container" style="margin-top: 15px; font-size: 8px; color: #ccc; text-align: left; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444;">
-                  <div style="text-align: center; color: #888;">Loading Pokédex entry...</div>
-              </div>
-
-              <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px;">
-                <div style="color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px;"><strong>Lv. 50 Stats (0 EVs)</strong></div>
-                <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div>
-                <div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
-                <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div>
-                <div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
-                <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div>
-                <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
+              <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>${abilitiesHtml}
+              <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
+              <div class="stat-card">
+                <div class="stat-card-header"><strong>Lv. 50 Stats (0 EVs)</strong></div>
+                <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
+                <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
+                <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
                 <hr style="border-color:#444; margin: 5px 0;">
                 <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
               </div>
           </div>
           <button id="modal-add-btn" class="btn-action btn-add" onclick='submitToTeam()'>Add to Team</button>
         `;
-
         fetchPokedexEntries(monData.num);
       }
       modal.style.display = 'flex';
     }
 
     function previewMega(baseId, displayName, baseSprite, megaId) {
-        const dynamicArea = document.getElementById('modal-dynamic-area');
-        const addBtn = document.getElementById('modal-add-btn');
-
+        const dynamicArea = document.getElementById('modal-dynamic-area'); const addBtn = document.getElementById('modal-add-btn');
         if (megaId === "none") { showData(baseId, displayName, baseSprite); return; }
-
-        let megaData = showdownData[megaId];
-        if (!megaData) return;
+        let megaData = showdownData[megaId]; if (!megaData) return;
         
-        let stats = megaData.baseStats;
-        let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
-        let hp50 = stats.hp === 1 ? 1 : Math.floor(0.5 * (2 * stats.hp + 31)) + 60;
-        let atk50 = Math.floor(0.5 * (2 * stats.atk + 31)) + 5;
-        let def50 = Math.floor(0.5 * (2 * stats.def + 31)) + 5;
-        let spa50 = Math.floor(0.5 * (2 * stats.spa + 31)) + 5;
-        let spd50 = Math.floor(0.5 * (2 * stats.spd + 31)) + 5;
-        let spe50 = Math.floor(0.5 * (2 * stats.spe + 31)) + 5;
+        let stats = megaData.baseStats; let bst = stats.hp + stats.atk + stats.def + stats.spa + stats.spd + stats.spe;
+        let hp50  = calcLv50Stat(stats.hp,  true); let atk50 = calcLv50Stat(stats.atk); let def50 = calcLv50Stat(stats.def);
+        let spa50 = calcLv50Stat(stats.spa); let spd50 = calcLv50Stat(stats.spd); let spe50 = calcLv50Stat(stats.spe);
 
-        let abilitiesHtml = `<div style="margin: 15px 0 5px 0; text-align: left; color: #ff9900;"><strong>Ability:</strong></div>`;
         let megaAbilityName = megaData.abilities[0] || megaData.abilities['0'];
-        
         let showdownSpriteName = megaId.replace('mega', '-mega');
         let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
         dynamicArea.innerHTML = `
           <img src="${megaSprite}" style="height:80px; image-rendering:pixelated;" onerror="this.src='${baseSprite}'">
           <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>
-          <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;">
-              <input type="radio" name="ability-select" value="${megaAbilityName}" checked> ${megaAbilityName}
-          </label>
-
-          <div id="pokedex-entry-container" style="margin-top: 15px; font-size: 8px; color: #ccc; text-align: left; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444;">
-              <div style="text-align: center; color: #888;">Loading Pokédex entry...</div>
-          </div>
-
-          <div style="text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffcc00;">
-            <div style="color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px;"><strong>Lv. 50 Stats (0 EVs)</strong></div>
-            <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div>
-            <div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
-            <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div>
-            <div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
-            <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div>
-            <div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
-            <hr style="border-color:#444; margin: 5px 0;">
-            <div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
+          <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;"><input type="radio" name="ability-select" value="${megaAbilityName}" checked> ${megaAbilityName}</label>
+          <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
+          <div class="stat-card">
+            <div class="stat-card-header"><strong>Lv. 50 Stats (0 EVs)</strong></div>
+            <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
+            <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
+            <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
+            <hr style="border-color:#444; margin: 5px 0;"><div class="stat-row" style="color:#aaddff;"><span>Base Stat Total:</span> <span>${bst}</span></div>
           </div>
         `;
 
@@ -1595,7 +911,6 @@ const POKEMON_AESTHETICS = {};
 
         pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, teraType: "" };
         addBtn.innerText = "Add Form to Team";
-
         fetchPokedexEntries(megaData.num);
     }
 
@@ -1621,28 +936,21 @@ const POKEMON_AESTHETICS = {};
     function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
     function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
     function handleDrop(e) {
-        e.preventDefault();
-        e.currentTarget.classList.remove('drag-over');
+        e.preventDefault(); e.currentTarget.classList.remove('drag-over');
         let targetSlotIndex = parseInt(e.currentTarget.dataset.index);
-        
         if (draggedSlotIndex !== null && !isNaN(targetSlotIndex) && draggedSlotIndex !== targetSlotIndex) {
             let draggedMon = currentTeam[draggedSlotIndex];
             currentTeam.splice(draggedSlotIndex, 1);
             currentTeam.splice(targetSlotIndex, 0, draggedMon);
-            saveTeam();
-            renderAllUI();
+            saveTeam(); renderAllUI();
         }
     }
 
     function getLegalMoves(monId) {
         let moves = new Set(); let currentId = monId;
         while (currentId) {
-            let lset = learnsetsData[currentId]?.learnset;
-            let mon = showdownData[currentId];
-            if (!lset && mon && mon.baseSpecies) {
-                let baseId = mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
-                lset = learnsetsData[baseId]?.learnset;
-            }
+            let lset = learnsetsData[currentId]?.learnset; let mon = showdownData[currentId];
+            if (!lset && mon && mon.baseSpecies) { let baseId = mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, ''); lset = learnsetsData[baseId]?.learnset; }
             if (lset) Object.keys(lset).forEach(m => moves.add(m));
             currentId = mon && mon.prevo ? mon.prevo.toLowerCase().replace(/[^a-z0-9]/g, '') : null;
         }
@@ -1652,8 +960,7 @@ const POKEMON_AESTHETICS = {};
     }
 
     function openEditModal(index) {
-        let mon = currentTeam[index];
-        let legalMoves = getLegalMoves(mon.id);
+        let mon = currentTeam[index]; let legalMoves = getLegalMoves(mon.id);
         let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
         let teraOptions = `<option value="">(Select Tera Type)</option>` + TERA_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
 
@@ -1684,10 +991,7 @@ const POKEMON_AESTHETICS = {};
     }
 
     function saveMoves(index) {
-        currentTeam[index].moves = [
-            document.getElementById('edit-move1').value, document.getElementById('edit-move2').value,
-            document.getElementById('edit-move3').value, document.getElementById('edit-move4').value
-        ].filter(m => m !== "");
+        currentTeam[index].moves = [document.getElementById('edit-move1').value, document.getElementById('edit-move2').value, document.getElementById('edit-move3').value, document.getElementById('edit-move4').value].filter(m => m !== "");
         currentTeam[index].item = document.getElementById('edit-item').value;
         currentTeam[index].teraType = document.getElementById('edit-tera').value;
         saveTeam(); closeEditModal(); renderAllUI();
@@ -1739,10 +1043,7 @@ const POKEMON_AESTHETICS = {};
         
         for(let i=0; i<6; i++) {
             let tab = document.getElementById(`tab-team-${i}`);
-            if (tab) {
-                if (i === index) tab.classList.add('active');
-                else tab.classList.remove('active');
-            }
+            if (tab) { if (i === index) tab.classList.add('active'); else tab.classList.remove('active'); }
         }
         renderAllUI();
     }
@@ -1757,28 +1058,16 @@ const POKEMON_AESTHETICS = {};
 
     function removeFromTeam(index) { currentTeam.splice(index, 1); saveTeam(); renderAllUI(); }
 
-    function renderAllUI() {
-        renderTeamUI(); renderTypeChart(); analyzeArchetype(); renderSpeedTiers();
-    }
+    function renderAllUI() { renderTeamUI(); renderTypeChart(); analyzeArchetype(); renderSpeedTiers(); }
 
     function renderTeamUI() {
-      const container = document.getElementById('team-container');
-      container.innerHTML = '';
+      const container = document.getElementById('team-container'); container.innerHTML = '';
       for (let i = 0; i < 6; i++) {
-        const slot = document.createElement('div');
-        slot.className = 'team-slot';
-        slot.dataset.index = i;
-        
+        const slot = document.createElement('div'); slot.className = 'team-slot'; slot.dataset.index = i;
         if (currentTeam[i]) {
-          slot.classList.add('filled');
-          slot.setAttribute('draggable', 'true');
+          slot.classList.add('filled'); slot.setAttribute('draggable', 'true');
           slot.ondragstart = handleDragStart; slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
-          
-          slot.onclick = function(e) {
-              if (e.target.classList.contains('remove-x')) return;
-              openEditModal(i);
-          };
-
+          slot.onclick = function(e) { if (e.target.classList.contains('remove-x')) return; openEditModal(i); };
           slot.innerHTML = `
             <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}">
             <span style="font-size: 10px; font-family: 'Inter', sans-serif; font-weight: bold; color: #ffcc00; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;">${currentTeam[i].name}</span>
@@ -1793,7 +1082,7 @@ const POKEMON_AESTHETICS = {};
 
     function renderSpeedTiers() {
         let container = document.getElementById('speed-tier-container');
-        if (currentTeam.length === 0) { container.innerHTML = '<p style="color:#888; font-size:8px; margin:0;">Add Pokémon to see speed tiers.</p>'; return; }
+        if (currentTeam.length === 0) { container.innerHTML = '<p style="color:#888; font-size:12px; margin:0;">Add Pokémon to see speed tiers.</p>'; return; }
         
         let isTailwind = document.getElementById('speed-tailwind').checked;
         let isTrickRoom = document.getElementById('speed-trickroom').checked;
@@ -1801,33 +1090,26 @@ const POKEMON_AESTHETICS = {};
 
         let speeds = currentTeam.map(mon => {
             let baseSpe = showdownData[mon.id] ? showdownData[mon.id].baseStats.spe : 50;
-            let spe50 = Math.floor(0.5 * (2 * baseSpe + 31)) + 5; 
-            
+            let spe50 = calcLv50Stat(baseSpe);
             if (mon.item === 'Choice Scarf') spe50 = Math.floor(spe50 * 1.5);
             if (mon.item === 'Iron Ball' || mon.item === 'Macho Brace') spe50 = Math.floor(spe50 * 0.5);
-            
             if (isDrop) spe50 = Math.floor(spe50 * 0.66);
             if (isTailwind) spe50 = spe50 * 2;
-
             return { name: mon.name, sprite: mon.sprite, speed: spe50, item: mon.item };
         });
         
-        if (isTrickRoom) {
-            speeds.sort((a, b) => a.speed - b.speed);
-        } else {
-            speeds.sort((a, b) => b.speed - a.speed);
-        }
+        if (isTrickRoom) speeds.sort((a, b) => a.speed - b.speed);
+        else speeds.sort((a, b) => b.speed - a.speed);
 
         container.innerHTML = speeds.map(s => `
-            <div style="display:flex; align-items:center; gap:15px; margin-bottom:8px; background:#1e293b; padding:8px 12px; border-radius:6px; border-left:4px solid #ffcc00; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
-                <span style="color:#ffcc00; width:45px; text-align:right; font-size:14px; font-weight:bold; font-family:'Press Start 2P', monospace;">${s.speed}</span>
-                <img src="${s.sprite}" style="height:36px; image-rendering:pixelated;">
-                <span style="font-size:15px; font-family:'Inter', sans-serif; font-weight:600; color:#fff;">${s.name} ${s.item ? `<span style="color:#94a3b8; font-weight:400; font-size:13px;">(@${s.item})</span>` : ''}</span>
+            <div class="speed-tier-row">
+                <span class="speed-tier-value">${s.speed}</span>
+                <img src="${s.sprite}" class="speed-tier-sprite">
+                <span class="speed-tier-name">${s.name} ${s.item ? `<span class="speed-tier-item">(@${s.item})</span>` : ''}</span>
             </div>
         `).join('');
     }
 
-    // --- MISSING PIECE RECOMMENDER ---
     function suggestTeammate() {
         if(currentTeam.length >= 6) { alert("Your team is full!"); return; }
         if(currentTeam.length === 0) { alert("Add at least one Pokémon first to find synergies."); return; }
@@ -1850,14 +1132,11 @@ const POKEMON_AESTHETICS = {};
         let candidates = [];
         Object.keys(POKEMON_AESTHETICS).forEach(id => {
             if(currentTeam.some(m => m.id === id)) return;
-            let mon = showdownData[id];
-            if(!mon) return;
-            
+            let mon = showdownData[id]; if(!mon) return;
             if(mon.evos && mon.evos.length > 0) return;
             if(mon.requiredItem || id.includes('mega')) return;
             
-            let score = 0;
-            let goodAgainst = [];
+            let score = 0; let goodAgainst = [];
             Object.keys(typeBalance).forEach(type => {
                 let balance = typeBalance[type];
                 if (balance.weak > balance.resist) {
@@ -1866,27 +1145,24 @@ const POKEMON_AESTHETICS = {};
                     if(defMult > 1) score -= 2; 
                 }
             });
-            if(score > 0 && goodAgainst.length > 0) {
-                candidates.push({ id, name: mon.name, score, goodAgainst });
-            }
+            if(score > 0 && goodAgainst.length > 0) candidates.push({ id, name: mon.name, score, goodAgainst });
         });
         
         candidates.sort((a,b) => b.score - a.score);
         let top = candidates.slice(0, 4);
 
         let html = "";
-        if(top.length === 0) {
-            html = `<p style="font-size:10px;">Your team doesn't have any major unresisted weaknesses!</p>`;
-        } else {
+        if(top.length === 0) { html = `<p style="font-size:10px;">Your team doesn't have any major unresisted weaknesses!</p>`; } 
+        else {
             top.forEach(cand => {
                 let spriteName = cand.id.replace('mega', '-mega');
                 let spriteUrl = CUSTOM_SPRITES[cand.id] ? CUSTOM_SPRITES[cand.id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
                 html += `
-                    <div style="display:flex; align-items:center; background:#222; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #444; text-align:left;">
-                        <img src="${spriteUrl}" style="width:50px; image-rendering:pixelated; margin-right:15px;">
+                    <div class="suggest-card">
+                        <img src="${spriteUrl}" class="suggest-sprite">
                         <div style="flex:1;">
-                            <h4 style="margin:0; color:#ffcc00; font-size:10px;">${cand.name}</h4>
-                            <p style="margin:4px 0 0 0; font-size:8px; color:#aaa; line-height:1.4;">Plugs weaknesses to: <span style="color:#ff4444;">${cand.goodAgainst.join(', ')}</span></p>
+                            <h4 class="suggest-name">${cand.name}</h4>
+                            <p class="suggest-desc">Plugs weaknesses to: <span style="color:#ff4444;">${cand.goodAgainst.join(', ')}</span></p>
                         </div>
                         <button class="btn-action" style="padding:5px 10px; font-size:8px;" onclick="addSuggestion('${cand.id}', '${cand.name.replace(/'/g, "\\'")}', '${spriteUrl}')">Select</button>
                     </div>
@@ -1897,12 +1173,8 @@ const POKEMON_AESTHETICS = {};
         document.getElementById('suggest-modal').style.display = 'flex';
     }
 
-    function addSuggestion(id, name, sprite) {
-        closeSuggestModal();
-        showData(id, name, sprite);
-    }
+    function addSuggestion(id, name, sprite) { closeSuggestModal(); showData(id, name, sprite); }
 
-    // --- STRICT ARCHETYPE ENGINE DATA ---
     const ARCHETYPE_CORES = {
         "Bulky Offense": { setters: ["incineroar", "arcanine"], abusers: ["rillaboom", "gholdengo", "amoonguss", "dragonite"], megas: ["kangaskhanmega", "venusaurmega", "scizormega", "metagrossmega", "dragonitemega", "meganiummega", "feraligatrmega", "excadrillmega", "scraftymega", "chesnaughtmega", "golisopodmega", "baxcaliburmega", "lucariomegaz", "absolmegaz"], megaSetters: [] },
         "Rain": { setters: ["pelipper"], abusers: ["archaludon", "palafinhero", "basculegion", "gastrodon"], megas: ["swampertmega", "blastoisemega", "gyaradosmega", "starmiemega", "dragalgemega", "eelektrossmega"], megaSetters: [] },
@@ -1914,56 +1186,34 @@ const POKEMON_AESTHETICS = {};
         "Psyspam": { setters: ["indeedeef", "indeedee"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"], megaSetters: [] }
     };
 
-    // --- VGC SPECIES CLAUSE HELPER ---
     function getBaseSpecies(id) {
         let mon = showdownData[id];
-        if (mon && mon.baseSpecies) {
-            return mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
-        }
-        let stripped = id.replace(/mega[a-z]?$/, '');
-        stripped = stripped.replace(/(alola|galar|hisui|paldea)$/, '');
-        stripped = stripped.replace(/(wash|heat|mow|frost|fan|droopy|stretchy|curly|blade|hero)$/, '');
+        if (mon && mon.baseSpecies) return mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let stripped = id.replace(/mega[a-z]?$/, '').replace(/(alola|galar|hisui|paldea)$/, '').replace(/(wash|heat|mow|frost|fan|droopy|stretchy|curly|blade|hero)$/, '');
         return stripped;
     }
 
-    // --- STRICT ROSTER-ONLY AUTO-BUILDER ENGINE ---
     function addMonToTeamQuietly(id) {
         if (currentTeam.length >= 6) return false;
-        
         let incomingSpecies = getBaseSpecies(id);
-        let violatesSpeciesClause = currentTeam.some(m => getBaseSpecies(m.id) === incomingSpecies);
-        if (violatesSpeciesClause) return false; 
-        
+        if (currentTeam.some(m => getBaseSpecies(m.id) === incomingSpecies)) return false; 
         if (!POKEMON_AESTHETICS[id] && !id.includes('mega')) return false; 
+        let monData = showdownData[id]; if(!monData) return false;
         
-        let monData = showdownData[id];
-        if(!monData) return false;
-        
-         let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-         spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
+         let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
          let spriteUrl = CUSTOM_SPRITES[id] ? CUSTOM_SPRITES[id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
         
         let ability = monData.abilities[0] || monData.abilities['0'];
-        if (id === 'pelipper') ability = 'Drizzle';
-        if (id === 'torkoal') ability = 'Drought';
-        if (id === 'indeedeef' || id === 'indeedee') ability = 'Psychic Surge';
-        if (id === 'tyranitar') ability = 'Sand Stream';
-        if (id === 'ninetalesalola') ability = 'Snow Warning';
-        if (id === 'rillaboom') ability = 'Grassy Surge';    
-        if (id === 'charizardmegay') ability = 'Drought';
-        if (id === 'tyranitarmega') ability = 'Sand Stream';
-        if (id === 'abomasnowmega') ability = 'Snow Warning';
+        if (id === 'pelipper') ability = 'Drizzle'; if (id === 'torkoal') ability = 'Drought';
+        if (id === 'indeedeef' || id === 'indeedee') ability = 'Psychic Surge'; if (id === 'tyranitar') ability = 'Sand Stream';
+        if (id === 'ninetalesalola') ability = 'Snow Warning'; if (id === 'rillaboom') ability = 'Grassy Surge';    
+        if (id === 'charizardmegay') ability = 'Drought'; if (id === 'tyranitarmega') ability = 'Sand Stream'; if (id === 'abomasnowmega') ability = 'Snow Warning';
 
         let megaItemName = monData.item || "";
         if (id.includes('mega') && !megaItemName) {
              let baseId = id.replace(/mega[a-z]?$/, '');
              if (baseId.endsWith('x') || baseId.endsWith('y') || baseId.endsWith('z')) baseId = baseId.slice(0, -1);
-             if (MEGA_MAP[baseId]) {
-                 let match = MEGA_MAP[baseId].find(m => m.id === id);
-                 if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) {
-                     megaItemName = match.stone;
-                 }
-             }
+             if (MEGA_MAP[baseId]) { let match = MEGA_MAP[baseId].find(m => m.id === id); if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) megaItemName = match.stone; }
         }
         
         currentTeam.push({ id: id, name: monData.name, sprite: spriteUrl, types: monData.types, moves: [], item: megaItemName, ability: ability, teraType: "" });
@@ -1976,11 +1226,8 @@ const POKEMON_AESTHETICS = {};
             let weakCount = 0; let resistCount = 0;
             currentTeam.forEach(mon => {
                 let defMult = getDefensiveMultiplier(mon.types, targetType);
-                if(defMult > 1) weakCount++;
-                if(defMult < 1) resistCount++;
-                if(mon.ability && ABILITY_DEFENSES[mon.ability]) {
-                     if (ABILITY_DEFENSES[mon.ability].immuneTo && ABILITY_DEFENSES[mon.ability].immuneTo.includes(targetType)) resistCount += 2;
-                }
+                if(defMult > 1) weakCount++; if(defMult < 1) resistCount++;
+                if(mon.ability && ABILITY_DEFENSES[mon.ability]) { if (ABILITY_DEFENSES[mon.ability].immuneTo && ABILITY_DEFENSES[mon.ability].immuneTo.includes(targetType)) resistCount += 2; }
             });
             typeBalance[targetType] = { weak: weakCount, resist: resistCount };
         });
@@ -1988,16 +1235,9 @@ const POKEMON_AESTHETICS = {};
         let candidates = [];
         Object.keys(POKEMON_AESTHETICS).forEach(id => {
             if(usedIds.has(id)) return;
-            
-            // STRICT SPECIES CHECK: Don't even consider it if we already have the species
-            let baseSp = getBaseSpecies(id);
-            if (currentTeamBaseSpecies.has(baseSp)) return;
-
-            let mon = showdownData[id];
-            if(!mon) return;
-            if(mon.evos && mon.evos.length > 0) return; // Must be fully evolved
-            if(id.includes('mega')) return; // Megas are handled in step 1
-            if(mon.requiredItems || mon.requiredItem) return; // Fix: Catch Showdown's exact phrasing
+            let baseSp = getBaseSpecies(id); if (currentTeamBaseSpecies.has(baseSp)) return;
+            let mon = showdownData[id]; if(!mon) return;
+            if(mon.evos && mon.evos.length > 0) return; if(id.includes('mega')) return; if(mon.requiredItems || mon.requiredItem) return; 
             
             let score = 0;
             Object.keys(typeBalance).forEach(type => {
@@ -2008,8 +1248,7 @@ const POKEMON_AESTHETICS = {};
                     if(defMult > 1) score -= 3; 
                 }
             });
-            score += Math.random() * 5; 
-            candidates.push({ id, score });
+            score += Math.random() * 5; candidates.push({ id, score });
         });
         
         candidates.sort((a,b) => b.score - a.score);
@@ -2017,417 +1256,185 @@ const POKEMON_AESTHETICS = {};
     }
 
     function runAutoBuild() {
-        let arch1 = document.getElementById('auto-arch-1').value;
-        let arch2 = document.getElementById('auto-arch-2').value;
-        
-        currentTeam = []; 
-        let usedIds = new Set();
-        let currentTeamBaseSpecies = new Set();
+        let arch1 = document.getElementById('auto-arch-1').value; let arch2 = document.getElementById('auto-arch-2').value;
+        currentTeam = []; let usedIds = new Set(); let currentTeamBaseSpecies = new Set();
         
         function tryAdd(id) {
             if(currentTeam.length >= 6 || usedIds.has(id)) return false;
-            let baseSp = getBaseSpecies(id);
-            if(currentTeamBaseSpecies.has(baseSp)) return false; // Hard block duplicates here too
-
+            let baseSp = getBaseSpecies(id); if(currentTeamBaseSpecies.has(baseSp)) return false;
             let success = addMonToTeamQuietly(id);
-            if(success) {
-                usedIds.add(id);
-                currentTeamBaseSpecies.add(baseSp);
-            }
+            if(success) { usedIds.add(id); currentTeamBaseSpecies.add(baseSp); }
             return success;
         }
 
-        // STEP 1: Select exactly 1 Mega Evolution
         let possibleMegas = [...ARCHETYPE_CORES[arch1].megas];
-        
-        // Increase the spawn chance of a dual-role Mega Setter if the archetype uses one
-        if (ARCHETYPE_CORES[arch1].megaSetters.length > 0) {
-            possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters);
-            possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters); 
-        }
-
+        if (ARCHETYPE_CORES[arch1].megaSetters.length > 0) { possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters); possibleMegas.push(...ARCHETYPE_CORES[arch1].megaSetters); }
         if (arch2 !== 'None' && ARCHETYPE_CORES[arch2]) {
             possibleMegas = possibleMegas.concat(ARCHETYPE_CORES[arch2].megas);
-            if (ARCHETYPE_CORES[arch2].megaSetters.length > 0) {
-                possibleMegas.push(...ARCHETYPE_CORES[arch2].megaSetters);
-            }
+            if (ARCHETYPE_CORES[arch2].megaSetters.length > 0) possibleMegas.push(...ARCHETYPE_CORES[arch2].megaSetters);
         }
         
-        possibleMegas.sort(() => 0.5 - Math.random());
-        let chosenMega = null;
-        for(let m of possibleMegas) { 
-            if(tryAdd(m)) {
-                chosenMega = m;
-                break;
-            } 
-        }
+        possibleMegas.sort(() => 0.5 - Math.random()); let chosenMega = null;
+        for(let m of possibleMegas) { if(tryAdd(m)) { chosenMega = m; break; } }
 
-        // STEP 2: Arch 1 Cores
-        let needsA1Setter = true;
-        if (chosenMega && ARCHETYPE_CORES[arch1].megaSetters.includes(chosenMega)) {
-            needsA1Setter = false; 
-        }
-        
-        if (needsA1Setter) {
-            let a1Setters = [...ARCHETYPE_CORES[arch1].setters].sort(() => 0.5 - Math.random());
-            for(let s of a1Setters) { if(tryAdd(s)) break; }
-        }
-        
-        let a1Abusers = [...ARCHETYPE_CORES[arch1].abusers].sort(() => 0.5 - Math.random());
-        for(let a of a1Abusers) { if(tryAdd(a)) break; }
+        let needsA1Setter = true; if (chosenMega && ARCHETYPE_CORES[arch1].megaSetters.includes(chosenMega)) needsA1Setter = false; 
+        if (needsA1Setter) { let a1Setters = [...ARCHETYPE_CORES[arch1].setters].sort(() => 0.5 - Math.random()); for(let s of a1Setters) { if(tryAdd(s)) break; } }
+        let a1Abusers = [...ARCHETYPE_CORES[arch1].abusers].sort(() => 0.5 - Math.random()); for(let a of a1Abusers) { if(tryAdd(a)) break; }
 
-        // STEP 3: Arch 2 Cores
         if (arch2 !== 'None' && arch1 !== arch2 && ARCHETYPE_CORES[arch2]) {
-            let needsA2Setter = true;
-            if (chosenMega && ARCHETYPE_CORES[arch2].megaSetters.includes(chosenMega)) {
-                needsA2Setter = false; 
-            }
-
-            if (needsA2Setter) {
-                let a2Setters = [...ARCHETYPE_CORES[arch2].setters].sort(() => 0.5 - Math.random());
-                for(let s of a2Setters) { if(tryAdd(s)) break; }
-            }
-            
-            let a2Abusers = [...ARCHETYPE_CORES[arch2].abusers].sort(() => 0.5 - Math.random());
-            for(let a of a2Abusers) { if(tryAdd(a)) break; }
+            let needsA2Setter = true; if (chosenMega && ARCHETYPE_CORES[arch2].megaSetters.includes(chosenMega)) needsA2Setter = false; 
+            if (needsA2Setter) { let a2Setters = [...ARCHETYPE_CORES[arch2].setters].sort(() => 0.5 - Math.random()); for(let s of a2Setters) { if(tryAdd(s)) break; } }
+            let a2Abusers = [...ARCHETYPE_CORES[arch2].abusers].sort(() => 0.5 - Math.random()); for(let a of a2Abusers) { if(tryAdd(a)) break; }
         }
 
-        // STEP 4: Fill to 6
         let attempts = 0;
-        while(currentTeam.length < 6 && attempts < 200) { // Bumped failsafe to 200 just in case
-            attempts++;
-            let bestFitId = getBestDefensiveFitForAutoBuild(usedIds, currentTeamBaseSpecies);
-            if(bestFitId) {
-                tryAdd(bestFitId);
-            } else {
-                // If the logic perfectly bottlenecks and finds ZERO ideal defensive fits, grab a random legal mon to finish the team
-                let fallback = Object.keys(POKEMON_AESTHETICS).find(id => !usedIds.has(id) && !currentTeamBaseSpecies.has(getBaseSpecies(id)) && !id.includes('mega') && (!showdownData[id] || !showdownData[id].evos || showdownData[id].evos.length === 0));
-                if (fallback) tryAdd(fallback);
-            }
+        while(currentTeam.length < 6 && attempts < 200) { 
+            attempts++; let bestFitId = getBestDefensiveFitForAutoBuild(usedIds, currentTeamBaseSpecies);
+            if(bestFitId) tryAdd(bestFitId);
+            else { let fallback = Object.keys(POKEMON_AESTHETICS).find(id => !usedIds.has(id) && !currentTeamBaseSpecies.has(getBaseSpecies(id)) && !id.includes('mega') && (!showdownData[id] || !showdownData[id].evos || showdownData[id].evos.length === 0)); if (fallback) tryAdd(fallback); }
         }
-
-        saveTeam();
-        renderAllUI();
-        closeAutoBuildModal();
+        saveTeam(); renderAllUI(); closeAutoBuildModal();
     }
+
     function loadTopCutTeam() {
         let val = document.getElementById('top-cut-select').value;
-        if(val && TOP_CUT_TEAMS[val]) {
-            document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
-            loadSimOpponent();
-        }
+        if(val && TOP_CUT_TEAMS[val]) { document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val]; loadSimOpponent(); }
     }
 
     function openSimModal() {
         if(currentTeam.length === 0) { alert("Add Pokémon to your team first."); return; }
-        simYourSelection = [];
-        simOppTeam = [];
-        
-        let yourHtml = currentTeam.map((mon, idx) => `
-            <div class="sim-slot" id="sim-my-slot-${idx}" onclick="toggleSimMon(${idx})">
-                <img src="${mon.sprite}">
-            </div>
-        `).join('');
+        simYourSelection = []; simOppTeam = [];
+        let yourHtml = currentTeam.map((mon, idx) => `<div class="sim-slot" id="sim-my-slot-${idx}" onclick="toggleSimMon(${idx})"><img src="${mon.sprite}"></div>`).join('');
         document.getElementById('sim-your-team').innerHTML = yourHtml;
-        document.getElementById('sim-opp-paste').value = "";
-        document.getElementById('top-cut-select').value = "";
-        document.getElementById('sim-opp-team').innerHTML = "";
-        
-        document.getElementById('sim-analysis-results').style.display = 'block';
-        document.getElementById('sim-matrix-results').style.display = 'none';
-        document.getElementById('sim-analysis-results').innerHTML = `<p style="color:#888; font-size:9px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`;
-        
+        document.getElementById('sim-opp-paste').value = ""; document.getElementById('top-cut-select').value = ""; document.getElementById('sim-opp-team').innerHTML = "";
+        document.getElementById('sim-analysis-results').style.display = 'block'; document.getElementById('sim-matrix-results').style.display = 'none';
+        document.getElementById('sim-analysis-results').innerHTML = `<p style="color:#888; font-size:12px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`;
         document.getElementById('sim-modal').style.display = 'flex';
     }
 
     function toggleSimMon(idx) {
-        let slot = document.getElementById(`sim-my-slot-${idx}`);
-        let mon = currentTeam[idx];
-        
-        if (simYourSelection.includes(mon)) {
-            simYourSelection = simYourSelection.filter(m => m !== mon);
-            slot.classList.remove('selected');
-        } else {
-            if (simYourSelection.length >= 4) return; 
-            simYourSelection.push(mon);
-            slot.classList.add('selected');
-        }
-        
-        document.getElementById('sim-analysis-results').style.display = 'block';
-        document.getElementById('sim-matrix-results').style.display = 'none';
-        runSimAnalysis();
+        let slot = document.getElementById(`sim-my-slot-${idx}`); let mon = currentTeam[idx];
+        if (simYourSelection.includes(mon)) { simYourSelection = simYourSelection.filter(m => m !== mon); slot.classList.remove('selected'); } 
+        else { if (simYourSelection.length >= 4) return; simYourSelection.push(mon); slot.classList.add('selected'); }
+        document.getElementById('sim-analysis-results').style.display = 'block'; document.getElementById('sim-matrix-results').style.display = 'none'; runSimAnalysis();
     }
 
     function loadSimOpponent() {
-        let text = document.getElementById('sim-opp-paste').value;
-        let blocks = text.trim().split(/\n\s*\n/);
-        simOppTeam = [];
-        
+        let text = document.getElementById('sim-opp-paste').value; let blocks = text.trim().split(/\n\s*\n/); simOppTeam = [];
         blocks.forEach(block => {
-            let lines = block.split('\n');
-            if (lines.length === 0 || lines[0] === '') return;
-            let firstLine = lines[0].trim();
-            if (firstLine.includes('@')) firstLine = firstLine.split('@')[0].trim();
+            let lines = block.split('\n'); if (lines.length === 0 || lines[0] === '') return;
+            let firstLine = lines[0].trim(); if (firstLine.includes('@')) firstLine = firstLine.split('@')[0].trim();
             firstLine = firstLine.replace(/\s*\([MFN]\)$/i, '').trim();
-            
-            let species = firstLine;
-            let match = firstLine.match(/.*\(([^)]+)\)$/);
-            if (match) species = match[1].trim();
-            
-            let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, '');
-            let monData = showdownData[jsonId] || Object.values(showdownData).find(d => d.name === species);
-
+            let species = firstLine; let match = firstLine.match(/.*\(([^)]+)\)$/); if (match) species = match[1].trim();
+            let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, ''); let monData = showdownData[jsonId] || Object.values(showdownData).find(d => d.name === species);
             if (monData) {
-            let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-            spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
+            let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
             let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
                 simOppTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types });
             }
         });
-        
-        let oppHtml = simOppTeam.map(mon => `
-            <div class="sim-slot">
-                <img src="${mon.sprite}">
-            </div>
-        `).join('');
+        let oppHtml = simOppTeam.map(mon => `<div class="sim-slot"><img src="${mon.sprite}"></div>`).join('');
         document.getElementById('sim-opp-team').innerHTML = oppHtml;
-        
-        document.getElementById('sim-analysis-results').style.display = 'block';
-        document.getElementById('sim-matrix-results').style.display = 'none';
-        runSimAnalysis();
+        document.getElementById('sim-analysis-results').style.display = 'block'; document.getElementById('sim-matrix-results').style.display = 'none'; runSimAnalysis();
     }
 
     function get1v1Score(myMon, oppMon) {
-        let myBaseSpe = showdownData[myMon.id] ? showdownData[myMon.id].baseStats.spe : 50;
-        let mySpd = Math.floor(0.5 * (2 * myBaseSpe + 31)) + 5;
-        if(myMon.item === 'Choice Scarf') mySpd = Math.floor(mySpd * 1.5);
-        if(myMon.item === 'Iron Ball' || myMon.item === 'Macho Brace') mySpd = Math.floor(mySpd * 0.5);
-
-        let oppBaseSpe = showdownData[oppMon.id] ? showdownData[oppMon.id].baseStats.spe : 50;
-        let oppSpd = Math.floor(0.5 * (2 * oppBaseSpe + 31)) + 5;
-
-        let myMaxOffense = 0;
-        myMon.types.forEach(t => {
-            let mult = getDefensiveMultiplier(oppMon.types, t);
-            if (mult > myMaxOffense) myMaxOffense = mult;
-        });
-
-        let theirMaxOffense = 0;
-        oppMon.types.forEach(t => {
-            let mult = getDefensiveMultiplier(myMon.types, t);
-            if (mult > theirMaxOffense) theirMaxOffense = mult;
-        });
+        let myBaseSpe = showdownData[myMon.id] ? showdownData[myMon.id].baseStats.spe : 50; let mySpd = calcLv50Stat(myBaseSpe);
+        if(myMon.item === 'Choice Scarf') mySpd = Math.floor(mySpd * 1.5); if(myMon.item === 'Iron Ball' || myMon.item === 'Macho Brace') mySpd = Math.floor(mySpd * 0.5);
+        let oppBaseSpe = showdownData[oppMon.id] ? showdownData[oppMon.id].baseStats.spe : 50; let oppSpd = calcLv50Stat(oppBaseSpe);
+        
+        let myMaxOffense = 0; myMon.types.forEach(t => { let mult = getDefensiveMultiplier(oppMon.types, t); if (mult > myMaxOffense) myMaxOffense = mult; });
+        let theirMaxOffense = 0; oppMon.types.forEach(t => { let mult = getDefensiveMultiplier(myMon.types, t); if (mult > theirMaxOffense) theirMaxOffense = mult; });
 
         let score = 0;
-        if (myMaxOffense > theirMaxOffense) score += 1;
-        else if (myMaxOffense < theirMaxOffense) score -= 1;
-
-        if (mySpd > oppSpd) score += 0.5;
-        else if (mySpd < oppSpd) score -= 0.5;
-
+        if (myMaxOffense > theirMaxOffense) score += 1; else if (myMaxOffense < theirMaxOffense) score -= 1;
+        if (mySpd > oppSpd) score += 0.5; else if (mySpd < oppSpd) score -= 0.5;
         return score;
     }
 
     function runSimAnalysis() {
         let resDiv = document.getElementById('sim-analysis-results');
-        if (simYourSelection.length !== 4 || simOppTeam.length === 0) {
-            resDiv.innerHTML = `<p style="color:#888; font-size:9px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`;
-            return;
-        }
+        if (simYourSelection.length !== 4 || simOppTeam.length === 0) { resDiv.innerHTML = `<p style="color:#888; font-size:12px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`; return; }
 
         let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0;">Offensive Pressure (STAB)</h4>`;
         let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0;">Defensive Risks (STAB)</h4>`;
 
         simYourSelection.forEach(myMon => {
-            let hitsSE = [];
-            simOppTeam.forEach(oppMon => {
-                let se = false;
-                myMon.types.forEach(t => { if(getDefensiveMultiplier(oppMon.types, t) >= 2) se = true; });
-                if(se) hitsSE.push(oppMon.name);
-            });
-            if(hitsSE.length > 0) {
-                offenseText += `<div style="font-size:8px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> hits -> <span style="color:#ddd;">${hitsSE.join(', ')}</span></div>`;
-            }
+            let hitsSE = []; simOppTeam.forEach(oppMon => { let se = false; myMon.types.forEach(t => { if(getDefensiveMultiplier(oppMon.types, t) >= 2) se = true; }); if(se) hitsSE.push(oppMon.name); });
+            if(hitsSE.length > 0) offenseText += `<div style="font-size:10px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> hits -> <span style="color:#ddd;">${hitsSE.join(', ')}</span></div>`;
         });
 
         simYourSelection.forEach(myMon => {
-            let hitBySE = [];
-            simOppTeam.forEach(oppMon => {
-                let se = false;
-                oppMon.types.forEach(t => { if(getDefensiveMultiplier(myMon.types, t) >= 2) se = true; });
-                if(se) hitBySE.push(oppMon.name);
-            });
-            if(hitBySE.length > 0) {
-                defenseText += `<div style="font-size:8px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> is weak to -> <span style="color:#ddd;">${hitBySE.join(', ')}</span></div>`;
-            }
+            let hitBySE = []; simOppTeam.forEach(oppMon => { let se = false; oppMon.types.forEach(t => { if(getDefensiveMultiplier(myMon.types, t) >= 2) se = true; }); if(se) hitBySE.push(oppMon.name); });
+            if(hitBySE.length > 0) defenseText += `<div style="font-size:10px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> is weak to -> <span style="color:#ddd;">${hitBySE.join(', ')}</span></div>`;
         });
 
-        resDiv.innerHTML = `<div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-            <div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${offenseText}</div>
-            <div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${defenseText}</div>
-        </div>`;
+        resDiv.innerHTML = `<div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;"><div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${offenseText}</div><div style="flex:1; min-width:200px; background:#222; padding:10px; border-radius:4px;">${defenseText}</div></div>`;
     }
 
     function generate1v1LeadMatrix() {
-        let resDiv = document.getElementById('sim-analysis-results');
-        let matrixDiv = document.getElementById('sim-matrix-results');
+        let resDiv = document.getElementById('sim-analysis-results'); let matrixDiv = document.getElementById('sim-matrix-results');
+        if (currentTeam.length === 0 || simOppTeam.length === 0) { alert("You need both your team and an opponent loaded to generate a matrix!"); return; }
+        resDiv.style.display = 'none'; matrixDiv.style.display = 'block';
 
-        if (currentTeam.length === 0 || simOppTeam.length === 0) {
-            alert("You need both your team and an opponent loaded to generate a matrix!");
-            return;
-        }
+        let legendHtml = `<div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;"><h4 style="color: #ff9900; margin: 0 0 6px 0; font-size: 14px;">How to Read the 1v1 Matrix</h4><ul style="margin: 0; padding-left: 15px; font-size: 12px; color: #ccc; line-height: 1.6;"><li><strong style="color: #4CAF50;">Favorable:</strong> Major STAB or Speed advantage.</li><li><strong style="color: #81c784;">Slight Adv:</strong> Outspeed or better typing.</li><li><strong style="color: #aaa;">Neutral:</strong> Even matchup.</li><li><strong style="color: #e57373;">Slight Dis:</strong> Slightly outsped or weaker typing.</li><li><strong style="color: #ff4444;">Poor:</strong> Outsped and take SE damage. DO NOT lead.</li></ul></div>`;
+        let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
-        resDiv.style.display = 'none';
-        matrixDiv.style.display = 'block';
-
-        let legendHtml = `
-            <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
-                <h4 style="color: #ff9900; margin: 0 0 6px 0; font-size: 10px;">How to Read the 1v1 Matrix</h4>
-                <ul style="margin: 0; padding-left: 15px; font-size: 8px; color: #ccc; line-height: 1.6;">
-                    <li><strong style="color: #4CAF50;">Favorable:</strong> You have a major STAB or Speed advantage. Highly recommended lead against this Pokémon.</li>
-                    <li><strong style="color: #81c784;">Slight Adv:</strong> You outspeed or have better typing, but not both. A safe lead.</li>
-                    <li><strong style="color: #aaa;">Neutral:</strong> An even matchup. Success depends on held items, specific moves, or Terastallization.</li>
-                    <li><strong style="color: #e57373;">Slight Dis:</strong> You are slightly outsped or have weaker typing. Somewhat risky lead.</li>
-                    <li><strong style="color: #ff4444;">Poor:</strong> You are outsped and take Super Effective damage. DO NOT lead this unless you have a hard-counter strategy (like Fake Out + Trick Room).</li>
-                </ul>
-            </div>
-        `;
-
-        let html = '<h3 style="color:#9c27b0; font-size:12px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>';
-        html += legendHtml;
-        html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
-
-        simOppTeam.forEach(opp => {
-            html += `<th style="min-width: 60px;"><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`;
-        });
-        html += '</tr>';
-
+        simOppTeam.forEach(opp => { html += `<th style="min-width: 60px;"><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`; }); html += '</tr>';
         currentTeam.forEach(myMon => {
             html += `<tr><th><img src="${myMon.sprite}" class="matrix-sprite"><br>${myMon.name.substring(0, 10)}</th>`;
-            
             simOppTeam.forEach(oppMon => {
                 let score = get1v1Score(myMon, oppMon);
-
-                let cellClass = "matrix-neutral";
-                let cellText = "Neutral";
-                if (score >= 1) { cellClass = "matrix-great"; cellText = "Favorable"; }
-                else if (score <= -1) { cellClass = "matrix-terrible"; cellText = "Poor"; }
-                else if (score > 0) { cellClass = "matrix-good"; cellText = "Slight Adv"; }
-                else if (score < 0) { cellClass = "matrix-bad"; cellText = "Slight Dis"; }
-
+                let cellClass = "matrix-neutral"; let cellText = "Neutral";
+                if (score >= 1) { cellClass = "matrix-great"; cellText = "Favorable"; } else if (score <= -1) { cellClass = "matrix-terrible"; cellText = "Poor"; }
+                else if (score > 0) { cellClass = "matrix-good"; cellText = "Slight Adv"; } else if (score < 0) { cellClass = "matrix-bad"; cellText = "Slight Dis"; }
                 html += `<td class="${cellClass}">${cellText}</td>`;
             });
             html += '</tr>';
         });
-
-        html += '</table></div>';
-        matrixDiv.innerHTML = html;
+        html += '</table></div>'; matrixDiv.innerHTML = html;
     }
 
     function generate2v2LeadMatrix() {
-        let resDiv = document.getElementById('sim-analysis-results');
-        let matrixDiv = document.getElementById('sim-matrix-results');
+        let resDiv = document.getElementById('sim-analysis-results'); let matrixDiv = document.getElementById('sim-matrix-results');
+        if (currentTeam.length < 2 || simOppTeam.length < 2) { alert("You need at least 2 Pokémon on both teams to generate a 2v2 matrix!"); return; }
+        resDiv.style.display = 'none'; matrixDiv.style.display = 'block';
 
-        if (currentTeam.length < 2 || simOppTeam.length < 2) {
-            alert("You need at least 2 Pokémon on both teams to generate a 2v2 matrix!");
-            return;
-        }
+        let legendHtml = `<div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;"><h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px;">How to Read the 2v2 Duo Matrix</h4><ul style="margin: 0; padding-left: 15px; font-size: 12px; color: #ccc; line-height: 1.6;"><li><strong style="color: #4CAF50;">Favorable:</strong> Massive combined offensive pressure. Excellent pair!</li><li><strong style="color: #81c784;">Advantage:</strong> Covers weaknesses or pressures heavily.</li><li><strong style="color: #aaa;">Neutral:</strong> An even trade on the board.</li><li><strong style="color: #e57373;">Disadv:</strong> Inherently counters your STAB types or speed.</li><li><strong style="color: #ff4444;">Poor:</strong> Shuts down both of your Pokémon. Do not lead!</li></ul></div>`;
+        let html = '<h3 style="color:#2196F3; font-size:14px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
-        resDiv.style.display = 'none';
-        matrixDiv.style.display = 'block';
+        let oppPairs = []; for(let i=0; i<simOppTeam.length; i++) { for(let j=i+1; j<simOppTeam.length; j++) { oppPairs.push([simOppTeam[i], simOppTeam[j]]); } }
+        let myPairs = []; for(let i=0; i<currentTeam.length; i++) { for(let j=i+1; j<currentTeam.length; j++) { myPairs.push([currentTeam[i], currentTeam[j]]); } }
 
-        let legendHtml = `
-            <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
-                <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 10px;">How to Read the 2v2 Duo Matrix</h4>
-                <ul style="margin: 0; padding-left: 15px; font-size: 8px; color: #ccc; line-height: 1.6;">
-                    <li><strong style="color: #4CAF50;">Favorable:</strong> Both of your Pokémon apply massive combined offensive pressure or speed control over their duo. Excellent lead pair!</li>
-                    <li><strong style="color: #81c784;">Advantage:</strong> Your duo naturally covers each other's weaknesses or pressures at least one of their leads heavily.</li>
-                    <li><strong style="color: #aaa;">Neutral:</strong> An even trade on the board. Game will be decided by Turn 1 positioning and Terastallization.</li>
-                    <li><strong style="color: #e57373;">Disadv:</strong> Their duo inherently counters your lead pair's STAB types or speed tiers.</li>
-                    <li><strong style="color: #ff4444;">Poor:</strong> Their duo completely shuts down both of your Pokémon. Highly recommended to keep this pair in the back!</li>
-                </ul>
-            </div>
-        `;
-
-        let html = '<h3 style="color:#2196F3; font-size:12px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>';
-        html += legendHtml;
-        html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
-
-        let oppPairs = [];
-        for(let i=0; i<simOppTeam.length; i++) {
-            for(let j=i+1; j<simOppTeam.length; j++) {
-                oppPairs.push([simOppTeam[i], simOppTeam[j]]);
-            }
-        }
-        
-        let myPairs = [];
-        for(let i=0; i<currentTeam.length; i++) {
-            for(let j=i+1; j<currentTeam.length; j++) {
-                myPairs.push([currentTeam[i], currentTeam[j]]);
-            }
-        }
-
-        oppPairs.forEach(opp => {
-            html += `<th style="min-width: 60px;"><img src="${opp[0].sprite}" style="height:24px; image-rendering:pixelated; margin-right:-5px;"><img src="${opp[1].sprite}" style="height:24px; image-rendering:pixelated;"></th>`;
-        });
-        html += '</tr>';
-
+        oppPairs.forEach(opp => { html += `<th style="min-width: 60px;"><img src="${opp[0].sprite}" style="height:24px; image-rendering:pixelated; margin-right:-5px;"><img src="${opp[1].sprite}" style="height:24px; image-rendering:pixelated;"></th>`; }); html += '</tr>';
         myPairs.forEach(myPair => {
             html += `<tr><th><img src="${myPair[0].sprite}" style="height:24px; image-rendering:pixelated; margin-right:-5px;"><img src="${myPair[1].sprite}" style="height:24px; image-rendering:pixelated;"></th>`;
-            
             oppPairs.forEach(oppPair => {
-                let score = get1v1Score(myPair[0], oppPair[0]) + get1v1Score(myPair[0], oppPair[1]) +
-                            get1v1Score(myPair[1], oppPair[0]) + get1v1Score(myPair[1], oppPair[1]);
-
-                let cellClass = "matrix-neutral";
-                let cellText = "Neutral";
-                if (score >= 2) { cellClass = "matrix-great"; cellText = "Favorable"; }
-                else if (score <= -2) { cellClass = "matrix-terrible"; cellText = "Poor"; }
-                else if (score > 0) { cellClass = "matrix-good"; cellText = "Adv"; }
-                else if (score < 0) { cellClass = "matrix-bad"; cellText = "Dis"; }
-
+                let score = get1v1Score(myPair[0], oppPair[0]) + get1v1Score(myPair[0], oppPair[1]) + get1v1Score(myPair[1], oppPair[0]) + get1v1Score(myPair[1], oppPair[1]);
+                let cellClass = "matrix-neutral"; let cellText = "Neutral";
+                if (score >= 2) { cellClass = "matrix-great"; cellText = "Favorable"; } else if (score <= -2) { cellClass = "matrix-terrible"; cellText = "Poor"; }
+                else if (score > 0) { cellClass = "matrix-good"; cellText = "Adv"; } else if (score < 0) { cellClass = "matrix-bad"; cellText = "Dis"; }
                 html += `<td class="${cellClass}">${cellText}</td>`;
             });
             html += '</tr>';
         });
-
-        html += '</table></div>';
-        matrixDiv.innerHTML = html;
+        html += '</table></div>'; matrixDiv.innerHTML = html;
     }
 
-    // --- IMPORT LOGIC ---
     function handleFileUpload(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) { document.getElementById('import-text').value = e.target.result; };
-        reader.readAsText(file);
+        const file = event.target.files[0]; if (!file) return;
+        const reader = new FileReader(); reader.onload = function(e) { document.getElementById('import-text').value = e.target.result; }; reader.readAsText(file);
     }
 
     function processImport() {
-        let text = document.getElementById('import-text').value;
-        let blocks = text.trim().split(/\n\s*\n/);
-        let importedTeam = [];
-        
+        let text = document.getElementById('import-text').value; let blocks = text.trim().split(/\n\s*\n/); let importedTeam = [];
         blocks.forEach(block => {
-            let lines = block.split('\n');
-            if (lines.length === 0 || lines[0] === '') return;
-            
-            let firstLine = lines[0].trim();
-            let item = "";
-            if (firstLine.includes('@')) {
-                let parts = firstLine.split('@');
-                item = parts[1].trim();
-                firstLine = parts[0].trim();
-            }
+            let lines = block.split('\n'); if (lines.length === 0 || lines[0] === '') return;
+            let firstLine = lines[0].trim(); let item = "";
+            if (firstLine.includes('@')) { let parts = firstLine.split('@'); item = parts[1].trim(); firstLine = parts[0].trim(); }
             firstLine = firstLine.replace(/\s*\([MFN]\)$/i, '').trim();
-            
-            let species = firstLine;
-            let match = firstLine.match(/.*\(([^)]+)\)$/);
-            if (match) species = match[1].trim();
-            
-            let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, '');
-            if (jsonId === 'indeedeef') jsonId = 'indeedeef';
+            let species = firstLine; let match = firstLine.match(/.*\(([^)]+)\)$/); if (match) species = match[1].trim();
+            let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, ''); if (jsonId === 'indeedeef') jsonId = 'indeedeef';
 
             let ability = ""; let teraType = ""; let moves = [];
             for (let i = 1; i < lines.length; i++) {
@@ -2438,25 +1445,17 @@ const POKEMON_AESTHETICS = {};
             }
             
             let monData = showdownData[jsonId];
-            if (!monData) {
-                 let found = Object.values(showdownData).find(d => d.name === species);
-                 if (found) { monData = found; jsonId = found.id || jsonId; }
-            }
+            if (!monData) { let found = Object.values(showdownData).find(d => d.name === species); if (found) { monData = found; jsonId = found.id || jsonId; } }
 
             if (monData) {
-                let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-                spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
+                let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
                 let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
-
                 importedTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types, ability: ability, item: item, teraType: teraType, moves: moves.slice(0, 4) });
             }
         });
         
-        if (importedTeam.length > 0) {
-            currentTeam = importedTeam.slice(0, 6);
-            saveTeam(); renderAllUI(); closeImportModal();
-            document.getElementById('import-text').value = ""; 
-        } else { alert("Could not parse any valid Pokémon from the text."); }
+        if (importedTeam.length > 0) { currentTeam = importedTeam.slice(0, 6); saveTeam(); renderAllUI(); closeImportModal(); document.getElementById('import-text').value = ""; } 
+        else { alert("Could not parse any valid Pokémon from the text."); }
     }
 
     function exportTeam() {
@@ -2470,16 +1469,11 @@ const POKEMON_AESTHETICS = {};
         if (mon.moves && mon.moves.length > 0) { mon.moves.forEach(move => { exportText += `- ${move}\n`; }); }
         exportText += `\n`; 
       });
-
-      navigator.clipboard.writeText(exportText.trim()).then(() => {
-        alert("Copied to clipboard!");
-      });
+      navigator.clipboard.writeText(exportText.trim()).then(() => { alert("Copied to clipboard!"); });
     }
 
-    // --- PDF SHEET GENERATOR ---
     function generateTeamSheet() {
         if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
-
         let teamWord = ""; 
         let c1 = "#555", c2 = "#555", c3 = "#555";
         if (currentTeam[0]) c1 = (POKEMON_AESTHETICS[currentTeam[0].id] || { color: TYPE_COLORS[currentTeam[0].types[0]] || "#555" }).color;
@@ -2488,57 +1482,44 @@ const POKEMON_AESTHETICS = {};
 
         let sheetHTML = `
             <!DOCTYPE html>
-            <html>
-            <head>
-                <title>VGC Open Team Sheet</title>
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <style>
-                    @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
-                    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
-                    html, body { margin: 0; padding: 0; min-height: 100vh; background-color: #1a1a1a; }
-                    body { background-image: linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)), linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%); color: #fff; font-family: monospace; font-size: 14px; box-sizing: border-box; }
-                    .content-wrapper { padding: 20px; max-width: 900px; margin: 0 auto; }
-                    .team-flex { display: flex; flex-wrap: wrap; justify-content: space-between; }
-                    .mon-container { display: flex; align-items: center; background: rgba(30, 30, 30, 0.6); padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 48.5%; box-sizing: border-box; margin-bottom: 20px; }
-                    @media (max-width: 700px) { .mon-container { width: 100%; } }
-                    .mon-crest { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Pacifico', cursive; font-size: 26px; color: #fff; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); margin-right: 15px; border: 2px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.3); flex-shrink: 0; }
-                    .mon-sprite { width: 90px; text-align: center; flex-shrink: 0; margin-right: 10px; }
-                    .mon-sprite img { width: 100%; image-rendering: pixelated; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); }
-                    .mon-details { line-height: 1.6; width: 100%; }
-                    .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; text-shadow: 1px 1px 2px #000; }
-                    .mon-item { color: #ccc; font-style: italic; }
-                    .mon-ability { color: #fff; }
-                    .mon-tera { color: #ff9900; }
-                    .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.2); }
-                    .team-acronym-container { text-align: center; background: rgba(30, 30, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-top: 10px; }
-                    .team-acronym-title { color: #aaa; font-family: sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; }
-                    .team-acronym-word { font-family: 'Pacifico', cursive; font-size: 48px; color: #ffcc00; letter-spacing: 8px; text-shadow: 3px 3px 0px rgba(0,0,0,0.8); }
-                    
-                    @media print {
-                        @page { size: A4 portrait; margin: 0.5cm; }
-                        body { min-height: 297mm; background-color: #1a1a1a !important; background-image: linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)), linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%) !important; }
-                        .content-wrapper { padding: 10px; }
-                        h2 { margin: 5px 0 15px 0; font-size: 18px; }
-                        .mon-container { width: 48.5% !important; background: rgba(20, 20, 20, 0.8) !important; padding: 10px !important; margin-bottom: 15px !important; border: 1px solid #444 !important; }
-                        .mon-sprite { width: 70px; margin-right: 5px; }
-                        .mon-crest { width: 35px; height: 35px; font-size: 20px; margin-right: 10px; }
-                        .mon-name { font-size: 14px; }
-                        .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; padding: 10px; border: 1px solid #444 !important; }
-                        .print-btn { display: none !important; }
-                    }
-                </style>
-            </head>
-            <body>
-                <div class="content-wrapper">
-                    <h2 style="text-align:center; color:#ffcc00; font-family: sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">VGC Open Team Sheet</h2>
-                    <div class="team-flex">
+            <html><head><title>VGC Open Team Sheet</title><meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+                html, body { margin: 0; padding: 0; min-height: 100vh; background-color: #1a1a1a; }
+                body { background-image: linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)), linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%); color: #fff; font-family: monospace; font-size: 14px; box-sizing: border-box; }
+                .content-wrapper { padding: 20px; max-width: 900px; margin: 0 auto; }
+                .team-flex { display: flex; flex-wrap: wrap; justify-content: space-between; }
+                .mon-container { display: flex; align-items: center; background: rgba(30, 30, 30, 0.6); padding: 15px; border-radius: 8px; page-break-inside: avoid; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.5); width: 48.5%; box-sizing: border-box; margin-bottom: 20px; }
+                @media (max-width: 700px) { .mon-container { width: 100%; } }
+                .mon-crest { width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Pacifico', cursive; font-size: 26px; color: #fff; text-shadow: 2px 2px 0px rgba(0,0,0,0.5); margin-right: 15px; border: 2px solid #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.3); flex-shrink: 0; }
+                .mon-sprite { width: 90px; text-align: center; flex-shrink: 0; margin-right: 10px; }
+                .mon-sprite img { width: 100%; image-rendering: pixelated; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.5)); }
+                .mon-details { line-height: 1.6; width: 100%; }
+                .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; text-shadow: 1px 1px 2px #000; }
+                .mon-item { color: #ccc; font-style: italic; }
+                .mon-ability { color: #fff; }
+                .mon-tera { color: #ff9900; }
+                .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.2); }
+                .team-acronym-container { text-align: center; background: rgba(30, 30, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-top: 10px; }
+                .team-acronym-title { color: #aaa; font-family: sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; }
+                .team-acronym-word { font-family: 'Pacifico', cursive; font-size: 48px; color: #ffcc00; letter-spacing: 8px; text-shadow: 3px 3px 0px rgba(0,0,0,0.8); }
+                @media print {
+                    @page { size: A4 portrait; margin: 0.5cm; }
+                    body { min-height: 297mm; background-color: #1a1a1a !important; background-image: linear-gradient(rgba(20, 20, 20, 0.88), rgba(20, 20, 20, 0.95)), linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%) !important; }
+                    .content-wrapper { padding: 10px; } h2 { margin: 5px 0 15px 0; font-size: 18px; }
+                    .mon-container { width: 48.5% !important; background: rgba(20, 20, 20, 0.8) !important; padding: 10px !important; margin-bottom: 15px !important; border: 1px solid #444 !important; }
+                    .mon-sprite { width: 70px; margin-right: 5px; } .mon-crest { width: 35px; height: 35px; font-size: 20px; margin-right: 10px; }
+                    .mon-name { font-size: 14px; } .team-acronym-container { background: rgba(20, 20, 20, 0.8) !important; padding: 10px; border: 1px solid #444 !important; }
+                    .print-btn { display: none !important; }
+                }
+            </style></head>
+            <body><div class="content-wrapper"><h2 style="text-align:center; color:#ffcc00; font-family: sans-serif; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">VGC Open Team Sheet</h2><div class="team-flex">
         `;
 
         currentTeam.forEach(mon => {
             let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
-            let movesHTML = "";
-            if (mon.moves && mon.moves.length > 0) mon.moves.forEach(m => { movesHTML += `- ${m}<br>`; });
-
+            let movesHTML = ""; if (mon.moves && mon.moves.length > 0) mon.moves.forEach(m => { movesHTML += `- ${m}<br>`; });
             let aesthetic = POKEMON_AESTHETICS[mon.id] || { letter: exportName.charAt(0).toUpperCase(), color: TYPE_COLORS[mon.types[0]] || "#555" };
             teamWord += aesthetic.letter;
 
@@ -2556,97 +1537,64 @@ const POKEMON_AESTHETICS = {};
             `;
         });
 
-        sheetHTML += `
-                    </div>
-                    <div class="team-acronym-container">
-                        <p class="team-acronym-title">Team Acronym</p>
-                        <div class="team-acronym-word">${teamWord}</div>
-                    </div>
-                    <div style="text-align:center; margin-top:20px;" class="print-btn">
-                        <button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button>
-                    </div>
-                </div>
-            </body>
-            </html>
+        sheetHTML += `</div><div class="team-acronym-container"><p class="team-acronym-title">Team Acronym</p><div class="team-acronym-word">${teamWord}</div></div>
+            <div style="text-align:center; margin-top:20px;" class="print-btn"><button onclick="window.print()" style="padding: 10px 20px; font-size: 16px; cursor: pointer; background-color: #ff9800; border: none; border-radius: 4px; color: #111; font-weight: bold;">Print / Save as PDF</button></div>
+            </div></body></html>
         `;
 
-        let sheetWindow = window.open('', '_blank');
-        sheetWindow.document.write(sheetHTML);
-        sheetWindow.document.close();
+        let sheetWindow = window.open('', '_blank'); sheetWindow.document.write(sheetHTML); sheetWindow.document.close();
     }
 
-    // --- ARCHETYPE ANALYZER ---
     function analyzeArchetype() {
         let container = document.getElementById('archetype-summary');
-        if (currentTeam.length === 0) { container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to analyze archetype.</p>'; return; }
+        if (currentTeam.length === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px; margin:0;">Add Pokémon to analyze archetype.</p>'; return; }
         
-        let totalMoves = 0;
-        currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
-        if (totalMoves === 0) { container.innerHTML = '<p style="color: #888; font-size: 8px; margin:0;">Awaiting move selection...</p>'; return; }
+        let totalMoves = 0; currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
+        if (totalMoves === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px; margin:0;">Awaiting move selection...</p>'; return; }
 
         let stats = { hasTR: false, hasTailwind: false, hasStickyWeb: false, hasDrizzle: false, hasRainAbuser: false, hasDrought: false, hasSunAbuser: false, hasSand: false, hasSnow: false, hasPsychicTerrain: false, hasExpandingForce: false, protectCount: 0, recoveryCount: 0, unawareCount: 0, statDroppers: 0, perishSongCount: 0, redirectorCount: 0, fakeOutCount: 0, pivotMoveCount: 0, hazardSetters: 0, hazardRemovers: 0, hasGholdengo: false, avgSpeed: 0, highSpeedCount: 0, suicideLeadPotential: false, hasDondozo: false, hasTatsugiri: false, hasMagnezone: false, dragonCount: 0, shadowTag: false };
         let typesPresent = new Set();
 
         currentTeam.forEach(mon => {
             let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
-            stats.avgSpeed += baseSpe;
-            if (baseSpe >= 110) stats.highSpeedCount++;
-            
+            stats.avgSpeed += baseSpe; if (baseSpe >= 110) stats.highSpeedCount++;
             mon.types.forEach(t => typesPresent.add(t));
             
-            if (mon.id.includes('dondozo')) stats.hasDondozo = true;
-            if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
-            if (mon.id.includes('magnezone')) stats.hasMagnezone = true;
-            if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
-            if (mon.types.includes('Dragon')) stats.dragonCount++;
-            if (mon.ability === 'Unaware') stats.unawareCount++;
-
-            if (mon.ability === 'Drizzle') stats.hasDrizzle = true;
-            if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
-            if (mon.ability === 'Drought') stats.hasDrought = true;
-            if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
-            if (mon.ability === 'Sand Stream') stats.hasSand = true;
-            if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
-            if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true;
-            if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
+            if (mon.id.includes('dondozo')) stats.hasDondozo = true; if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
+            if (mon.id.includes('magnezone')) stats.hasMagnezone = true; if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
+            if (mon.types.includes('Dragon')) stats.dragonCount++; if (mon.ability === 'Unaware') stats.unawareCount++;
+            if (mon.ability === 'Drizzle') stats.hasDrizzle = true; if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
+            if (mon.ability === 'Drought') stats.hasDrought = true; if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
+            if (mon.ability === 'Sand Stream') stats.hasSand = true; if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
+            if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true; if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
 
             if (mon.moves) {
-                if (mon.moves.includes('Trick Room')) stats.hasTR = true;
-                if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
-                if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true;
-                if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
-                
+                if (mon.moves.includes('Trick Room')) stats.hasTR = true; if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
+                if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true; if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
                 if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
                 if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
                 if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
                 if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => mon.moves.includes(m))) stats.recoveryCount++;
                 if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => mon.moves.includes(m))) stats.protectCount++;
-                
                 if (mon.moves.includes('Perish Song')) stats.perishSongCount++;
                 if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
                 if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
-                
                 if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) stats.suicideLeadPotential = true;
             }
         });
         
-        stats.avgSpeed /= currentTeam.length;
-        let detectedModes = [];
+        stats.avgSpeed /= currentTeam.length; let detectedModes = [];
 
         if (stats.hasDondozo && stats.hasTatsugiri) detectedModes.push({name: "DozoGiri", desc: "Uses Commander to grant Dondozo double omni-boosts to sweep."});
         if (stats.hasMagnezone && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
         if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) detectedModes.push({name: "Perish Trap", desc: "Traps opponents and uses Perish Song to force KOs within 3 turns."});
-        
         if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers."});
         else if (stats.hasDrizzle) detectedModes.push({name: "Rain Mode", desc: "Utilizes Rain to boost Water attacks and mitigate Fire weaknesses."});
-        
         if (stats.hasDrought && stats.hasSunAbuser) detectedModes.push({name: "Sun Offense", desc: "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate pressure."});
         else if (stats.hasDrought) detectedModes.push({name: "Sun Mode", desc: "Utilizes Sun to boost Fire attacks and mitigate Water weaknesses."});
-
         if (stats.hasSand) detectedModes.push({name: "Sand Mode", desc: "Uses Sandstorm for residual damage and to grant Special Defense boosts to Rock types."});
         if (stats.hasSnow) detectedModes.push({name: "Snow Mode", desc: "Sets Snow to boost Ice-type Defense and enable Aurora Veil support."});
         if (stats.hasPsychicTerrain && stats.hasExpandingForce) detectedModes.push({name: "Psyspam", desc: "Abuses Psychic Terrain to block priority and fire off high-powered Expanding Force attacks."});
-
         if (stats.hasTailwind) detectedModes.push({name: "Tailwind Control", desc: "Utilizes Tailwind for an immediate, team-wide speed advantage."});
         if (stats.hasTR && stats.avgSpeed < 75) detectedModes.push({name: "Hard Trick Room", desc: "Committed to speed inversion. Relies on slow juggernauts to sweep."});
         else if (stats.hasTR) detectedModes.push({name: "Trick Room Mode", desc: "Features Trick Room as an alternate form of speed control for hybrid flexibility."});
@@ -2657,23 +1605,17 @@ const POKEMON_AESTHETICS = {};
             else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) detectedModes.push({name: "Bulky Offense / Pivot Balance", desc: "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers and maintain board control."});
         }
 
-        let archetype = "Bulky Offense / Balance";
-        let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
-
-        if (detectedModes.length > 0) {
-            archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : "");
-            desc = detectedModes.map(m => `• ${m.desc}`).join("<br>");
-        }
+        let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
+        if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
 
         let cores = [];
         if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) cores.push("🔥💧🌿 Fire / Water / Grass Core");
         if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
 
         let coreHtml = cores.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #555; color: #aaddff;"><strong>Active Defensive Cores:</strong><br>${cores.join('<br>')}</div>` : "";
-        container.innerHTML = `<span style="color:#ffcc00; font-size:12px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:10px;">${desc}</span>${coreHtml}`;
+        container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${coreHtml}`;
     }
 
-    // --- TYPE CHART ---
     function getDefensiveMultiplier(defendingTypes, attackingType) {
       let mult = 1;
       defendingTypes.forEach(type => {
@@ -2686,44 +1628,28 @@ const POKEMON_AESTHETICS = {};
     }
 
     function renderTypeChart() {
-      const container = document.getElementById('type-summary-container');
-      container.innerHTML = '';
-      if (currentTeam.length === 0) { container.innerHTML = '<p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>'; return; }
+      const container = document.getElementById('type-summary-container'); container.innerHTML = '';
+      if (currentTeam.length === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px;">Add Pokémon to your team to see analysis.</p>'; return; }
 
-      let extremeWeak = {}; let weaknesses = {}; let resistances = {}; let mostlyIneffective = {};
-      let immunities = {}; let abilityImmune = {}; let abilityResist = {}; let coverage = {};
-
-      Object.keys(TYPE_DATA).forEach(t => {
-        extremeWeak[t] = []; weaknesses[t] = []; resistances[t] = []; mostlyIneffective[t] = [];
-        immunities[t] = []; abilityImmune[t] = []; abilityResist[t] = []; coverage[t] = [];
-      });
+      let extremeWeak = {}; let weaknesses = {}; let resistances = {}; let mostlyIneffective = {}; let immunities = {}; let abilityImmune = {}; let abilityResist = {}; let coverage = {};
+      Object.keys(TYPE_DATA).forEach(t => { extremeWeak[t] = []; weaknesses[t] = []; resistances[t] = []; mostlyIneffective[t] = []; immunities[t] = []; abilityImmune[t] = []; abilityResist[t] = []; coverage[t] = []; });
 
       Object.keys(TYPE_DATA).forEach(targetType => {
         currentTeam.forEach(mon => {
           let defMult = getDefensiveMultiplier(mon.types, targetType);
-          if (defMult === 4) extremeWeak[targetType].push(mon);
-          else if (defMult === 2) weaknesses[targetType].push(mon);
-          else if (defMult === 0.5) resistances[targetType].push(mon);
-          else if (defMult === 0.25) mostlyIneffective[targetType].push(mon);
-          else if (defMult === 0) immunities[targetType].push(mon);
-
+          if (defMult === 4) extremeWeak[targetType].push(mon); else if (defMult === 2) weaknesses[targetType].push(mon); else if (defMult === 0.5) resistances[targetType].push(mon); else if (defMult === 0.25) mostlyIneffective[targetType].push(mon); else if (defMult === 0) immunities[targetType].push(mon);
           if (mon.ability && ABILITY_DEFENSES[mon.ability]) {
              let abilDef = ABILITY_DEFENSES[mon.ability];
              if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType) && defMult !== 0) abilityImmune[targetType].push(mon);
              if (abilDef.resists && abilDef.resists.includes(targetType)) abilityResist[targetType].push(mon);
           }
-          if (mon.moves) {
-              let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t));
-              if (hasSE) coverage[targetType].push(mon);
-          }
+          if (mon.moves) { let hasSE = mon.types.some(t => TYPE_DATA[targetType].weakTo.includes(t)); if (hasSE) coverage[targetType].push(mon); }
         });
       });
 
       const buildSection = (title, color, dataObj, emptyMsg) => {
         let activeTypes = Object.keys(dataObj).filter(t => dataObj[t].length > 0).sort((a, b) => dataObj[b].length - dataObj[a].length);
-        let contentHtml = activeTypes.length === 0 
-            ? `<div style="color: #888; font-size: 8px;">${emptyMsg}</div>` 
-            : activeTypes.map(t => `<div class="summary-row"><div class="type-label" style="background-color: ${TYPE_COLORS[t]}; width: 45px;">${t.substring(0,3).toUpperCase()}</div><div class="summary-sprites">${dataObj[t].map(m => `<img src="${m.sprite}" title="${m.name}">`).join('')}</div></div>`).join('');
+        let contentHtml = activeTypes.length === 0 ? `<div style="color: #888; font-size: 10px;">${emptyMsg}</div>` : activeTypes.map(t => `<div class="summary-row"><div class="type-label" style="background-color: ${TYPE_COLORS[t]}; width: 60px;">${t.substring(0,3).toUpperCase()}</div><div class="summary-sprites">${dataObj[t].map(m => `<img src="${m.sprite}" title="${m.name}">`).join('')}</div></div>`).join('');
         let totalCount = activeTypes.reduce((sum, t) => sum + dataObj[t].length, 0);
         return `<details><summary style="color: ${color};"><strong>${title}</strong><span style="background: ${color}; color: #111; padding: 2px 6px; border-radius: 10px;">${totalCount}</span></summary><div class="summary-content">${contentHtml}</div></details>`;
       };
@@ -2740,51 +1666,22 @@ const POKEMON_AESTHETICS = {};
       `;
     }
 
-    // --- UNIVERSAL ROSTER SEARCH ---
     function universalSearch() {
         let input = document.getElementById('universal-search').value.toLowerCase().trim();
         let containers = document.querySelectorAll('.poke-sprite-container');
-
         containers.forEach(container => {
             let match = container.getAttribute('onclick').match(/showData\('([^']+)'/);
             if (match) {
-                let monId = match[1];
-                let monData = showdownData[monId];
-                let isMatch = false;
-
-                // Always show everything if search is empty
-                if (input === '') {
-                    isMatch = true;
-                } else if (monData) {
-                    // 1. Search by Name
+                let monId = match[1]; let monData = showdownData[monId]; let isMatch = false;
+                if (input === '') { isMatch = true; } 
+                else if (monData) {
                     if (monData.name.toLowerCase().includes(input)) isMatch = true;
-                    
-                    // 2. Search by Type
                     if (monData.types.some(t => t.toLowerCase().includes(input))) isMatch = true;
-                    
-                    // 3. Search by Ability
-                    if (monData.abilities) {
-                        for (let key in monData.abilities) { 
-                            if (monData.abilities[key].toLowerCase().includes(input)) isMatch = true; 
-                        }
-                    }
-                } else {
-                    // Fallback for custom megas that might not have full loaded data yet
-                    if (monId.includes(input)) isMatch = true;
-                }
+                    if (monData.abilities) { for (let key in monData.abilities) { if (monData.abilities[key].toLowerCase().includes(input)) isMatch = true; } }
+                } else { if (monId.includes(input)) isMatch = true; }
 
-                // Apply Visual Feedback
-                if (isMatch) { 
-                    container.style.opacity = "1"; 
-                    container.style.pointerEvents = "auto"; 
-                    container.style.filter = "drop-shadow(0 4px 4px rgba(0,0,0,0.5))"; 
-                    container.style.transform = "scale(1)";
-                } else { 
-                    container.style.opacity = "0.15"; 
-                    container.style.pointerEvents = "none"; 
-                    container.style.filter = "grayscale(100%) blur(2px)"; 
-                    container.style.transform = "scale(0.85)";
-                }
+                if (isMatch) { container.style.opacity = "1"; container.style.pointerEvents = "auto"; container.style.filter = "drop-shadow(0 4px 4px rgba(0,0,0,0.5))"; container.style.transform = "scale(1)"; } 
+                else { container.style.opacity = "0.15"; container.style.pointerEvents = "none"; container.style.filter = "grayscale(100%) blur(2px)"; container.style.transform = "scale(0.85)"; }
             }
         });
     }       
