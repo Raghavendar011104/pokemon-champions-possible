@@ -72,7 +72,7 @@
   .sim-slot.selected { border-color: #4CAF50; background: #1a3a1a; transform: scale(1.1); }
 
   /* Lead Matrix Styles */
-  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 8px; text-align: center; }
+  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 8px; text-align: center; white-space: nowrap; }
   .matrix-table th, .matrix-table td { border: 1px solid #444; padding: 6px; }
   .matrix-table th { background: #222; color: #aaddff; font-weight: normal; }
   .matrix-good { background: rgba(76, 175, 80, 0.2); color: #4CAF50; font-weight: bold; text-shadow: 1px 1px 0 #000; }
@@ -455,9 +455,10 @@
 
            <textarea id="sim-opp-paste" placeholder="Or paste opposing team Poképaste here..." style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #444; padding: 5px; font-family: monospace; font-size: 8px; resize: none; box-sizing:border-box;"></textarea>
            
-           <div style="display:flex; gap: 5px; margin-top: 5px;">
-               <button class="btn-action btn-add" style="margin-top:0; font-size:8px; padding: 6px; flex:1;" onclick="loadSimOpponent()">Load Opponent</button>
-               <button class="btn-action btn-add" style="margin-top:0; font-size:8px; padding: 6px; flex:1; background-color:#9c27b0; color:#fff;" onclick="generateLeadMatrix()">6v6 Lead Matrix</button>
+           <div style="display:flex; gap: 5px; margin-top: 5px; flex-wrap:wrap;">
+               <button class="btn-action btn-add" style="margin-top:0; font-size:8px; padding: 6px; flex:1; min-width: 80px;" onclick="loadSimOpponent()">Load Opp</button>
+               <button class="btn-action btn-add" style="margin-top:0; font-size:8px; padding: 6px; flex:1; min-width: 80px; background-color:#9c27b0; color:#fff;" onclick="generate1v1LeadMatrix()">1v1 Matrix</button>
+               <button class="btn-action btn-add" style="margin-top:0; font-size:8px; padding: 6px; flex:1; min-width: 80px; background-color:#2196F3; color:#fff;" onclick="generate2v2LeadMatrix()">2v2 Matrix</button>
            </div>
         </div>
       </div>
@@ -467,7 +468,7 @@
       </div>
 
       <div id="sim-matrix-results" style="display: none; margin-top: 20px; background: #111; padding: 15px; border-radius: 8px; border: 1px solid #9c27b0; overflow-x: auto;">
-          <p style="color:#888; font-size:9px; text-align:center;">Load an Opponent and click "6v6 Lead Matrix".</p>
+          <p style="color:#888; font-size:9px; text-align:center;">Load an Opponent and click a Matrix button.</p>
       </div>
 
     </div>
@@ -1824,6 +1825,37 @@ Mega Victreebel,M,#78C850,Grass Green`;
         runSimAnalysis();
     }
 
+    function get1v1Score(myMon, oppMon) {
+        let myBaseSpe = showdownData[myMon.id] ? showdownData[myMon.id].baseStats.spe : 50;
+        let mySpd = Math.floor(0.5 * (2 * myBaseSpe + 31)) + 5;
+        if(myMon.item === 'Choice Scarf') mySpd = Math.floor(mySpd * 1.5);
+        if(myMon.item === 'Iron Ball' || myMon.item === 'Macho Brace') mySpd = Math.floor(mySpd * 0.5);
+
+        let oppBaseSpe = showdownData[oppMon.id] ? showdownData[oppMon.id].baseStats.spe : 50;
+        let oppSpd = Math.floor(0.5 * (2 * oppBaseSpe + 31)) + 5;
+
+        let myMaxOffense = 0;
+        myMon.types.forEach(t => {
+            let mult = getDefensiveMultiplier(oppMon.types, t);
+            if (mult > myMaxOffense) myMaxOffense = mult;
+        });
+
+        let theirMaxOffense = 0;
+        oppMon.types.forEach(t => {
+            let mult = getDefensiveMultiplier(myMon.types, t);
+            if (mult > theirMaxOffense) theirMaxOffense = mult;
+        });
+
+        let score = 0;
+        if (myMaxOffense > theirMaxOffense) score += 1;
+        else if (myMaxOffense < theirMaxOffense) score -= 1;
+
+        if (mySpd > oppSpd) score += 0.5;
+        else if (mySpd < oppSpd) score -= 0.5;
+
+        return score;
+    }
+
     function runSimAnalysis() {
         let resDiv = document.getElementById('sim-analysis-results');
         if (simYourSelection.length !== 4 || simOppTeam.length === 0) {
@@ -1864,7 +1896,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         </div>`;
     }
 
-    function generateLeadMatrix() {
+    function generate1v1LeadMatrix() {
         let resDiv = document.getElementById('sim-analysis-results');
         let matrixDiv = document.getElementById('sim-matrix-results');
 
@@ -1876,45 +1908,20 @@ Mega Victreebel,M,#78C850,Grass Green`;
         resDiv.style.display = 'none';
         matrixDiv.style.display = 'block';
 
-        let html = '<h3 style="color:#9c27b0; font-size:12px; margin-top:0;">Turn 1 Lead Matrix</h3>';
+        let html = '<h3 style="color:#9c27b0; font-size:12px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>';
         html += '<p style="font-size:8px; color:#aaa; margin-bottom:10px; line-height: 1.4;">Compares your STAB damage and Speed against the opponent to estimate the 1v1 advantage.<br><strong style="color:#4CAF50;">Green</strong> = Favorable Matchup | <strong style="color:#ff4444;">Red</strong> = Poor Matchup.</p>';
-        html += '<table class="matrix-table"><tr><th>VS</th>';
+        html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
         simOppTeam.forEach(opp => {
-            html += `<th><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`;
+            html += `<th style="min-width: 60px;"><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`;
         });
         html += '</tr>';
 
         currentTeam.forEach(myMon => {
             html += `<tr><th><img src="${myMon.sprite}" class="matrix-sprite"><br>${myMon.name.substring(0, 10)}</th>`;
             
-            let myBaseSpe = showdownData[myMon.id] ? showdownData[myMon.id].baseStats.spe : 50;
-            let mySpd = Math.floor(0.5 * (2 * myBaseSpe + 31)) + 5;
-            if(myMon.item === 'Choice Scarf') mySpd = Math.floor(mySpd * 1.5);
-            if(myMon.item === 'Iron Ball' || myMon.item === 'Macho Brace') mySpd = Math.floor(mySpd * 0.5);
-
             simOppTeam.forEach(oppMon => {
-                let oppBaseSpe = showdownData[oppMon.id] ? showdownData[oppMon.id].baseStats.spe : 50;
-                let oppSpd = Math.floor(0.5 * (2 * oppBaseSpe + 31)) + 5;
-
-                let myMaxOffense = 0;
-                myMon.types.forEach(t => {
-                    let mult = getDefensiveMultiplier(oppMon.types, t);
-                    if (mult > myMaxOffense) myMaxOffense = mult;
-                });
-
-                let theirMaxOffense = 0;
-                oppMon.types.forEach(t => {
-                    let mult = getDefensiveMultiplier(myMon.types, t);
-                    if (mult > theirMaxOffense) theirMaxOffense = mult;
-                });
-
-                let score = 0;
-                if (myMaxOffense > theirMaxOffense) score += 1;
-                else if (myMaxOffense < theirMaxOffense) score -= 1;
-
-                if (mySpd > oppSpd) score += 0.5;
-                else if (mySpd < oppSpd) score -= 0.5;
+                let score = get1v1Score(myMon, oppMon);
 
                 let cellClass = "matrix-neutral";
                 let cellText = "Neutral";
@@ -1928,7 +1935,65 @@ Mega Victreebel,M,#78C850,Grass Green`;
             html += '</tr>';
         });
 
-        html += '</table>';
+        html += '</table></div>';
+        matrixDiv.innerHTML = html;
+    }
+
+    function generate2v2LeadMatrix() {
+        let resDiv = document.getElementById('sim-analysis-results');
+        let matrixDiv = document.getElementById('sim-matrix-results');
+
+        if (currentTeam.length < 2 || simOppTeam.length < 2) {
+            alert("You need at least 2 Pokémon on both teams to generate a 2v2 matrix!");
+            return;
+        }
+
+        resDiv.style.display = 'none';
+        matrixDiv.style.display = 'block';
+
+        let html = '<h3 style="color:#2196F3; font-size:12px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>';
+        html += '<p style="font-size:8px; color:#aaa; margin-bottom:10px; line-height: 1.4;">Compares every possible 2-Pokémon lead combination for STAB synergy and Speed. Scroll to view the full grid.<br><strong style="color:#4CAF50;">Green</strong> = Favorable Matchup | <strong style="color:#ff4444;">Red</strong> = Poor Matchup.</p>';
+        html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
+
+        let oppPairs = [];
+        for(let i=0; i<simOppTeam.length; i++) {
+            for(let j=i+1; j<simOppTeam.length; j++) {
+                oppPairs.push([simOppTeam[i], simOppTeam[j]]);
+            }
+        }
+        
+        let myPairs = [];
+        for(let i=0; i<currentTeam.length; i++) {
+            for(let j=i+1; j<currentTeam.length; j++) {
+                myPairs.push([currentTeam[i], currentTeam[j]]);
+            }
+        }
+
+        oppPairs.forEach(opp => {
+            html += `<th style="min-width: 60px;"><img src="${opp[0].sprite}" style="height:24px; image-rendering:pixelated; margin-right:-5px;"><img src="${opp[1].sprite}" style="height:24px; image-rendering:pixelated;"></th>`;
+        });
+        html += '</tr>';
+
+        myPairs.forEach(myPair => {
+            html += `<tr><th><img src="${myPair[0].sprite}" style="height:24px; image-rendering:pixelated; margin-right:-5px;"><img src="${myPair[1].sprite}" style="height:24px; image-rendering:pixelated;"></th>`;
+            
+            oppPairs.forEach(oppPair => {
+                let score = get1v1Score(myPair[0], oppPair[0]) + get1v1Score(myPair[0], oppPair[1]) +
+                            get1v1Score(myPair[1], oppPair[0]) + get1v1Score(myPair[1], oppPair[1]);
+
+                let cellClass = "matrix-neutral";
+                let cellText = "Neutral";
+                if (score >= 2) { cellClass = "matrix-good"; cellText = "Favorable"; }
+                else if (score <= -2) { cellClass = "matrix-bad"; cellText = "Poor"; }
+                else if (score > 0) { cellClass = "matrix-good"; cellText = "Adv"; }
+                else if (score < 0) { cellClass = "matrix-bad"; cellText = "Dis"; }
+
+                html += `<td class="${cellClass}">${cellText}</td>`;
+            });
+            html += '</tr>';
+        });
+
+        html += '</table></div>';
         matrixDiv.innerHTML = html;
     }
 
