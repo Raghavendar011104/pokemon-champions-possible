@@ -129,6 +129,7 @@
         <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
            <button class="btn-action" style="padding: 8px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import</button>
            <button class="btn-action" style="padding: 8px;" onclick="exportTeam()">Export</button>
+           <button class="btn-action" style="padding: 8px; background-color: #4CAF50; color: #fff;" onclick="openAutoBuildModal()">Auto-Build</button>
            <button class="btn-action" style="padding: 8px; background-color: #9c27b0; color: #fff;" onclick="openSimModal()">Pick 4 Sim</button>
            <button class="btn-action" style="padding: 8px; background-color: #ff9800; color: #111;" onclick="generateTeamSheet()">VGC Sheet</button>
         </div>
@@ -433,6 +434,40 @@
       <h2 style="color:#ffcc00; font-size:14px; margin-top:0;">Missing Piece</h2>
       <p style="font-size:8px; color:#ccc; margin-bottom:15px; line-height: 1.4;">Based on your team's worst 2x and 4x weaknesses, here are the best defensive candidates from the roster to plug the hole.</p>
       <div id="suggest-results" style="max-height: 300px; overflow-y: auto;">Loading recommendations...</div>
+    </div>
+  </div>
+  <div id="autobuild-modal" class="modal">
+    <div class="modal-content" style="width: 320px;">
+      <span class="close-btn" onclick="closeAutoBuildModal()">X</span>
+      <h2 style="color:#ffcc00; font-size:14px; margin-top:0;">Auto-Build Team</h2>
+      <p style="font-size:8px; color:#ccc; margin-bottom:15px; line-height: 1.4;">Select your preferred playstyles. The engine will select exactly 1 Mega Evolution and 5 perfectly typed final evolutions to match from your roster.</p>
+      
+      <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Primary Archetype:</strong></p>
+      <select id="auto-arch-1" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">
+          <option value="Bulky Offense">Bulky Offense (Balanced)</option>
+          <option value="Rain">Rain (Drizzle + Swift Swim)</option>
+          <option value="Sun">Sun (Drought + Chlorophyll)</option>
+          <option value="Sand">Sand (Sand Stream + Sand Rush)</option>
+          <option value="Snow">Snow (Snow Warning + Aurora Veil)</option>
+          <option value="Trick Room">Trick Room (Slow & Strong)</option>
+          <option value="Tailwind">Tailwind (Speed Control)</option>
+          <option value="Psyspam">Psyspam (Psychic Terrain)</option>
+      </select>
+
+      <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Secondary Archetype (Optional):</strong></p>
+      <select id="auto-arch-2" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">
+          <option value="None">None (Pure)</option>
+          <option value="Bulky Offense">Bulky Offense (Balanced)</option>
+          <option value="Rain">Rain (Drizzle + Swift Swim)</option>
+          <option value="Sun">Sun (Drought + Chlorophyll)</option>
+          <option value="Sand">Sand (Sand Stream + Sand Rush)</option>
+          <option value="Snow">Snow (Snow Warning + Aurora Veil)</option>
+          <option value="Trick Room">Trick Room (Slow & Strong)</option>
+          <option value="Tailwind">Tailwind (Speed Control)</option>
+          <option value="Psyspam">Psyspam (Psychic Terrain)</option>
+      </select>
+
+      <button class="btn-action btn-add" style="margin-top:5px; font-size:10px; background-color: #4CAF50; color: #fff;" onclick="runAutoBuild()">Generate 6 Pokémon</button>
     </div>
   </div>
 
@@ -1458,6 +1493,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
     function closeSuggestModal() { document.getElementById('suggest-modal').style.display = 'none'; }
     function closeSimModal() { document.getElementById('sim-modal').style.display = 'none'; }
+    function openAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'flex'; }
+    function closeAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'none'; }
 
     window.onclick = function(event) {
       if (event.target == document.getElementById('data-modal')) closeModal();
@@ -1465,6 +1502,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
       if (event.target == document.getElementById('import-modal')) closeImportModal();
       if (event.target == document.getElementById('suggest-modal')) closeSuggestModal();
       if (event.target == document.getElementById('sim-modal')) closeSimModal();
+      if (event.target == document.getElementById('autobuild-modal')) closeAutoBuildModal();
     }
 
     function handleDragStart(e) { draggedSlotIndex = parseInt(e.target.closest('.team-slot').dataset.index); }
@@ -1749,6 +1787,153 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function addSuggestion(id, name, sprite) {
         closeSuggestModal();
         showData(id, name, sprite);
+    }
+    // --- STRICT ROSTER-ONLY AUTO-BUILDER ENGINE ---
+    const ARCHETYPE_CORES = {
+        "Bulky Offense": { setters: ["incineroar", "arcanine"], abusers: ["rillaboom", "gholdengo", "amoonguss", "dragonite"], megas: ["kangaskhanmega", "venusaurmega", "scizormega", "metagrossmega", "dragonitemega", "meganiummega", "feraligatrmega", "excadrillmega", "scraftymega", "chesnaughtmega", "golisopodmega", "baxcaliburmega", "lucariomegaz", "absolmegaz"] },
+        "Rain": { setters: ["pelipper"], abusers: ["archaludon", "palafinhero", "basculegion", "gastrodon"], megas: ["swampertmega", "blastoisemega", "gyaradosmega", "starmiemega", "dragalgemega", "eelektrossmega"] },
+        "Sun": { setters: ["torkoal", "ninetales"], abusers: ["venusaur", "charizard", "skeledirge", "scovillain"], megas: ["charizardmegay", "houndoommega", "victreebelmega", "emboarmega", "delphoxmega", "scovillainmega", "pyroarmega"] },
+        "Sand": { setters: ["tyranitar"], abusers: ["excadrill", "garchomp"], megas: ["tyranitarmega", "garchompmega", "aerodactylmega", "excadrillmega", "barbaraclemega"] },
+        "Snow": { setters: ["ninetalesalola", "abomasnow"], abusers: ["baxcalibur", "glaceon", "froslass"], megas: ["abomasnowmega", "glaliemega", "froslassmega", "crabominablemega"] },
+        "Trick Room": { setters: ["hatterene", "farigiraf", "bronzong", "oranguru"], abusers: ["ursaluna", "torkoal", "amoonguss", "kingambit"], megas: ["cameruptmega", "mawilemega", "ampharosmega", "clefablemega", "golurkmega", "drampamega"] },
+        "Tailwind": { setters: ["talonflame", "corviknight", "pelipper"], abusers: ["gholdengo", "arcanine", "hydreigon"], megas: ["salamencemega", "pidgeotmega", "aerodactylmega", "staraptormega", "raichumegax", "raichumegay", "hawluchamega", "skarmorymega"] },
+        "Psyspam": { setters: ["indeedeef"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"] }
+    };
+
+    function addMonToTeamQuietly(id) {
+        if (currentTeam.length >= 6) return false;
+        if (currentTeam.some(m => m.id === id)) return false; 
+        
+        let baseId = id.includes('mega') ? id.replace(/mega[a-z]?$/, '') : id;
+        if (!POKEMON_AESTHETICS[baseId] && !POKEMON_AESTHETICS[id]) return false; 
+        
+        let monData = showdownData[id];
+        if(!monData) return false; 
+        
+        let spriteUrl = "";
+        if (CUSTOM_SPRITES[id]) {
+            spriteUrl = CUSTOM_SPRITES[id];
+        } else {
+            let spriteId = id;
+            if (id.includes('mega')) {
+                if (id.endsWith('x') || id.endsWith('y') || id.endsWith('z')) {
+                    spriteId = id.replace(/mega([xyz])$/, '-mega$1');
+                } else {
+                    spriteId = id.replace('mega', '-mega');
+                }
+            }
+            spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteId}.png`;
+        }
+
+        let ability = monData.abilities[0] || monData.abilities['0'];
+        if (id === 'pelipper') ability = 'Drizzle';
+        if (id === 'torkoal') ability = 'Drought';
+        if (id === 'indeedeef') ability = 'Psychic Surge';
+        if (id === 'tyranitar') ability = 'Sand Stream';
+        if (id === 'ninetalesalola') ability = 'Snow Warning';
+
+        let megaItemName = monData.item || "";
+        if (id.includes('mega') && !megaItemName) {
+             if (MEGA_MAP[baseId]) {
+                 let match = MEGA_MAP[baseId].find(m => m.id === id);
+                 if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) {
+                     megaItemName = match.stone;
+                 }
+             }
+        }
+        
+        currentTeam.push({ id: id, name: monData.name, sprite: spriteUrl, types: monData.types, moves: [], item: megaItemName, ability: ability, teraType: "" });
+        return true;
+    }
+
+    function getBestDefensiveFitForAutoBuild(usedIds) {
+        let typeBalance = {};
+        Object.keys(TYPE_DATA).forEach(targetType => {
+            let weakCount = 0; let resistCount = 0;
+            currentTeam.forEach(mon => {
+                let defMult = getDefensiveMultiplier(mon.types, targetType);
+                if(defMult > 1) weakCount++;
+                if(defMult < 1) resistCount++;
+                if(mon.ability && ABILITY_DEFENSES[mon.ability]) {
+                     if (ABILITY_DEFENSES[mon.ability].immuneTo && ABILITY_DEFENSES[mon.ability].immuneTo.includes(targetType)) resistCount += 2;
+                }
+            });
+            typeBalance[targetType] = { weak: weakCount, resist: resistCount };
+        });
+        
+        let candidates = [];
+        Object.keys(POKEMON_AESTHETICS).forEach(id => {
+            if(usedIds.has(id)) return;
+            
+            let mon = showdownData[id];
+            if(!mon) return;
+            
+            if(mon.evos && mon.evos.length > 0) return; 
+            if(id.includes('mega')) return; 
+            if(mon.requiredItem) return; 
+            
+            let score = 0;
+            Object.keys(typeBalance).forEach(type => {
+                let balance = typeBalance[type];
+                if (balance.weak > balance.resist) {
+                    let defMult = getDefensiveMultiplier(mon.types, type);
+                    if(defMult < 1) score += (balance.weak - balance.resist) * 2;
+                    if(defMult > 1) score -= 3; 
+                }
+            });
+            score += Math.random() * 5; 
+            candidates.push({ id, score });
+        });
+        
+        candidates.sort((a,b) => b.score - a.score);
+        return candidates.length > 0 ? candidates[0].id : null;
+    }
+
+    function runAutoBuild() {
+        let arch1 = document.getElementById('auto-arch-1').value;
+        let arch2 = document.getElementById('auto-arch-2').value;
+        
+        currentTeam = []; 
+        let usedIds = new Set();
+        
+        function tryAdd(id) {
+            if(currentTeam.length >= 6 || usedIds.has(id)) return false;
+            let success = addMonToTeamQuietly(id);
+            if(success) usedIds.add(id);
+            return success;
+        }
+
+        let possibleMegas = [...ARCHETYPE_CORES[arch1].megas];
+        if (arch2 !== 'None' && ARCHETYPE_CORES[arch2]) {
+            possibleMegas = possibleMegas.concat(ARCHETYPE_CORES[arch2].megas);
+        }
+        possibleMegas.sort(() => 0.5 - Math.random());
+        for(let m of possibleMegas) { if(tryAdd(m)) break; }
+
+        let a1Setters = [...ARCHETYPE_CORES[arch1].setters].sort(() => 0.5 - Math.random());
+        for(let s of a1Setters) { if(tryAdd(s)) break; }
+        
+        let a1Abusers = [...ARCHETYPE_CORES[arch1].abusers].sort(() => 0.5 - Math.random());
+        for(let a of a1Abusers) { if(tryAdd(a)) break; }
+
+        if (arch2 !== 'None' && arch1 !== arch2 && ARCHETYPE_CORES[arch2]) {
+            let a2Setters = [...ARCHETYPE_CORES[arch2].setters].sort(() => 0.5 - Math.random());
+            for(let s of a2Setters) { if(tryAdd(s)) break; }
+            
+            let a2Abusers = [...ARCHETYPE_CORES[arch2].abusers].sort(() => 0.5 - Math.random());
+            for(let a of a2Abusers) { if(tryAdd(a)) break; }
+        }
+
+        let attempts = 0;
+        while(currentTeam.length < 6 && attempts < 100) {
+            attempts++;
+            let bestFitId = getBestDefensiveFitForAutoBuild(usedIds);
+            if(bestFitId) tryAdd(bestFitId);
+        }
+
+        saveTeam();
+        renderAllUI();
+        closeAutoBuildModal();
     }
 
     // --- PICK 4 SIMULATOR & TOP CUT EMULATOR & LEAD MATRIX ---
