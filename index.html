@@ -4,87 +4,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pokémon Competitive Team Builder</title>
-<link rel="icon" type="image/png" href="https://play.pokemonshowdown.com/sprites/itemicons/great-ball.png">
+<link rel="icon" type="image/png" href="https://play.pokemonshowdown.com/sprites/itemicons/quick-ball.png">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
 
-  body { background-color: #2b5b84; color: #ffffff; font-family: 'Press Start 2P', monospace; font-size: 10px; line-height: 1.5; padding: 20px; margin: 0; }
-  h1 { text-align: center; color: #ffcc00; text-shadow: 3px 3px 0 #333; font-size: 24px; margin-bottom: 20px; margin-top: 10px; }
-  h2 { color: #ff9900; text-shadow: 2px 2px 0 #222; border-bottom: 4px solid #fff; padding-bottom: 10px; margin-top: 40px; }
-  h3 { color: #aaddff; margin-top: 20px; margin-bottom: 10px; }
+  :root {
+    /* Scaled-Up Golden Ratio Typography */
+    --text-xs: 12px;
+    --text-sm: 16px;
+    --text-md: 26px; /* 16 * 1.618 */
+    --text-lg: 42px; /* 26 * 1.618 */
+  }
+
+  body { background-color: #1e3a5f; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: var(--text-sm); line-height: 1.6; padding: 20px; margin: 0; }
+  h1, h2 { font-family: 'Press Start 2P', monospace; }
+  h1 { text-align: center; color: #ffcc00; text-shadow: 3px 3px 0 #111; font-size: var(--text-lg); margin-bottom: 20px; margin-top: 10px; }
+  h2 { color: #ff9900; text-shadow: 2px 2px 0 #111; border-bottom: 3px solid #cbd5e1; padding-bottom: 10px; margin-top: 40px; font-size: var(--text-md); }
+  h3 { color: #aaddff; font-family: 'Press Start 2P', monospace; font-size: 13px; margin-top: 20px; margin-bottom: 15px; line-height: 1.4; }
 
   /* --- DASHBOARD --- */
-  #dashboard { display: flex; flex-wrap: wrap; gap: 20px; background-color: #1a365d; border: 4px solid #ffcc00; padding: 15px; border-radius: 8px; margin-bottom: 40px; box-shadow: 6px 6px 0 #000; }
-  #team-builder { flex: 1; min-width: 320px; }
+  #dashboard { display: flex; flex-wrap: wrap; gap: 20px; background-color: #0f172a; border: 3px solid #ffcc00; padding: 20px; border-radius: 12px; margin-bottom: 40px; box-shadow: 8px 8px 0 #070f1a; }
+  #team-builder { flex: 1.618; min-width: 320px; } /* Golden Ratio Layout */
   .team-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
   /* --- TABS --- */
-  #team-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
-  .btn-tab { background-color: #222; color: #888; border: 1px solid #555; padding: 6px 10px; font-family: inherit; font-size: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-  .btn-tab.active { background-color: #ffcc00; color: #111; border-color: #ffcc00; }
-  .btn-tab:hover:not(.active) { background-color: #444; }
+  #team-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+  .btn-tab { background-color: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 16px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
+  .btn-tab.active { background-color: #ffcc00; color: #0f172a; border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
+  .btn-tab:hover:not(.active) { background-color: #334155; color: #fff; }
 
-  .team-slots { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; }
+  .team-slots { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; justify-content: center; }
 
   /* --- DRAG & DROP SLOTS --- */
-  .team-slot { width: 60px; height: 60px; background-color: #111; border: 3px dashed #555; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: grab; position: relative; transition: all 0.2s; }
-  .team-slot:active { cursor: grabbing; }
-  .team-slot.drag-over { border-color: #4CAF50; background-color: #223; transform: scale(1.05); }
-  .team-slot img { max-height: 50px; image-rendering: pixelated; pointer-events: none; }
-  .team-slot:hover { border-color: #ffcc00; }
-  .team-slot.filled .remove-x { display: none; position: absolute; top: -5px; right: -5px; background: #ff0000; color: white; padding: 4px; border-radius: 50%; font-size: 8px; z-index: 10; cursor: pointer; pointer-events: auto; }
+  .team-slot { width: 75px !important; height: 85px !important; flex-direction: column !important; justify-content: center !important; gap: 4px !important; background-color: #1e293b; border: 2px dashed #475569; border-radius: 8px; display: flex; align-items: center; cursor: grab; position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+  .team-slot:active { cursor: grabbing; transform: scale(0.95); }
+  .team-slot.drag-over { border-color: #4CAF50; background-color: #14532d; transform: scale(1.05); }
+  .team-slot img { max-height: 45px !important; image-rendering: pixelated; pointer-events: none; }
+  .team-slot:hover { border-color: #ffcc00; background-color: #334155; }
+  .team-slot.filled .remove-x { display: none; position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; padding: 4px 6px; border-radius: 50%; font-size: 10px; font-weight: bold; font-family: 'Inter', sans-serif; z-index: 10; cursor: pointer; pointer-events: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
   .team-slot.filled:hover .remove-x { display: block; }
 
-  #type-chart-container { flex: 1.2; min-width: 350px; background-color: #111; padding: 15px; border-radius: 4px; border: 2px solid #555; }
+  #type-chart-container { flex: 1; min-width: 300px; background-color: #0f172a; padding: 20px; border-radius: 12px; border: 2px solid #334155; height: fit-content; }
 
-  details { background-color: #222; margin-bottom: 8px; border-radius: 4px; border: 1px solid #444; }
-  summary { padding: 10px; cursor: pointer; font-size: 9px; outline: none; display: flex; justify-content: space-between; align-items: center; }
-  summary:hover { background-color: #333; }
-  .summary-content { padding: 10px; border-top: 1px solid #444; background-color: #111; max-height: 200px; overflow-y: auto; }
-  .summary-row { display: flex; align-items: center; margin-bottom: 6px; }
-  .type-label { padding: 4px; border-radius: 3px; text-shadow: 1px 1px 0 #000; width: 45px; text-align: center; margin-right: 10px; }
-  .summary-sprites { display: flex; gap: 4px; flex-wrap: wrap; }
-  .summary-sprites img { height: 24px; width: 24px; object-fit: contain; image-rendering: pixelated; background: #222; border-radius: 4px; padding: 2px; border: 1px solid #444; }
+  details { background-color: #1e293b; margin-bottom: 8px; border-radius: 6px; border: 1px solid #334155; }
+  summary { padding: 12px; cursor: pointer; font-size: 14px; font-weight: 600; outline: none; display: flex; justify-content: space-between; align-items: center; }
+  summary:hover { background-color: #334155; }
+  .summary-content { padding: 12px; border-top: 1px solid #334155; background-color: #0f172a; max-height: 250px; overflow-y: auto; }
+  .summary-row { display: flex; align-items: center; margin-bottom: 8px; }
+  .type-label { padding: 4px 6px; border-radius: 4px; text-shadow: 1px 1px 0 #000; width: 60px; text-align: center; margin-right: 12px; font-weight: bold; font-size: 12px; font-family: 'Inter', sans-serif; }
+  .summary-sprites { display: flex; gap: 6px; flex-wrap: wrap; }
+  .summary-sprites img { height: 28px; width: 28px; object-fit: contain; image-rendering: pixelated; background: #1e293b; border-radius: 4px; padding: 2px; border: 1px solid #475569; }
 
   .grid-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
-  .poke-box { background-color: #111111; border: 4px solid #f8f8f8; border-radius: 4px; padding: 15px; box-shadow: 4px 4px 0 #000000; display: flex; align-items: center; transition: transform 0.2s; }
+  .poke-box { background-color: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 12px; box-shadow: 4px 4px 0 rgba(0,0,0,0.5); display: flex; align-items: center; transition: transform 0.2s, border-color 0.2s; font-weight: 600; }
   .poke-box:hover { transform: translateY(-4px); border-color: #ffcc00; }
-  .arrow { color: #ff0000; margin: 0 10px; font-size: 14px; }
+  .arrow { color: #ef4444; margin: 0 12px; font-size: 14px; }
   .stage-container { display: flex; align-items: center; gap: 10px; }
-  .poke-sprite-container { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 64px; cursor: pointer; transition: transform 0.1s; }
-  .poke-sprite-container:hover { transform: scale(1.1); color: #ffcc00; }
-  .poke-sprite { image-rendering: pixelated; max-height: 60px; margin-bottom: 8px; }
-  .branch-divider { color: #666; margin: 0 5px; }
+  .poke-sprite-container { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 64px; cursor: pointer; transition: all 0.2s; }
+  .poke-sprite-container:hover { transform: scale(1.15); color: #ffcc00; }
+  .poke-sprite { image-rendering: pixelated; max-height: 60px; margin-bottom: 4px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); }
+  .branch-divider { color: #64748b; margin: 0 8px; font-weight: bold; font-size: 16px !important; }
 
   /* --- MODALS & BUTTONS --- */
-  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center; }
-  .modal-content { background-color: #111111; border: 4px solid #ffcc00; padding: 20px; width: 320px; text-align: center; border-radius: 8px; box-shadow: 0 0 15px #ffcc00; position: relative; max-height: 90vh; overflow-y: auto; }
-  .close-btn { position: absolute; top: 10px; right: 15px; color: #ff0000; font-size: 16px; cursor: pointer; }
-  .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 9px; }
+  .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .modal-content { background-color: #0f172a; border: 3px solid #ffcc00; padding: 25px; width: 340px; text-align: center; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto; }
+  .close-btn { position: absolute; top: 12px; right: 18px; color: #ef4444; font-size: 20px; font-weight: bold; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; }
+  .close-btn:hover { color: #ffcc00; transform: scale(1.2); }
+  .stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-family: 'Press Start 2P', monospace; }
 
-  .btn-action { background-color: #ffcc00; color: #111; border: none; padding: 10px; font-family: inherit; font-size: 9px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-  .btn-action:hover { background-color: #fff; }
-  .btn-add { margin-top: 15px; width: 100%; }
+  .btn-action { background-color: #ffcc00; color: #0f172a; border: none; padding: 12px 16px !important; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 13px !important; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+  .btn-action:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.3); filter: brightness(1.1); }
+  .btn-action:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+  .btn-add { margin-top: 15px; width: 100%; padding: 14px; font-size: 13px; }
   
+  input, select, textarea { font-family: 'Inter', sans-serif; border-radius: 6px; padding: 10px !important; font-size: 14px !important; box-sizing: border-box; height: auto !important; }
+
   /* Pick 4 Sim Styles */
-  .sim-slot { width: 50px; height: 50px; border: 2px solid #555; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; background: #222; margin: 5px; cursor: pointer; transition: 0.2s; }
-  .sim-slot img { max-height: 40px; image-rendering: pixelated; pointer-events: none; }
-  .sim-slot.selected { border-color: #4CAF50; background: #1a3a1a; transform: scale(1.1); }
+  .sim-slot { width: 55px; height: 55px; border: 2px solid #475569; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; background: #1e293b; margin: 5px; cursor: pointer; transition: 0.2s; }
+  .sim-slot img { max-height: 45px; image-rendering: pixelated; pointer-events: none; }
+  .sim-slot.selected { border-color: #4CAF50; background: #14532d; transform: scale(1.1); box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); }
 
   /* Lead Matrix Styles */
-  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 8px; text-align: center; white-space: nowrap; }
-  .matrix-table th, .matrix-table td { border: 1px solid #444; padding: 6px; }
-  .matrix-table th { background: #222; color: #aaddff; font-weight: normal; }
-  
-  /* Upgraded Color Tiers for readability */
-  .matrix-great { background: rgba(76, 175, 80, 0.4); color: #4CAF50; font-weight: bold; text-shadow: 1px 1px 0 #000; }
-  .matrix-good { background: rgba(76, 175, 80, 0.15); color: #81c784; }
-  .matrix-terrible { background: rgba(244, 67, 54, 0.4); color: #ff4444; font-weight: bold; text-shadow: 1px 1px 0 #000; }
-  .matrix-bad { background: rgba(244, 67, 54, 0.15); color: #e57373; }
-  .matrix-neutral { background: rgba(255, 255, 255, 0.05); color: #aaa; }
-  
-  .matrix-sprite { height: 28px; image-rendering: pixelated; margin-bottom: 4px; }
+  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px !important; font-weight: bold; text-align: center; white-space: nowrap; }
+  .matrix-table th, .matrix-table td { border: 1px solid #334155; padding: 10px !important; }
+  .matrix-table th { background: #1e293b; color: #aaddff; }
+  .matrix-great { background: rgba(76, 175, 80, 0.3); color: #86efac; }
+  .matrix-good { background: rgba(76, 175, 80, 0.1); color: #4ade80; }
+  .matrix-terrible { background: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+  .matrix-bad { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+  .matrix-neutral { background: rgba(255, 255, 255, 0.03); color: #94a3b8; }
+  .matrix-sprite { height: 32px; image-rendering: pixelated; margin-bottom: 4px; }
+
+  /* --- MOBILE POLISH (RESPONSIVE DESIGN) --- */
+  @media (max-width: 800px) {
+      #dashboard { flex-direction: column; padding: 10px; gap: 10px; }
+      #team-builder, #type-chart-container { min-width: 100%; }
+      .team-slot { width: 65px !important; height: 75px !important; }
+      .team-slot img { max-height: 40px !important; }
+      .btn-action { padding: 8px !important; font-size: 11px !important; flex: 1 1 30%; }
+      h1 { font-size: 24px; }
+      h2 { font-size: 16px; }
+      .poke-box { width: 100%; justify-content: center; }
+      .stage-container { flex-wrap: wrap; justify-content: center; }
+  }
+
+  /* --- TYPOGRAPHY OVERRIDES (Fixing tiny inline styles) --- */
+  .poke-sprite-container span { font-size: 13px !important; font-weight: 700 !important; margin-top: 4px !important; }
+  #archetype-summary { font-size: 14px !important; padding: 15px !important; line-height: 1.6 !important; }
+  #archetype-summary span, #archetype-summary p { font-size: 14px !important; line-height: 1.6 !important; }
+  .modal-content p, .modal-content label { font-size: 14px !important; line-height: 1.6 !important; }
+  .stat-row, .stat-row span { font-size: 13px !important; }
+  #pokedex-entry-container, #pokedex-entry-container div { font-size: 12px !important; line-height: 1.5 !important; }
+  #suggest-results p, #suggest-results h4, #suggest-results span { font-size: 13px !important; }
+/* 6. Scale up the Matrix Legend text */
+  #sim-matrix-results h4 { font-size: 16px !important; margin-bottom: 10px !important; font-family: 'Inter', sans-serif !important; }
+  #sim-matrix-results ul { font-size: 14px !important; padding-left: 20px !important; color: #e2e8f0 !important; }
+  #sim-matrix-results li { margin-bottom: 6px !important; line-height: 1.6 !important; }
+/* 7. Pokédex Data Modal fixes (Types, Abilities, Description) */
+  #modal-dynamic-area p { font-size: 15px !important; margin: 8px 0 !important; }
+  .modal-content strong { font-size: 15px !important; }
+  #modal-dynamic-area label { font-size: 15px !important; margin: 8px 0 !important; display: flex !important; align-items: center !important; gap: 8px !important; }
+  #ability-desc { font-size: 13px !important; padding: 12px !important; margin-top: 8px !important; line-height: 1.6 !important; }
 </style>
 
 <script>window.exports = {};</script>
@@ -105,8 +147,8 @@
   </div>
 
   <h1>Pokédex Roster</h1>
-  <div style="text-align: center; margin-bottom: 20px;">
-      <input type="text" id="ability-search" placeholder="🔍 Search Ability (e.g. Intimidate)..." onkeyup="filterByAbility()" style="padding: 10px; width: 60%; max-width: 400px; background: #111; color: #fff; border: 2px solid #ffcc00; border-radius: 4px; font-family: 'Press Start 2P', monospace; font-size: 8px;">
+  <div style="text-align: center; margin-bottom: 25px;">
+      <input type="text" id="universal-search" placeholder="🔍 Search Name, Type, or Ability (e.g. Charizard, Fire, Intimidate)..." onkeyup="universalSearch()" style="padding: 14px; width: 80%; max-width: 500px; background: #0f172a; color: #fff; border: 2px solid #4a90e2; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.5); outline: none; transition: border-color 0.2s;">
   </div>
   <div id="dashboard">
     <div id="team-builder">
@@ -123,8 +165,8 @@
         </div>
         
         <div style="width: 100%; margin-top: 8px; display: flex; align-items: center; gap: 10px;">
-            <span style="color: #ff9900; font-size: 8px;">Rename Team:</span>
-            <input type="text" id="team-name-input" onchange="updateTeamName()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; font-family: 'Press Start 2P', monospace; font-size:8px; border-radius:4px; flex-grow: 1; max-width: 250px;">
+            <span style="color: #ff9900; font-size: 12px; font-family: 'Press Start 2P', monospace;">Rename Team:</span>
+            <input type="text" id="team-name-input" onchange="updateTeamName()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; font-family: 'Press Start 2P', monospace; font-size:10px !important; border-radius:4px; flex-grow: 1; max-width: 250px;">
         </div>
 
         <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
@@ -139,14 +181,14 @@
       <div class="team-slots" id="team-container"></div>
       
       <h3 style="margin-top: 30px; margin-bottom: 5px;">Speed War Matrix (Lv. 50)</h3>
-      <div style="margin-bottom: 10px; display: flex; gap: 10px; font-size: 8px; color: #ccc; flex-wrap: wrap;">
+      <div style="margin-bottom: 10px; display: flex; gap: 10px; font-size: 12px; color: #ccc; flex-wrap: wrap;">
           <label style="cursor:pointer;"><input type="checkbox" id="speed-tailwind" onchange="renderSpeedTiers()"> Tailwind (x2)</label>
           <label style="cursor:pointer;"><input type="checkbox" id="speed-trickroom" onchange="renderSpeedTiers()"> Trick Room</label>
           <label style="cursor:pointer;"><input type="checkbox" id="speed-drop" onchange="renderSpeedTiers()"> Icy Wind/Webs (-1 Stage)</label>
       </div>
 
       <div id="speed-tier-container" style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555; min-height: 40px; margin-bottom: 20px;">
-         <p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to see speed tiers.</p>
+         <p style="color: #888; font-size: 12px; margin:0;">Add Pokémon to see speed tiers.</p>
       </div>
 
       <div style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555;">
@@ -159,7 +201,7 @@
    <div id="type-chart-container">
       <h3 style="margin-top: 0; margin-bottom: 10px;">Team Archetype</h3>
       <div id="archetype-summary" style="background:#222; padding:10px; border-radius:4px; font-size:9px; line-height:1.4; margin-bottom:15px; border: 1px solid #ffcc00;">
-        <p style="color: #888; font-size: 8px; margin:0;">Add Pokémon and moves to analyze archetype.</p>
+        <p style="color: #888; font-size: 12px; margin:0;">Add Pokémon and moves to analyze archetype.</p>
       </div>
 
       <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -167,7 +209,7 @@
         <button class="btn-action" style="padding: 6px; font-size: 8px; background-color: #ff9800; color: #111;" onclick="suggestTeammate()">Suggest Teammate</button>
       </div>
       <div id="type-summary-container">
-        <p style="color: #888; font-size: 8px;">Add Pokémon to your team to see analysis.</p>
+        <p style="color: #888; font-size: 12px;">Add Pokémon to your team to see analysis.</p>
       </div>
     </div>
   </div>
@@ -437,6 +479,7 @@
       <div id="suggest-results" style="max-height: 300px; overflow-y: auto;">Loading recommendations...</div>
     </div>
   </div>
+
   <div id="autobuild-modal" class="modal">
     <div class="modal-content" style="width: 320px;">
       <span class="close-btn" onclick="closeAutoBuildModal()">X</span>
@@ -515,7 +558,6 @@
       <div id="sim-matrix-results" style="display: none; margin-top: 20px; background: #111; padding: 15px; border-radius: 8px; border: 1px solid #9c27b0; overflow-x: auto;">
           <p style="color:#888; font-size:9px; text-align:center;">Load an Opponent and click a Matrix button.</p>
       </div>
-
     </div>
   </div>
 
@@ -672,24 +714,57 @@
     };
     
     const CUSTOM_SPRITES = {
-      "raichumegax": "images/raichu-mega-x.png", "raichumegay": "images/raichu-mega-y.png", "clefablemega": "images/clefable-mega.png",
-      "victreebelmega": "images/victreebel-mega.png", "starmiemega": "images/starmie-mega.png", "dragonitemega": "images/dragonite-mega.png",
-      "meganiummega": "images/meganium-mega.png", "feraligatrmega": "images/feraligatr-mega.png", "skarmorymega": "images/skarmory-mega.png",
-      "chimechomega": "images/chimecho-mega.png", "absolmegaz": "images/absol-mega-z.png", "staraptormega": "images/staraptor-mega.png",
-      "froslassmega": "images/froslass-mega.png", "emboarmega": "images/emboar-mega.png", "excadrillmega": "images/excadrill-mega.png",
-      "scolipedemega": "images/scolipede-mega.png", "scraftymega": "images/scrafty-mega.png", "eelektrossmega": "images/eelektross-mega.png", 
-      "chandeluremega": "images/chandelure-mega.png", "golurkmega": "images/golurk-mega.png", "chesnaughtmega": "images/chesnaught-mega.png",
-      "delphoxmega": "images/delphox-mega.png", "greninjamega": "images/greninja-mega.png", "pyroarmega": "images/pyroar-mega.png",
-      "floettemega": "images/floette-mega.png", "meowsticmega": "images/meowstic-mega.png", "malamarmega": "images/malamar-mega.png",
-      "barbaraclemega": "images/barbaracle-mega.png", "dragalgemega": "images/dragalge-mega.png", "hawluchamega": "images/hawlucha-mega.png",
-      "crabominablemega": "images/crabominable-mega.png", "golisopodmega": "images/golisopod-mega.png", "drampamega": "images/drampa-mega.png",
-      "falinksmega": "images/falinks-mega.png", "scovillainmega": "images/scovillain-mega.png", "glimmoramega": "images/glimmora-mega.png",
-      "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png", "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
-      "tatsugirimegacurly": "images/tatsugiri-mega-curly.png", "baxcaliburmega": "images/baxcalibur-mega.png", "lucariomegaz": "images/lucario-mega-z.png",
-      "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png", "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
-      "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png", "rotomwash": "https://play.pokemonshowdown.com/sprites/gen5/rotom-wash.png",
-      "rotomheat": "https://play.pokemonshowdown.com/sprites/gen5/rotom-heat.png", "rotommow": "https://play.pokemonshowdown.com/sprites/gen5/rotom-mow.png",
-      "rotomfrost": "https://play.pokemonshowdown.com/sprites/gen5/rotom-frost.png", "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
+      "charizardmegax": "https://play.pokemonshowdown.com/sprites/gen5/charizard-megax.png",
+      "charizardmegay": "https://play.pokemonshowdown.com/sprites/gen5/charizard-megay.png",
+      "raichumegax": "images/raichu-mega-x.png",
+      "raichumegay": "images/raichu-mega-y.png",
+      "clefablemega": "images/clefable-mega.png",
+      "victreebelmega": "images/victreebel-mega.png",
+      "starmiemega": "images/starmie-mega.png",
+      "dragonitemega": "images/dragonite-mega.png",
+      "meganiummega": "images/meganium-mega.png",
+      "feraligatrmega": "images/feraligatr-mega.png",
+      "skarmorymega": "images/skarmory-mega.png",
+      "chimechomega": "images/chimecho-mega.png",
+      "absolmegaz": "images/absol-mega-z.png",
+      "staraptormega": "images/staraptor-mega.png",
+      "froslassmega": "images/froslass-mega.png",
+      "emboarmega": "images/emboar-mega.png",
+      "excadrillmega": "images/excadrill-mega.png",
+      "scolipedemega": "images/scolipede-mega.png",
+      "scraftymega": "images/scrafty-mega.png",
+      "eelektrossmega": "images/eelektross-mega.png", 
+      "chandeluremega": "images/chandelure-mega.png",
+      "golurkmega": "images/golurk-mega.png",
+      "chesnaughtmega": "images/chesnaught-mega.png",
+      "delphoxmega": "images/delphox-mega.png",
+      "greninjamega": "images/greninja-mega.png",
+      "pyroarmega": "images/pyroar-mega.png",
+      "floettemega": "images/floette-mega.png",
+      "meowsticmega": "images/meowstic-mega.png",
+      "malamarmega": "images/malamar-mega.png",
+      "barbaraclemega": "images/barbaracle-mega.png",
+      "dragalgemega": "images/dragalge-mega.png",
+      "hawluchamega": "images/hawlucha-mega.png",
+      "crabominablemega": "images/crabominable-mega.png",
+      "golisopodmega": "images/golisopod-mega.png",
+      "drampamega": "images/drampa-mega.png",
+      "falinksmega": "images/falinks-mega.png",
+      "scovillainmega": "images/scovillain-mega.png",
+      "glimmoramega": "images/glimmora-mega.png",
+      "tatsugirimegadroopy": "images/tatsugiri-mega-droopy.png",
+      "tatsugirimegastretchy": "images/tatsugiri-mega-stretchy.png",
+      "tatsugirimegacurly": "images/tatsugiri-mega-curly.png",
+      "baxcaliburmega": "images/baxcalibur-mega.png",
+      "lucariomegaz": "images/lucario-mega-z.png",
+      "indeedeef": "https://play.pokemonshowdown.com/sprites/gen5/indeedee-f.png",
+      "aegislashblade": "https://play.pokemonshowdown.com/sprites/gen5/aegislash-blade.png",
+      "palafinhero": "https://play.pokemonshowdown.com/sprites/gen5/palafin-hero.png",
+      "rotomwash": "https://play.pokemonshowdown.com/sprites/gen5/rotom-wash.png",
+      "rotomheat": "https://play.pokemonshowdown.com/sprites/gen5/rotom-heat.png",
+      "rotommow": "https://play.pokemonshowdown.com/sprites/gen5/rotom-mow.png",
+      "rotomfrost": "https://play.pokemonshowdown.com/sprites/gen5/rotom-frost.png",
+      "rotomfan": "https://play.pokemonshowdown.com/sprites/gen5/rotom-fan.png"
     };
 
     const TERA_TYPES = ['Normal', 'Fire', 'Water', 'Electric', 'Grass', 'Ice', 'Fighting', 'Poison', 'Ground', 'Flying', 'Psychic', 'Bug', 'Rock', 'Ghost', 'Dragon', 'Dark', 'Steel', 'Fairy', 'Stellar'];
@@ -1160,8 +1235,7 @@ Mega Swampert,M,#6890F0,Water Blue
 Mega Tyranitar,M,#705848,Dark Umber
 Mega Venusaur,M,#78C850,Grass Green
 Mega Victreebel,M,#78C850,Grass Green`;
-
-    const POKEMON_AESTHETICS = {};
+const POKEMON_AESTHETICS = {};
     RAW_AESTHETICS_CSV.trim().split('\n').forEach((line, index) => {
         if (index === 0) return; 
         let [name, letter, color] = line.split(',');
@@ -1205,6 +1279,27 @@ Mega Victreebel,M,#78C850,Grass Green`;
     let simYourSelection = [];
     let simOppTeam = [];
 
+    // --- SPRITE URL GENERATOR ---
+    function getSpriteUrl(monId) {
+        if (CUSTOM_SPRITES[monId]) return CUSTOM_SPRITES[monId];
+        let spriteId = monId;
+        if (monId.includes('mega')) {
+            if (monId.endsWith('x') || monId.endsWith('y') || monId.endsWith('z')) {
+                spriteId = monId.replace(/mega([xyz])$/, '-mega$1');
+            } else if (monId.match(/mega(droopy|stretchy|curly)$/)) {
+                spriteId = monId.replace(/mega(.*)$/, '-mega');
+            } else {
+                spriteId = monId.replace('mega', '-mega');
+            }
+        }
+        return `https://play.pokemonshowdown.com/sprites/gen5/${spriteId}.png`;
+    }
+
+    function getBaseSprite(monId) {
+        let baseId = monId.replace(/mega.*/, '');
+        return `https://play.pokemonshowdown.com/sprites/gen5/${baseId}.png`;
+    }
+
     // --- INITIALIZATION ---
     window.addEventListener('load', () => {
       if (window.exports && window.exports.BattlePokedex && window.exports.BattleAbilities && window.exports.BattleMovedex && window.exports.BattleLearnsets && window.exports.BattleItems) {
@@ -1220,7 +1315,23 @@ Mega Victreebel,M,#78C850,Grass Green`;
           });
           document.getElementById('item-list').innerHTML = itemOptions;
 
+          // DYNAMIC MEGA INJECTION: Ensure new Megas have data even if Showdown hasn't updated yet.
+          Object.keys(CUSTOM_SPRITES).forEach(megaId => {
+              if (megaId.includes('mega') && !showdownData[megaId]) {
+                  let baseId = megaId.replace(/mega[a-z]?$/, '');
+                  if(showdownData[baseId]) {
+                      let clone = JSON.parse(JSON.stringify(showdownData[baseId]));
+                      let letter = megaId.match(/mega([xyz])$/) ? " " + megaId.slice(-1).toUpperCase() : "";
+                      clone.name = clone.name + "-Mega" + letter;
+                      clone.baseStats.hp += 0; clone.baseStats.atk += 20; clone.baseStats.def += 20;
+                      clone.baseStats.spa += 20; clone.baseStats.spd += 20; clone.baseStats.spe += 20;
+                      showdownData[megaId] = clone;
+                  }
+              }
+          });
+
           document.getElementById('loading-overlay').style.display = 'none';
+          
           buildRosterUI();
           loadTeam();
       } else {
@@ -1670,6 +1781,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
           slot.innerHTML = `
             <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}">
+            <span style="font-size: 10px; font-family: 'Inter', sans-serif; font-weight: bold; color: #ffcc00; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;">${currentTeam[i].name}</span>
             <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
           `;
         } else {
@@ -1707,10 +1819,10 @@ Mega Victreebel,M,#78C850,Grass Green`;
         }
 
         container.innerHTML = speeds.map(s => `
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px; background:#222; padding:4px; border-radius:4px; border-left:3px solid #ffcc00;">
-                <span style="color:#ffcc00; width:35px; text-align:right; font-size:10px;">${s.speed}</span>
-                <img src="${s.sprite}" style="height:24px; image-rendering:pixelated;">
-                <span style="font-size:8px;">${s.name} ${s.item ? `<span style="color:#888;">(@${s.item})</span>` : ''}</span>
+            <div style="display:flex; align-items:center; gap:15px; margin-bottom:8px; background:#1e293b; padding:8px 12px; border-radius:6px; border-left:4px solid #ffcc00; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                <span style="color:#ffcc00; width:45px; text-align:right; font-size:14px; font-weight:bold; font-family:'Press Start 2P', monospace;">${s.speed}</span>
+                <img src="${s.sprite}" style="height:36px; image-rendering:pixelated;">
+                <span style="font-size:15px; font-family:'Inter', sans-serif; font-weight:600; color:#fff;">${s.name} ${s.item ? `<span style="color:#94a3b8; font-weight:400; font-size:13px;">(@${s.item})</span>` : ''}</span>
             </div>
         `).join('');
     }
@@ -1997,6 +2109,13 @@ Mega Victreebel,M,#78C850,Grass Green`;
         saveTeam();
         renderAllUI();
         closeAutoBuildModal();
+    }
+    function loadTopCutTeam() {
+        let val = document.getElementById('top-cut-select').value;
+        if(val && TOP_CUT_TEAMS[val]) {
+            document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
+            loadSimOpponent();
+        }
     }
 
     function openSimModal() {
@@ -2621,22 +2740,54 @@ Mega Victreebel,M,#78C850,Grass Green`;
       `;
     }
 
-    function filterByAbility() {
-        let input = document.getElementById('ability-search').value.toLowerCase();
+    // --- UNIVERSAL ROSTER SEARCH ---
+    function universalSearch() {
+        let input = document.getElementById('universal-search').value.toLowerCase().trim();
         let containers = document.querySelectorAll('.poke-sprite-container');
+
         containers.forEach(container => {
             let match = container.getAttribute('onclick').match(/showData\('([^']+)'/);
             if (match) {
-                let monData = showdownData[match[1]];
-                let hasAbility = false;
-                if (monData && monData.abilities) {
-                    for (let key in monData.abilities) { if (monData.abilities[key].toLowerCase().includes(input)) { hasAbility = true; break; } }
+                let monId = match[1];
+                let monData = showdownData[monId];
+                let isMatch = false;
+
+                // Always show everything if search is empty
+                if (input === '') {
+                    isMatch = true;
+                } else if (monData) {
+                    // 1. Search by Name
+                    if (monData.name.toLowerCase().includes(input)) isMatch = true;
+                    
+                    // 2. Search by Type
+                    if (monData.types.some(t => t.toLowerCase().includes(input))) isMatch = true;
+                    
+                    // 3. Search by Ability
+                    if (monData.abilities) {
+                        for (let key in monData.abilities) { 
+                            if (monData.abilities[key].toLowerCase().includes(input)) isMatch = true; 
+                        }
+                    }
+                } else {
+                    // Fallback for custom megas that might not have full loaded data yet
+                    if (monId.includes(input)) isMatch = true;
                 }
-                if (hasAbility || input === '') { container.style.opacity = "1"; container.style.pointerEvents = "auto"; container.style.filter = "grayscale(0%)"; } 
-                else { container.style.opacity = "0.2"; container.style.pointerEvents = "none"; container.style.filter = "grayscale(100%)"; }
+
+                // Apply Visual Feedback
+                if (isMatch) { 
+                    container.style.opacity = "1"; 
+                    container.style.pointerEvents = "auto"; 
+                    container.style.filter = "drop-shadow(0 4px 4px rgba(0,0,0,0.5))"; 
+                    container.style.transform = "scale(1)";
+                } else { 
+                    container.style.opacity = "0.15"; 
+                    container.style.pointerEvents = "none"; 
+                    container.style.filter = "grayscale(100%) blur(2px)"; 
+                    container.style.transform = "scale(0.85)";
+                }
             }
         });
-    }
+    }       
   </script>
 </body>
 </html>
