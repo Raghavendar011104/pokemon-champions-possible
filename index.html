@@ -1826,7 +1826,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let monData = showdownData[id];
         if(!monData) return false;
         
-        let spriteUrl = getSpriteUrl(id);
+        let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+        let spriteUrl = CUSTOM_SPRITES[id] ? CUSTOM_SPRITES[id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
         
         let ability = monData.abilities[0] || monData.abilities['0'];
         if (id === 'pelipper') ability = 'Drizzle';
