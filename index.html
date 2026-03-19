@@ -19,7 +19,7 @@
   .team-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
 
   /* --- TABS --- */
-  #team-tabs { display: flex; gap: 5px; }
+  #team-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
   .btn-tab { background-color: #222; color: #888; border: 1px solid #555; padding: 6px 10px; font-family: inherit; font-size: 8px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
   .btn-tab.active { background-color: #ffcc00; color: #111; border-color: #ffcc00; }
   .btn-tab:hover:not(.active) { background-color: #444; }
@@ -97,11 +97,21 @@
     <div id="team-builder">
       <div class="team-header">
         <h3 style="margin: 0;">Roster</h3>
+        
         <div id="team-tabs">
            <button id="tab-team-0" class="btn-tab active" onclick="switchTeam(0)">Team 1</button>
            <button id="tab-team-1" class="btn-tab" onclick="switchTeam(1)">Team 2</button>
            <button id="tab-team-2" class="btn-tab" onclick="switchTeam(2)">Team 3</button>
+           <button id="tab-team-3" class="btn-tab" onclick="switchTeam(3)">Team 4</button>
+           <button id="tab-team-4" class="btn-tab" onclick="switchTeam(4)">Team 5</button>
+           <button id="tab-team-5" class="btn-tab" onclick="switchTeam(5)">Team 6</button>
         </div>
+        
+        <div style="width: 100%; margin-top: 8px; display: flex; align-items: center; gap: 10px;">
+            <span style="color: #ff9900; font-size: 8px;">Rename Team:</span>
+            <input type="text" id="team-name-input" onchange="updateTeamName()" style="background:#222; color:#fff; border:1px solid #555; padding:6px; font-family: 'Press Start 2P', monospace; font-size:8px; border-radius:4px; flex-grow: 1; max-width: 250px;">
+        </div>
+
         <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
            <button class="btn-action" style="padding: 8px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import</button>
            <button class="btn-action" style="padding: 8px;" onclick="exportTeam()">Export</button>
@@ -112,7 +122,13 @@
       
       <div class="team-slots" id="team-container"></div>
       
-      <h3>Speed Tiers (Lv. 50)</h3>
+      <h3 style="margin-top: 30px; margin-bottom: 5px;">Speed War Matrix (Lv. 50)</h3>
+      <div style="margin-bottom: 10px; display: flex; gap: 10px; font-size: 8px; color: #ccc; flex-wrap: wrap;">
+          <label style="cursor:pointer;"><input type="checkbox" id="speed-tailwind" onchange="renderSpeedTiers()"> Tailwind (x2)</label>
+          <label style="cursor:pointer;"><input type="checkbox" id="speed-trickroom" onchange="renderSpeedTiers()"> Trick Room</label>
+          <label style="cursor:pointer;"><input type="checkbox" id="speed-drop" onchange="renderSpeedTiers()"> Icy Wind/Webs (-1 Stage)</label>
+      </div>
+
       <div id="speed-tier-container" style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555; min-height: 40px; margin-bottom: 20px;">
          <p style="color: #888; font-size: 8px; margin:0;">Add Pokémon to see speed tiers.</p>
       </div>
@@ -420,7 +436,15 @@
         <div style="flex: 1; min-width: 250px; background: #222; padding: 15px; border-radius: 8px; border: 1px solid #555;">
            <h3 style="margin-top:0; color:#ff4444; font-size:12px;">Opponent Team</h3>
            <div id="sim-opp-team" style="display:flex; flex-wrap:wrap; justify-content:center; gap:8px; margin-bottom:10px;"></div>
-           <textarea id="sim-opp-paste" placeholder="Paste opposing team Poképaste here..." style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #444; padding: 5px; font-family: monospace; font-size: 8px; resize: none; box-sizing:border-box;"></textarea>
+           
+           <select id="top-cut-select" style="width: 100%; margin-bottom: 5px; padding: 6px; background: #111; color: #ffcc00; border: 1px solid #444; font-family: 'Press Start 2P', monospace; font-size: 7px; border-radius: 4px;" onchange="loadTopCutTeam()">
+                <option value="">-- Load Top Cut Team Emulator --</option>
+                <option value="worlds2024">2024 Worlds Champ (Luca Ceribelli)</option>
+                <option value="naic2024">2024 NAIC Champ (Patrick Connors)</option>
+                <option value="worlds2023">2023 Worlds Champ (Shohei Kimura)</option>
+           </select>
+
+           <textarea id="sim-opp-paste" placeholder="Or paste opposing team Poképaste here..." style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #444; padding: 5px; font-family: monospace; font-size: 8px; resize: none; box-sizing:border-box;"></textarea>
            <button class="btn-action btn-add" style="margin-top:5px; font-size:8px; padding: 6px;" onclick="loadSimOpponent()">Load Opponent</button>
         </div>
       </div>
@@ -432,6 +456,13 @@
   </div>
 
   <script>
+    // --- TOP CUT TEAMS DATABASE ---
+    const TOP_CUT_TEAMS = {
+        "worlds2024": `Calyrex-Ice @ Clear Amulet\nAbility: As One (Glastrier)\nLevel: 50\nTera Type: Grass\n- Glacial Lance\n- High Horsepower\n- Trick Room\n- Protect\n\nUrshifu-Rapid-Strike @ Focus Sash\nAbility: Unseen Fist\nLevel: 50\nTera Type: Water\n- Surging Strikes\n- Close Combat\n- Aqua Jet\n- Protect\n\nAmoonguss @ Rocky Helmet\nAbility: Regenerator\nLevel: 50\nTera Type: Water\n- Spore\n- Pollen Puff\n- Rage Powder\n- Protect\n\nIncineroar @ Safety Goggles\nAbility: Intimidate\nLevel: 50\nTera Type: Ghost\n- Flare Blitz\n- Knock Off\n- Parting Shot\n- Fake Out\n\nRaging Bolt @ Assault Vest\nAbility: Protosynthesis\nLevel: 50\nTera Type: Fairy\n- Electro Shot\n- Draco Meteor\n- Thunderbolt\n- Snarl\n\nOgerpon-Hearthflame @ Hearthflame Mask\nAbility: Mold Breaker\nLevel: 50\nTera Type: Fire\n- Ivy Cudgel\n- Horn Leech\n- Spiky Shield\n- Follow Me`,
+        "naic2024": `Calyrex-Ice @ Clear Amulet\nAbility: As One (Glastrier)\nLevel: 50\nTera Type: Water\n- Glacial Lance\n- High Horsepower\n- Trick Room\n- Protect\n\nAmoonguss @ Rocky Helmet\nAbility: Regenerator\nLevel: 50\nTera Type: Water\n- Spore\n- Sludge Bomb\n- Rage Powder\n- Protect\n\nPelipper @ Focus Sash\nAbility: Drizzle\nLevel: 50\nTera Type: Ghost\n- Weather Ball\n- Hurricane\n- Tailwind\n- Wide Guard\n\nUrshifu-Rapid-Strike @ Choice Scarf\nAbility: Unseen Fist\nLevel: 50\nTera Type: Water\n- Surging Strikes\n- Close Combat\n- U-turn\n- Aqua Jet\n\nIncineroar @ Sitrus Berry\nAbility: Intimidate\nLevel: 50\nTera Type: Grass\n- Flare Blitz\n- Knock Off\n- Parting Shot\n- Fake Out\n\nRaging Bolt @ Assault Vest\nAbility: Protosynthesis\nLevel: 50\nTera Type: Bug\n- Electro Shot\n- Dragon Pulse\n- Thunderbolt\n- Snarl`,
+        "worlds2023": `Amoonguss @ Sitrus Berry\nAbility: Regenerator\nLevel: 50\nTera Type: Water\n- Spore\n- Pollen Puff\n- Rage Powder\n- Protect\n\nFlutter Mane @ Booster Energy\nAbility: Protosynthesis\nLevel: 50\nTera Type: Fairy\n- Dazzling Gleam\n- Shadow Ball\n- Moonblast\n- Protect\n\nIron Hands @ Assault Vest\nAbility: Quark Drive\nLevel: 50\nTera Type: Water\n- Drain Punch\n- Wild Charge\n- Heavy Slam\n- Fake Out\n\nLandorus-Therian @ Choice Scarf\nAbility: Intimidate\nLevel: 50\nTera Type: Flying\n- Stomping Tantrum\n- Tera Blast\n- U-turn\n- Rock Slide\n\nChien-Pao @ Focus Sash\nAbility: Sword of Ruin\nLevel: 50\nTera Type: Ghost\n- Icicle Crash\n- Sucker Punch\n- Sacred Sword\n- Protect\n\nUrshifu-Rapid-Strike @ Mystic Water\nAbility: Unseen Fist\nLevel: 50\nTera Type: Water\n- Surging Strikes\n- Close Combat\n- Aqua Jet\n- Protect`
+    };
+
     // --- TYPE MATRIX ---
     const TYPE_DATA = {
       Normal: { weakTo: ['Fighting'], resists: [], immuneTo: ['Ghost'] },
@@ -1096,20 +1127,13 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
     let showdownData = {}; let abilitiesData = {}; let movesData = {}; let learnsetsData = {}; let itemsData = {};
     
-    // --- V3 STATE MANAGEMENT ---
-    let allTeams = [
-        { roster: [], notes: "", replays: "" },
-        { roster: [], notes: "", replays: "" },
-        { roster: [], notes: "", replays: "" }
-    ];
+    // --- STATE MANAGEMENT ---
+    let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", replays: "", teamName: `Team ${i+1}` }));
     let currentTeamIndex = 0;
     let currentTeam = []; 
     let pendingMon = null; 
 
-    // --- DRAG AND DROP STATE ---
     let draggedSlotIndex = null;
-
-    // --- SIMULATOR STATE ---
     let simYourSelection = [];
     let simOppTeam = [];
 
@@ -1140,7 +1164,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
       }
     });
 
-    // --- POKEDEX FLAVOR TEXT ENGINE ---
     function formatVersionName(name) {
         return name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     }
@@ -1161,7 +1184,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
             let uniqueEntries = [];
             let seenTexts = new Set();
             
-            // Loop backwards to grab the newest entries first
             for (let i = entries.length - 1; i >= 0; i--) {
                 let e = entries[i];
                 let cleanText = e.flavor_text.replace(/[\n\f\r]/g, ' ').replace(/\s{2,}/g, ' ');
@@ -1395,7 +1417,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, teraType: "" };
         addBtn.innerText = "Add Form to Team";
 
-        // Megas use the base species pokedex entry in PokeAPI
         fetchPokedexEntries(megaData.num);
     }
 
@@ -1414,7 +1435,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
       if (event.target == document.getElementById('sim-modal')) closeSimModal();
     }
 
-    // --- REORDERING LOGIC ---
     function handleDragStart(e) { draggedSlotIndex = parseInt(e.target.closest('.team-slot').dataset.index); }
     function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
     function handleDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
@@ -1491,22 +1511,38 @@ Mega Victreebel,M,#78C850,Grass Green`;
         saveTeam(); closeEditModal(); renderAllUI();
     }
 
+    function updateTeamName() {
+        let newName = document.getElementById('team-name-input').value.trim();
+        if (newName === "") newName = `Team ${currentTeamIndex + 1}`;
+        allTeams[currentTeamIndex].teamName = newName;
+        document.getElementById(`tab-team-${currentTeamIndex}`).innerText = newName;
+        saveTeam();
+    }
+
     function saveTeam() {
       allTeams[currentTeamIndex].roster = currentTeam;
       allTeams[currentTeamIndex].notes = document.getElementById('team-notes').value;
       allTeams[currentTeamIndex].replays = document.getElementById('team-replays').value;
-      localStorage.setItem('myVGCTeams_v3', JSON.stringify(allTeams));
+      localStorage.setItem('myVGCTeams_v4', JSON.stringify(allTeams));
     }
 
     function loadTeam() {
-      const saved = localStorage.getItem('myVGCTeams_v3');
+      const saved = localStorage.getItem('myVGCTeams_v4');
       if (saved) {
-        allTeams = JSON.parse(saved);
+        let parsed = JSON.parse(saved);
+        for(let i=0; i<6; i++) {
+            allTeams[i] = parsed[i] || { roster: [], notes: "", replays: "", teamName: `Team ${i+1}` };
+            if (!allTeams[i].teamName) allTeams[i].teamName = `Team ${i+1}`;
+            document.getElementById(`tab-team-${i}`).innerText = allTeams[i].teamName;
+        }
       } else {
-        const v2Saved = localStorage.getItem('myVGCTeams_v2');
-        if (v2Saved) {
-            let parsed = JSON.parse(v2Saved);
-            allTeams = parsed.map(t => ({ roster: t || [], notes: "", replays: "" }));
+        const oldSaved = localStorage.getItem('myVGCTeams_v3');
+        if (oldSaved) {
+            let parsed = JSON.parse(oldSaved);
+            for(let i=0; i<6; i++) {
+                allTeams[i] = parsed[i] ? { ...parsed[i], teamName: `Team ${i+1}` } : { roster: [], notes: "", replays: "", teamName: `Team ${i+1}` };
+                document.getElementById(`tab-team-${i}`).innerText = allTeams[i].teamName;
+            }
         }
       }
       switchTeam(0);
@@ -1517,8 +1553,9 @@ Mega Victreebel,M,#78C850,Grass Green`;
         currentTeam = allTeams[currentTeamIndex].roster || [];
         document.getElementById('team-notes').value = allTeams[currentTeamIndex].notes || "";
         document.getElementById('team-replays').value = allTeams[currentTeamIndex].replays || "";
+        document.getElementById('team-name-input').value = allTeams[currentTeamIndex].teamName || `Team ${index + 1}`;
         
-        for(let i=0; i<3; i++) {
+        for(let i=0; i<6; i++) {
             let tab = document.getElementById(`tab-team-${i}`);
             if (tab) {
                 if (i === index) tab.classList.add('active');
@@ -1574,14 +1611,30 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function renderSpeedTiers() {
         let container = document.getElementById('speed-tier-container');
         if (currentTeam.length === 0) { container.innerHTML = '<p style="color:#888; font-size:8px; margin:0;">Add Pokémon to see speed tiers.</p>'; return; }
+        
+        let isTailwind = document.getElementById('speed-tailwind').checked;
+        let isTrickRoom = document.getElementById('speed-trickroom').checked;
+        let isDrop = document.getElementById('speed-drop').checked;
+
         let speeds = currentTeam.map(mon => {
             let baseSpe = showdownData[mon.id] ? showdownData[mon.id].baseStats.spe : 50;
             let spe50 = Math.floor(0.5 * (2 * baseSpe + 31)) + 5; 
+            
             if (mon.item === 'Choice Scarf') spe50 = Math.floor(spe50 * 1.5);
             if (mon.item === 'Iron Ball' || mon.item === 'Macho Brace') spe50 = Math.floor(spe50 * 0.5);
+            
+            if (isDrop) spe50 = Math.floor(spe50 * 0.66);
+            if (isTailwind) spe50 = spe50 * 2;
+
             return { name: mon.name, sprite: mon.sprite, speed: spe50, item: mon.item };
         });
-        speeds.sort((a, b) => b.speed - a.speed);
+        
+        if (isTrickRoom) {
+            speeds.sort((a, b) => a.speed - b.speed);
+        } else {
+            speeds.sort((a, b) => b.speed - a.speed);
+        }
+
         container.innerHTML = speeds.map(s => `
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px; background:#222; padding:4px; border-radius:4px; border-left:3px solid #ffcc00;">
                 <span style="color:#ffcc00; width:35px; text-align:right; font-size:10px;">${s.speed}</span>
@@ -1663,7 +1716,15 @@ Mega Victreebel,M,#78C850,Grass Green`;
         showData(id, name, sprite);
     }
 
-    // --- PICK 4 SIMULATOR ---
+    // --- PICK 4 SIMULATOR & TOP CUT EMULATOR ---
+    function loadTopCutTeam() {
+        let val = document.getElementById('top-cut-select').value;
+        if(val && TOP_CUT_TEAMS[val]) {
+            document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
+            loadSimOpponent();
+        }
+    }
+
     function openSimModal() {
         if(currentTeam.length === 0) { alert("Add Pokémon to your team first."); return; }
         simYourSelection = [];
@@ -1676,6 +1737,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         `).join('');
         document.getElementById('sim-your-team').innerHTML = yourHtml;
         document.getElementById('sim-opp-paste').value = "";
+        document.getElementById('top-cut-select').value = "";
         document.getElementById('sim-opp-team').innerHTML = "";
         document.getElementById('sim-analysis-results').innerHTML = `<p style="color:#888; font-size:9px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`;
         
@@ -1742,7 +1804,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0;">Offensive Pressure (STAB)</h4>`;
         let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0;">Defensive Risks (STAB)</h4>`;
 
-        // Offense: Who can YOU hit for Super Effective?
         simYourSelection.forEach(myMon => {
             let hitsSE = [];
             simOppTeam.forEach(oppMon => {
@@ -1755,7 +1816,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
             }
         });
 
-        // Defense: Who hits YOU for Super Effective?
         simYourSelection.forEach(myMon => {
             let hitBySE = [];
             simOppTeam.forEach(oppMon => {
