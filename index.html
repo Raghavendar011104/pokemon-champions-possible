@@ -1645,6 +1645,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
     }
 
     // --- MISSING PIECE RECOMMENDER ---
+    // --- MISSING PIECE RECOMMENDER ---
     function suggestTeammate() {
         if(currentTeam.length >= 6) { alert("Your team is full!"); return; }
         if(currentTeam.length === 0) { alert("Add at least one Pokémon first to find synergies."); return; }
@@ -1670,16 +1671,26 @@ Mega Victreebel,M,#78C850,Grass Green`;
             let mon = showdownData[id];
             if(!mon) return;
             
+            // STRICT FILTERS:
+            // 1. Skip pre-evolutions (must be the final stage)
+            if(mon.evos && mon.evos.length > 0) return;
+            // 2. Skip Megas or Forms that force you to hold a specific item
+            if(mon.requiredItem || id.includes('mega')) return;
+            
             let score = 0;
             let goodAgainst = [];
             Object.keys(typeBalance).forEach(type => {
                 let balance = typeBalance[type];
                 if (balance.weak > balance.resist) {
                     let defMult = getDefensiveMultiplier(mon.types, type);
+                    // Reward resistances to types the team is weak to
                     if(defMult < 1) { score += (balance.weak - balance.resist) * 2; goodAgainst.push(type); }
+                    // Penalize if the suggested mon shares the team's weakness
                     if(defMult > 1) score -= 2; 
                 }
             });
+            
+            // Only suggest if it solves problems and has a positive score
             if(score > 0 && goodAgainst.length > 0) {
                 candidates.push({ id, name: mon.name, score, goodAgainst });
             }
@@ -1710,7 +1721,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         document.getElementById('suggest-results').innerHTML = html;
         document.getElementById('suggest-modal').style.display = 'flex';
     }
-
     function addSuggestion(id, name, sprite) {
         closeSuggestModal();
         showData(id, name, sprite);
