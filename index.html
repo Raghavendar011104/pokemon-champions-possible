@@ -1449,6 +1449,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function renderTeamUI() {
       const container = document.getElementById('team-container');
       container.innerHTML = '';
+      
       for (let i = 0; i < 6; i++) {
         const slot = document.createElement('div');
         slot.className = 'team-slot';
@@ -1457,18 +1458,29 @@ Mega Victreebel,M,#78C850,Grass Green`;
         if (currentTeam[i]) {
           slot.classList.add('filled');
           slot.setAttribute('draggable', 'true');
-          slot.ondragstart = handleDragStart; slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
+          slot.ondragstart = handleDragStart; 
+          slot.ondragover = handleDragOver; 
+          slot.ondragleave = handleDragLeave; 
+          slot.ondrop = handleDrop;
+          
+          // FIX: Attach the click to the slot container, but ignore clicks on the "X" button
+          slot.onclick = function(e) {
+              if (e.target.classList.contains('remove-x')) return;
+              openEditModal(i);
+          };
+
           slot.innerHTML = `
-            <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}" onclick="openEditModal(${i})">
+            <img src="${currentTeam[i].sprite}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}">
             <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
           `;
         } else {
-          slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
+          slot.ondragover = handleDragOver; 
+          slot.ondragleave = handleDragLeave; 
+          slot.ondrop = handleDrop;
         }
         container.appendChild(slot);
       }
     }
-
     function renderSpeedTiers() {
         let container = document.getElementById('speed-tier-container');
         if (currentTeam.length === 0) { container.innerHTML = '<p style="color:#888; font-size:8px; margin:0;">Add Pokémon to see speed tiers.</p>'; return; }
