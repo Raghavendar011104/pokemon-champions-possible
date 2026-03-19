@@ -72,12 +72,17 @@
   .sim-slot.selected { border-color: #4CAF50; background: #1a3a1a; transform: scale(1.1); }
 
   /* Lead Matrix Styles */
-  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 8px; text-align: center; white-space: nowrap; }
+  .matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 8px; text-align: center; white-space: nowrap; }
   .matrix-table th, .matrix-table td { border: 1px solid #444; padding: 6px; }
   .matrix-table th { background: #222; color: #aaddff; font-weight: normal; }
-  .matrix-good { background: rgba(76, 175, 80, 0.2); color: #4CAF50; font-weight: bold; text-shadow: 1px 1px 0 #000; }
-  .matrix-bad { background: rgba(244, 67, 54, 0.2); color: #ff4444; font-weight: bold; text-shadow: 1px 1px 0 #000; }
+  
+  /* Upgraded Color Tiers for readability */
+  .matrix-great { background: rgba(76, 175, 80, 0.4); color: #4CAF50; font-weight: bold; text-shadow: 1px 1px 0 #000; }
+  .matrix-good { background: rgba(76, 175, 80, 0.15); color: #81c784; }
+  .matrix-terrible { background: rgba(244, 67, 54, 0.4); color: #ff4444; font-weight: bold; text-shadow: 1px 1px 0 #000; }
+  .matrix-bad { background: rgba(244, 67, 54, 0.15); color: #e57373; }
   .matrix-neutral { background: rgba(255, 255, 255, 0.05); color: #aaa; }
+  
   .matrix-sprite { height: 28px; image-rendering: pixelated; margin-bottom: 4px; }
 </style>
 
@@ -1777,7 +1782,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
             simYourSelection = simYourSelection.filter(m => m !== mon);
             slot.classList.remove('selected');
         } else {
-            if (simYourSelection.length >= 4) return; // Max 4
+            if (simYourSelection.length >= 4) return; 
             simYourSelection.push(mon);
             slot.classList.add('selected');
         }
@@ -1908,8 +1913,21 @@ Mega Victreebel,M,#78C850,Grass Green`;
         resDiv.style.display = 'none';
         matrixDiv.style.display = 'block';
 
+        let legendHtml = `
+            <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+                <h4 style="color: #ff9900; margin: 0 0 6px 0; font-size: 10px;">How to Read the 1v1 Matrix</h4>
+                <ul style="margin: 0; padding-left: 15px; font-size: 8px; color: #ccc; line-height: 1.6;">
+                    <li><strong style="color: #4CAF50;">Favorable:</strong> You have a major STAB or Speed advantage. Highly recommended lead against this Pokémon.</li>
+                    <li><strong style="color: #81c784;">Slight Adv:</strong> You outspeed or have better typing, but not both. A safe lead.</li>
+                    <li><strong style="color: #aaa;">Neutral:</strong> An even matchup. Success depends on held items, specific moves, or Terastallization.</li>
+                    <li><strong style="color: #e57373;">Slight Dis:</strong> You are slightly outsped or have weaker typing. Somewhat risky lead.</li>
+                    <li><strong style="color: #ff4444;">Poor:</strong> You are outsped and take Super Effective damage. DO NOT lead this unless you have a hard-counter strategy (like Fake Out + Trick Room).</li>
+                </ul>
+            </div>
+        `;
+
         let html = '<h3 style="color:#9c27b0; font-size:12px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>';
-        html += '<p style="font-size:8px; color:#aaa; margin-bottom:10px; line-height: 1.4;">Compares your STAB damage and Speed against the opponent to estimate the 1v1 advantage.<br><strong style="color:#4CAF50;">Green</strong> = Favorable Matchup | <strong style="color:#ff4444;">Red</strong> = Poor Matchup.</p>';
+        html += legendHtml;
         html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
         simOppTeam.forEach(opp => {
@@ -1925,8 +1943,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
                 let cellClass = "matrix-neutral";
                 let cellText = "Neutral";
-                if (score >= 1) { cellClass = "matrix-good"; cellText = "Favorable"; }
-                else if (score <= -1) { cellClass = "matrix-bad"; cellText = "Poor"; }
+                if (score >= 1) { cellClass = "matrix-great"; cellText = "Favorable"; }
+                else if (score <= -1) { cellClass = "matrix-terrible"; cellText = "Poor"; }
                 else if (score > 0) { cellClass = "matrix-good"; cellText = "Slight Adv"; }
                 else if (score < 0) { cellClass = "matrix-bad"; cellText = "Slight Dis"; }
 
@@ -1951,8 +1969,21 @@ Mega Victreebel,M,#78C850,Grass Green`;
         resDiv.style.display = 'none';
         matrixDiv.style.display = 'block';
 
+        let legendHtml = `
+            <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+                <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 10px;">How to Read the 2v2 Duo Matrix</h4>
+                <ul style="margin: 0; padding-left: 15px; font-size: 8px; color: #ccc; line-height: 1.6;">
+                    <li><strong style="color: #4CAF50;">Favorable:</strong> Both of your Pokémon apply massive combined offensive pressure or speed control over their duo. Excellent lead pair!</li>
+                    <li><strong style="color: #81c784;">Advantage:</strong> Your duo naturally covers each other's weaknesses or pressures at least one of their leads heavily.</li>
+                    <li><strong style="color: #aaa;">Neutral:</strong> An even trade on the board. Game will be decided by Turn 1 positioning and Terastallization.</li>
+                    <li><strong style="color: #e57373;">Disadv:</strong> Their duo inherently counters your lead pair's STAB types or speed tiers.</li>
+                    <li><strong style="color: #ff4444;">Poor:</strong> Their duo completely shuts down both of your Pokémon. Highly recommended to keep this pair in the back!</li>
+                </ul>
+            </div>
+        `;
+
         let html = '<h3 style="color:#2196F3; font-size:12px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>';
-        html += '<p style="font-size:8px; color:#aaa; margin-bottom:10px; line-height: 1.4;">Compares every possible 2-Pokémon lead combination for STAB synergy and Speed. Scroll to view the full grid.<br><strong style="color:#4CAF50;">Green</strong> = Favorable Matchup | <strong style="color:#ff4444;">Red</strong> = Poor Matchup.</p>';
+        html += legendHtml;
         html += '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
         let oppPairs = [];
@@ -1983,8 +2014,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
                 let cellClass = "matrix-neutral";
                 let cellText = "Neutral";
-                if (score >= 2) { cellClass = "matrix-good"; cellText = "Favorable"; }
-                else if (score <= -2) { cellClass = "matrix-bad"; cellText = "Poor"; }
+                if (score >= 2) { cellClass = "matrix-great"; cellText = "Favorable"; }
+                else if (score <= -2) { cellClass = "matrix-terrible"; cellText = "Poor"; }
                 else if (score > 0) { cellClass = "matrix-good"; cellText = "Adv"; }
                 else if (score < 0) { cellClass = "matrix-bad"; cellText = "Dis"; }
 
