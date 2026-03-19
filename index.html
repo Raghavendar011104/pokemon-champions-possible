@@ -1788,7 +1788,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
         closeSuggestModal();
         showData(id, name, sprite);
     }
-    // --- STRICT ROSTER-ONLY AUTO-BUILDER ENGINE ---
+
+    // --- STRICT ARCHETYPE ENGINE DATA ---
     const ARCHETYPE_CORES = {
         "Bulky Offense": { setters: ["incineroar", "arcanine"], abusers: ["rillaboom", "gholdengo", "amoonguss", "dragonite"], megas: ["kangaskhanmega", "venusaurmega", "scizormega", "metagrossmega", "dragonitemega", "meganiummega", "feraligatrmega", "excadrillmega", "scraftymega", "chesnaughtmega", "golisopodmega", "baxcaliburmega", "lucariomegaz", "absolmegaz"] },
         "Rain": { setters: ["pelipper"], abusers: ["archaludon", "palafinhero", "basculegion", "gastrodon"], megas: ["swampertmega", "blastoisemega", "gyaradosmega", "starmiemega", "dragalgemega", "eelektrossmega"] },
@@ -1797,17 +1798,16 @@ Mega Victreebel,M,#78C850,Grass Green`;
         "Snow": { setters: ["ninetalesalola", "abomasnow"], abusers: ["baxcalibur", "glaceon", "froslass"], megas: ["abomasnowmega", "glaliemega", "froslassmega", "crabominablemega"] },
         "Trick Room": { setters: ["hatterene", "farigiraf", "bronzong", "oranguru"], abusers: ["ursaluna", "torkoal", "amoonguss", "kingambit"], megas: ["cameruptmega", "mawilemega", "ampharosmega", "clefablemega", "golurkmega", "drampamega"] },
         "Tailwind": { setters: ["talonflame", "corviknight", "pelipper"], abusers: ["gholdengo", "arcanine", "hydreigon"], megas: ["salamencemega", "pidgeotmega", "aerodactylmega", "staraptormega", "raichumegax", "raichumegay", "hawluchamega", "skarmorymega"] },
-        "Psyspam": { setters: ["indeedeef"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"] }
+        // Added "indeedee" (Male) alongside "indeedeef" (Female)
+        "Psyspam": { setters: ["indeedeef", "indeedee"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"] }
     };
 
     // --- VGC SPECIES CLAUSE HELPER ---
     function getBaseSpecies(id) {
         let mon = showdownData[id];
-        // If Showdown knows the base species, use it
         if (mon && mon.baseSpecies) {
             return mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
         }
-        // Manual fallback for custom injected Megas or edge-case forms
         let stripped = id.replace(/mega[a-z]?$/, '');
         stripped = stripped.replace(/(alola|galar|hisui|paldea)$/, '');
         stripped = stripped.replace(/(wash|heat|mow|frost|fan|droopy|stretchy|curly|blade|hero)$/, '');
@@ -1818,25 +1818,29 @@ Mega Victreebel,M,#78C850,Grass Green`;
     function addMonToTeamQuietly(id) {
         if (currentTeam.length >= 6) return false;
         
-        // 1. STRICT SPECIES CLAUSE CHECK
-        // Prevents duplicate base Pokémon (e.g., Ninetales + Alolan Ninetales)
         let incomingSpecies = getBaseSpecies(id);
         let violatesSpeciesClause = currentTeam.some(m => getBaseSpecies(m.id) === incomingSpecies);
         if (violatesSpeciesClause) return false; 
         
-        // 2. ROSTER FIREWALL
         if (!POKEMON_AESTHETICS[id] && !id.includes('mega')) return false; 
         
         let monData = showdownData[id];
         if(!monData) return false;
         
         let spriteUrl = getSpriteUrl(id);
+        
         let ability = monData.abilities[0] || monData.abilities['0'];
         if (id === 'pelipper') ability = 'Drizzle';
         if (id === 'torkoal') ability = 'Drought';
-        if (id === 'indeedeef') ability = 'Psychic Surge';
+        // Updated to catch both Male and Female Indeedee
+        if (id === 'indeedeef' || id === 'indeedee') ability = 'Psychic Surge';
         if (id === 'tyranitar') ability = 'Sand Stream';
         if (id === 'ninetalesalola') ability = 'Snow Warning';
+        if (id === 'rillaboom') ability = 'Grassy Surge';
+        
+        if (id === 'charizardmegay') ability = 'Drought';
+        if (id === 'tyranitarmega') ability = 'Sand Stream';
+        if (id === 'abomasnowmega') ability = 'Snow Warning';
 
         let megaItemName = monData.item || "";
         if (id.includes('mega') && !megaItemName) {
@@ -1853,6 +1857,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
         currentTeam.push({ id: id, name: monData.name, sprite: spriteUrl, types: monData.types, moves: [], item: megaItemName, ability: ability, teraType: "" });
         return true;
     }
+
     function getBestDefensiveFitForAutoBuild(usedIds) {
         let typeBalance = {};
         Object.keys(TYPE_DATA).forEach(targetType => {
@@ -1871,10 +1876,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let candidates = [];
         Object.keys(POKEMON_AESTHETICS).forEach(id => {
             if(usedIds.has(id)) return;
-            
             let mon = showdownData[id];
             if(!mon) return;
-            
             if(mon.evos && mon.evos.length > 0) return; 
             if(id.includes('mega')) return; 
             if(mon.requiredItem) return; 
