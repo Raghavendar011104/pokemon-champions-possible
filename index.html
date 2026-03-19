@@ -1826,8 +1826,9 @@ Mega Victreebel,M,#78C850,Grass Green`;
         let monData = showdownData[id];
         if(!monData) return false;
         
-        let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-        let spriteUrl = CUSTOM_SPRITES[id] ? CUSTOM_SPRITES[id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
+         let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+         spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
+         let spriteUrl = CUSTOM_SPRITES[id] ? CUSTOM_SPRITES[id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
         
         let ability = monData.abilities[0] || monData.abilities['0'];
         if (id === 'pelipper') ability = 'Drizzle';
@@ -2057,8 +2058,9 @@ Mega Victreebel,M,#78C850,Grass Green`;
             let monData = showdownData[jsonId] || Object.values(showdownData).find(d => d.name === species);
 
             if (monData) {
-                let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-                let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
+            let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+            spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
+            let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
                 simOppTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types });
             }
         });
@@ -2323,6 +2325,7 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
             if (monData) {
                 let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+                spriteName = spriteName.replace('-mega-x', '-megax').replace('-mega-y', '-megay'); // Fixes Charizard X/Y
                 let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
 
                 importedTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types, ability: ability, item: item, teraType: teraType, moves: moves.slice(0, 4) });
