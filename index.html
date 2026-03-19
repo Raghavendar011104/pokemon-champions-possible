@@ -1800,31 +1800,37 @@ Mega Victreebel,M,#78C850,Grass Green`;
         "Psyspam": { setters: ["indeedeef"], abusers: ["armarouge", "hatterene", "gallade"], megas: ["alakazammega", "medichammega", "metagrossmega", "gallademega", "chimechomega", "meowsticmega", "malamarmega"] }
     };
 
+    // --- VGC SPECIES CLAUSE HELPER ---
+    function getBaseSpecies(id) {
+        let mon = showdownData[id];
+        // If Showdown knows the base species, use it
+        if (mon && mon.baseSpecies) {
+            return mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
+        // Manual fallback for custom injected Megas or edge-case forms
+        let stripped = id.replace(/mega[a-z]?$/, '');
+        stripped = stripped.replace(/(alola|galar|hisui|paldea)$/, '');
+        stripped = stripped.replace(/(wash|heat|mow|frost|fan|droopy|stretchy|curly|blade|hero)$/, '');
+        return stripped;
+    }
+
+    // --- STRICT ROSTER-ONLY AUTO-BUILDER ENGINE ---
     function addMonToTeamQuietly(id) {
         if (currentTeam.length >= 6) return false;
-        if (currentTeam.some(m => m.id === id)) return false; 
         
-        let baseId = id.includes('mega') ? id.replace(/mega[a-z]?$/, '') : id;
-        if (!POKEMON_AESTHETICS[baseId] && !POKEMON_AESTHETICS[id]) return false; 
+        // 1. STRICT SPECIES CLAUSE CHECK
+        // Prevents duplicate base Pokémon (e.g., Ninetales + Alolan Ninetales)
+        let incomingSpecies = getBaseSpecies(id);
+        let violatesSpeciesClause = currentTeam.some(m => getBaseSpecies(m.id) === incomingSpecies);
+        if (violatesSpeciesClause) return false; 
+        
+        // 2. ROSTER FIREWALL
+        if (!POKEMON_AESTHETICS[id] && !id.includes('mega')) return false; 
         
         let monData = showdownData[id];
-        if(!monData) return false; 
+        if(!monData) return false;
         
-        let spriteUrl = "";
-        if (CUSTOM_SPRITES[id]) {
-            spriteUrl = CUSTOM_SPRITES[id];
-        } else {
-            let spriteId = id;
-            if (id.includes('mega')) {
-                if (id.endsWith('x') || id.endsWith('y') || id.endsWith('z')) {
-                    spriteId = id.replace(/mega([xyz])$/, '-mega$1');
-                } else {
-                    spriteId = id.replace('mega', '-mega');
-                }
-            }
-            spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteId}.png`;
-        }
-
+        let spriteUrl = getSpriteUrl(id);
         let ability = monData.abilities[0] || monData.abilities['0'];
         if (id === 'pelipper') ability = 'Drizzle';
         if (id === 'torkoal') ability = 'Drought';
@@ -1834,6 +1840,8 @@ Mega Victreebel,M,#78C850,Grass Green`;
 
         let megaItemName = monData.item || "";
         if (id.includes('mega') && !megaItemName) {
+             let baseId = id.replace(/mega[a-z]?$/, '');
+             if (baseId.endsWith('x') || baseId.endsWith('y') || baseId.endsWith('z')) baseId = baseId.slice(0, -1);
              if (MEGA_MAP[baseId]) {
                  let match = MEGA_MAP[baseId].find(m => m.id === id);
                  if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) {
@@ -1845,7 +1853,6 @@ Mega Victreebel,M,#78C850,Grass Green`;
         currentTeam.push({ id: id, name: monData.name, sprite: spriteUrl, types: monData.types, moves: [], item: megaItemName, ability: ability, teraType: "" });
         return true;
     }
-
     function getBestDefensiveFitForAutoBuild(usedIds) {
         let typeBalance = {};
         Object.keys(TYPE_DATA).forEach(targetType => {
