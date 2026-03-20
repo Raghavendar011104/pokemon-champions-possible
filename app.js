@@ -11,6 +11,26 @@ let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", repla
 let currentTeamIndex = 0; let currentTeam = []; let pendingMon = null; let draggedSlotIndex = null;
 let simYourSelection = []; let simOppTeam = [];
 
+// --- VGC ITEM GLOSSARY ---
+const VGC_ITEMS = {
+    "None": "No item held.",
+    "Focus Sash": "Survive one OHKO attack with 1 HP if at full health. Great for frail, fast attackers.",
+    "Assault Vest": "Boosts Sp. Def by 50%, but disables status moves (like Protect).",
+    "Choice Scarf": "Boosts Speed by 50%, but locks you into your first move.",
+    "Choice Band": "Boosts Attack by 50%, but locks you into your first move.",
+    "Choice Specs": "Boosts Sp. Atk by 50%, but locks you into your first move.",
+    "Clear Amulet": "Protects your stats from being lowered by the opponent (e.g. Intimidate or Icy Wind).",
+    "Sitrus Berry": "Restores 25% HP when health drops below half. Great for bulky Pokémon.",
+    "Leftovers": "Restores 1/16th of max HP every turn. Good for slow, stalling games.",
+    "Life Orb": "Boosts damage by 30%, but drains 10% of your HP after every attack.",
+    "Rocky Helmet": "Damages the attacker for 1/6th of their max HP if they make physical contact.",
+    "Covert Cloak": "Protects you from secondary effects of attacks (like Fake Out flinches).",
+    "Mental Herb": "Cures Taunt or Encore once. Crucial for Trick Room setters to guarantee they move.",
+    "Eviolite": "Boosts Def and Sp. Def by 50% for Pokémon that can still evolve.",
+    "Mystic Water": "Boosts Water-type attacks by 20% without taking recoil damage.",
+    "Black Glasses": "Boosts Dark-type attacks by 20% without taking recoil damage."
+};
+
 function renderRoster() {
     let html = '';
     ROSTER_SECTIONS.forEach(sec => {
@@ -54,10 +74,6 @@ window.addEventListener('load', () => {
       showdownData = window.exports.BattlePokedex; abilitiesData = window.exports.BattleAbilities; movesData = window.exports.BattleMovedex;
       learnsetsData = window.exports.BattleLearnsets; itemsData = window.exports.BattleItems;
       
-      let itemOptions = "";
-      Object.values(itemsData).forEach(item => { if (item.name && !item.megaStone && !item.zMove) itemOptions += `<option value="${item.name}">`; });
-      document.getElementById('item-list').innerHTML = itemOptions;
-
       Object.keys(CUSTOM_SPRITES).forEach(megaId => {
           if (megaId.includes('mega') && !showdownData[megaId]) {
               let baseId = megaId.replace(/mega[a-z]?$/, '');
@@ -242,17 +258,52 @@ function getLegalMoves(monId) {
     return moveArray;
 }
 
+// Dynamically updates the item description box when a user selects an item
+function updateItemDescription(itemName) {
+    let descBox = document.getElementById('item-desc');
+    if (typeof VGC_ITEMS !== 'undefined' && VGC_ITEMS[itemName || 'None']) {
+        descBox.innerText = VGC_ITEMS[itemName || 'None'];
+    } else if (itemName) {
+        let itemId = itemName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (typeof itemsData !== 'undefined' && itemsData[itemId]) {
+            // Pulls the official description from Showdown
+            descBox.innerText = itemsData[itemId].desc || itemsData[itemId].shortDesc || "Competitive Item.";
+        } else {
+            descBox.innerText = "Imported or Custom Item.";
+        }
+    } else {
+        descBox.innerText = "No item selected.";
+    }
+}
+
 function openEditModal(index) {
     let mon = currentTeam[index]; 
     let legalMoves = getLegalMoves(mon.id);
     let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
     
-    // Check if VGC_ITEMS is defined (it's in new_features.js now, so we need a fallback just in case)
-    let itemOptions = "";
-    if (typeof VGC_ITEMS !== 'undefined') {
-        itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
-    } else {
-        itemOptions = `<option value="">None</option><option value="Focus Sash">Focus Sash</option>`; 
+    // 1. Load our custom Coach items first for easy access
+    let itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
+    itemOptions += `<option disabled>──────────</option>`;
+    
+    // 2. Dynamically load ALL other competitive items, stripping out TMs, species-specific items, and Poké Balls
+    let dynamicItems = [];
+    if (typeof itemsData !== 'undefined') {
+        Object.values(itemsData).forEach(item => {
+            let isTMTR = /^(TM|TR|HM)\d+/.test(item.name); // Excludes TM01, TR04, etc.
+            let isSpeciesSpecific = item.itemUser && item.itemUser.length > 0; // Excludes Light Ball, Thick Club, etc.
+            let isNonStandard = item.isNonstandard; // Excludes unreleased/past items
+            let isPokeball = item.isPokeball; // Excludes catching balls
+            
+            if (item.name && !item.megaStone && !item.zMove && !isTMTR && !isSpeciesSpecific && !isNonStandard && !isPokeball && !VGC_ITEMS[item.name]) {
+                dynamicItems.push(item.name);
+            }
+        });
+        
+        // Alphabetize the massive list so it's easy to search
+        dynamicItems.sort();
+        dynamicItems.forEach(name => {
+            itemOptions += `<option value="${name}">${name}</option>`;
+        });
     }
 
     let html = `
@@ -260,7 +311,7 @@ function openEditModal(index) {
         <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
         
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
-        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="document.getElementById('item-desc').innerText = (typeof VGC_ITEMS !== 'undefined' ? VGC_ITEMS[this.value || 'None'] : 'Item selected.')">
+        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="updateItemDescription(this.value)">
             ${itemOptions}
         </select>
         <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
@@ -278,11 +329,9 @@ function openEditModal(index) {
     
     if (mon.item) {
         document.getElementById('edit-item').value = mon.item;
-        if (typeof VGC_ITEMS !== 'undefined' && VGC_ITEMS[mon.item]) {
-            document.getElementById('item-desc').innerText = VGC_ITEMS[mon.item];
-        } else {
-            document.getElementById('item-desc').innerText = "Imported Item.";
-        }
+        updateItemDescription(mon.item);
+    } else {
+        updateItemDescription('None');
     }
     
     if (mon.moves) {
@@ -366,7 +415,7 @@ function renderAllUI() {
     renderTypeChart(); 
     analyzeArchetype(); 
     renderSpeedTiers(); 
-    if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook();
+    if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook(); 
 }
 
 function renderTeamUI() {
@@ -931,7 +980,6 @@ function analyzeArchetype() {
     let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
     if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
 
-    // Use our shiny new CSS class from style.css instead of forcing inline tooltips
     function createBadge(title, tooltipText, colorHex) {
         return `<span class="synergy-badge" style="color:${colorHex}; border:1px solid ${colorHex};">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
     }
@@ -1040,4 +1088,89 @@ function universalSearch() {
             else { container.style.opacity = "0.15"; container.style.pointerEvents = "none"; container.style.filter = "grayscale(100%) blur(2px)"; container.style.transform = "scale(0.85)"; }
         }
     });
+}
+
+// Dynamically updates the item description box when a user selects an item
+function updateItemDescription(itemName) {
+    let descBox = document.getElementById('item-desc');
+    if (typeof VGC_ITEMS !== 'undefined' && VGC_ITEMS[itemName || 'None']) {
+        descBox.innerText = VGC_ITEMS[itemName || 'None'];
+    } else if (itemName) {
+        let itemId = itemName.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (typeof itemsData !== 'undefined' && itemsData[itemId]) {
+            // Pulls the official description from Showdown (prioritizes shortDesc, falls back to desc)
+            descBox.innerText = itemsData[itemId].desc || itemsData[itemId].shortDesc || "Competitive Item.";
+        } else {
+            descBox.innerText = "Imported or Custom Item.";
+        }
+    } else {
+        descBox.innerText = "No item selected.";
+    }
+}
+
+function openEditModal(index) {
+    let mon = currentTeam[index]; 
+    let legalMoves = getLegalMoves(mon.id);
+    let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
+    
+    // 1. Load our custom Coach items first for easy access
+    let itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
+    itemOptions += `<option disabled>──────────</option>`;
+    
+    // 2. Dynamically load ALL other competitive items, stripping out TMs, TRs, HMs, species-specific items, and Poké Balls
+    let dynamicItems = [];
+    if (typeof itemsData !== 'undefined') {
+        Object.values(itemsData).forEach(item => {
+            let isTMTR = /^(TM|TR|HM)\d+/.test(item.name); // Excludes TM01, TR04, etc.
+            let isSpeciesSpecific = item.itemUser && item.itemUser.length > 0; // Excludes Light Ball, Thick Club, etc.
+            let isNonStandard = item.isNonstandard; // Excludes unreleased/past items
+            let isPokeball = item.isPokeball; // Excludes catching balls
+            
+            if (item.name && !item.megaStone && !item.zMove && !isTMTR && !isSpeciesSpecific && !isNonStandard && !isPokeball && !VGC_ITEMS[item.name]) {
+                dynamicItems.push(item.name);
+            }
+        });
+        
+        // Alphabetize the massive list so it's easy to search
+        dynamicItems.sort();
+        dynamicItems.forEach(name => {
+            itemOptions += `<option value="${name}">${name}</option>`;
+        });
+    }
+
+    let html = `
+        <h2 style="color:#ffcc00; font-size:16px;">Edit ${mon.name}</h2>
+        <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
+        
+        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
+        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="updateItemDescription(this.value)">
+            ${itemOptions}
+        </select>
+        <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
+        <div id="item-desc" style="background:#111; padding:8px; font-size:10px; border-radius:4px; text-align:left; min-height:30px; margin-bottom:15px; margin-top:5px; color:#aaa; line-height: 1.4;">Select an item to see its competitive use.</div>
+        
+        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
+        <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <button class="btn-action btn-add" style="margin-top:15px; font-size:12px;" onclick="saveMoves(${index})">Save Team Member</button>
+    `;
+    
+    document.getElementById('edit-modal-info').innerHTML = html;
+    
+    if (mon.item) {
+        document.getElementById('edit-item').value = mon.item;
+        updateItemDescription(mon.item);
+    } else {
+        updateItemDescription('None');
+    }
+    
+    if (mon.moves) {
+        if (mon.moves[0]) document.getElementById('edit-move1').value = mon.moves[0];
+        if (mon.moves[1]) document.getElementById('edit-move2').value = mon.moves[1];
+        if (mon.moves[2]) document.getElementById('edit-move3').value = mon.moves[2];
+        if (mon.moves[3]) document.getElementById('edit-move4').value = mon.moves[3];
+    }
+    document.getElementById('edit-modal').style.display = 'flex';
 }
