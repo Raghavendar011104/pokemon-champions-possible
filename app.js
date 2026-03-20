@@ -277,6 +277,7 @@ function openEditModal(index) {
         <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="document.getElementById('item-desc').innerText = VGC_ITEMS[this.value || 'None']">
             ${itemOptions}
         </select>
+        <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="loadStarterKit(${index})">🎒 Load Starter Kit</button>
         <div id="item-desc" style="background:#111; padding:8px; font-size:10px; border-radius:4px; text-align:left; min-height:30px; margin-bottom:15px; margin-top:5px; color:#aaa; line-height: 1.4;">Select an item to see its competitive use.</div>
         
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
@@ -373,8 +374,13 @@ function submitToTeam() {
 
 function removeFromTeam(index) { currentTeam.splice(index, 1); saveTeam(); renderAllUI(); }
 
-function renderAllUI() { renderTeamUI(); renderTypeChart(); analyzeArchetype(); renderSpeedTiers(); }
-
+function renderAllUI() { 
+    renderTeamUI(); 
+    renderTypeChart(); 
+    analyzeArchetype(); 
+    renderSpeedTiers(); 
+    if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook(); // <--- Add this line
+}
 function renderTeamUI() {
   const container = document.getElementById('team-container'); container.innerHTML = '';
   for (let i = 0; i < 6; i++) {
