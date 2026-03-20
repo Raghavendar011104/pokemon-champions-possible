@@ -164,3 +164,60 @@ input, select, textarea { font-family: 'Inter', sans-serif; border-radius: 6px; 
     max-width: 55px !important;
     object-fit: contain !important; /* Acts like a cage so wide sprites can't break out */
 }
+/* --- TOOLTIPS (For VGC Beginners) --- */
+.tooltip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    background-color: #4a90e2;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    margin-left: 6px;
+    cursor: help;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    width: 220px;
+    background-color: #0f172a;
+    color: #fff;
+    text-align: left;
+    border: 1px solid #ffcc00;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 9999;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 11px;
+    line-height: 1.5;
+    font-weight: normal;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    pointer-events: none;
+}
+
+/* Little arrow pointing down from the tooltip */
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #ffcc00 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
