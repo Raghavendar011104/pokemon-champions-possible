@@ -34,7 +34,6 @@ function loadStarterKit(index) {
     
     alert(`Loaded standard VGC Starter Kit for ${mon.name}!`);
 }
-
 // 2 & 3. Role Tags & Turn 1 Flow Indicators
 function applyCardDecorations() {
     if (!beginnerModeEnabled) return;
@@ -44,30 +43,51 @@ function applyCardDecorations() {
         let mon = currentTeam[i];
         if (!mon) return;
 
-        // Flow Icons
+        // Flow Icons (Added pointer-events: auto so native tooltips work!)
         let iconsHTML = "";
-        if (mon.moves.includes('Fake Out')) iconsHTML += `<span title="Has Fake Out">✋</span>`;
-        if (['Protect', 'Detect', 'Spiky Shield', 'Wide Guard'].some(m => mon.moves.includes(m))) iconsHTML += `<span title="Has Protect">🛡️</span>`;
-        if (['Follow Me', 'Rage Powder'].some(m => mon.moves.includes(m))) iconsHTML += `<span title="Has Redirection">🧲</span>`;
-        if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => mon.moves.includes(m))) iconsHTML += `<span title="Has Speed Control">⏱️</span>`;
+        if (mon.moves.includes('Fake Out')) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Fake Out">✋</span>`;
+        if (['Protect', 'Detect', 'Spiky Shield', 'Wide Guard'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Protect">🛡️</span>`;
+        if (['Follow Me', 'Rage Powder'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Redirection">🧲</span>`;
+        if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Speed Control">⏱️</span>`;
         
         if (iconsHTML !== "") {
             slot.insertAdjacentHTML('beforeend', `<div class="flow-icons">${iconsHTML}</div>`);
         }
 
-        // Role Tags
-        let tagClass = ""; let tagText = "";
+        // Role Tags with Tooltip Explanations
+        let tagClass = ""; let tagText = ""; let tagDesc = "";
         let atk = showdownData[mon.id] ? showdownData[mon.id].baseStats.atk : 50;
         let spa = showdownData[mon.id] ? showdownData[mon.id].baseStats.spa : 50;
         let isSupport = ['Fake Out', 'Parting Shot', 'Spore', 'Tailwind', 'Will-O-Wisp'].filter(m => mon.moves.includes(m)).length >= 2;
 
-        if (isSupport || mon.item === 'Mental Herb') { tagClass = "tag-support"; tagText = "SUPPORT"; }
-        else if (mon.item === 'Assault Vest' || mon.item === 'Rocky Helmet' || mon.ability === 'Regenerator') { tagClass = "tag-tank"; tagText = "BULKY/TANK"; }
-        else if (atk > spa) { tagClass = "tag-physical"; tagText = "PHYSICAL"; }
-        else { tagClass = "tag-special"; tagText = "SPECIAL"; }
+        if (isSupport || mon.item === 'Mental Herb') { 
+            tagClass = "tag-support"; 
+            tagText = "SUPPORT"; 
+            tagDesc = "Focuses on helping the team with speed control, redirection, or status moves rather than direct damage.";
+        }
+        else if (mon.item === 'Assault Vest' || mon.item === 'Rocky Helmet' || mon.ability === 'Regenerator') { 
+            tagClass = "tag-tank"; 
+            tagText = "BULKY/TANK"; 
+            tagDesc = "Designed to take multiple hits and disrupt the opponent while surviving longer than standard attackers.";
+        }
+        else if (atk > spa) { 
+            tagClass = "tag-physical"; 
+            tagText = "PHYSICAL"; 
+            tagDesc = "A primary attacker that uses its Attack stat. Be careful, its damage can be reduced by Intimidate and Burn!";
+        }
+        else { 
+            tagClass = "tag-special"; 
+            tagText = "SPECIAL"; 
+            tagDesc = "A primary attacker that uses its Special Attack stat. Great because it ignores Intimidate and Burn penalties.";
+        }
 
         if (mon.moves.length > 0) {
-            slot.insertAdjacentHTML('beforeend', `<div class="role-tag ${tagClass}">${tagText}</div>`);
+            slot.insertAdjacentHTML('beforeend', `
+                <div class="role-tag ${tagClass} tooltip" style="width: auto !important; height: auto !important; border-radius: 4px !important; pointer-events: auto; cursor: help; margin: 0;">
+                    ${tagText}
+                    <span class="tooltip-text" style="font-weight: normal; text-transform: none; bottom: 150%; white-space: normal; font-size: 10px; color: #fff;">${tagDesc}</span>
+                </div>
+            `);
         }
     });
 }
