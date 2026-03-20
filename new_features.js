@@ -147,6 +147,28 @@ function generateOffensiveCoverage() {
                 let moveData = movesData[moveId] || Object.values(movesData).find(d => d.name === mName);
                 if (moveData && moveData.category !== "Status") {
                     hitTypes.add(moveData.type);
+                    
+                    // --- DYNAMIC MOVE SMART OVERRIDES ---
+                    
+                    // 1. Make Weather Ball context-aware
+                    if (moveId === 'weatherball') {
+                        if (currentTeam.some(m => m.ability === 'Drizzle')) hitTypes.add('Water');
+                        if (currentTeam.some(m => m.ability === 'Drought')) hitTypes.add('Fire');
+                        if (currentTeam.some(m => ['Snow Warning', 'Chilly Reception'].includes(m.ability))) hitTypes.add('Ice');
+                        if (currentTeam.some(m => m.ability === 'Sand Stream')) hitTypes.add('Rock');
+                    }
+                    
+                    // 2. Make Tera Blast context-aware
+                    if (moveId === 'terablast' && mon.teraType) {
+                        hitTypes.add(mon.teraType);
+                    }
+                    
+                    // 3. Make Ivy Cudgel context-aware
+                    if (moveId === 'ivycudgel') {
+                        if (mon.id === 'ogerponhearthflame') hitTypes.add('Fire');
+                        if (mon.id === 'ogerponwellspring') hitTypes.add('Water');
+                        if (mon.id === 'ogerponcornerstone') hitTypes.add('Rock');
+                    }
                 }
             });
         }
@@ -156,7 +178,7 @@ function generateOffensiveCoverage() {
     Object.keys(TYPE_DATA).forEach(targetType => {
         let canHitSE = false;
         hitTypes.forEach(atkType => {
-            if (TYPE_DATA[targetType].weakTo.includes(atkType)) canHitSE = true;
+            if (TYPE_DATA[targetType] && TYPE_DATA[targetType].weakTo.includes(atkType)) canHitSE = true;
         });
         if (!canHitSE) misses.push(targetType);
     });
