@@ -11,6 +11,26 @@ let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", repla
 let currentTeamIndex = 0; let currentTeam = []; let pendingMon = null; let draggedSlotIndex = null;
 let simYourSelection = []; let simOppTeam = [];
 
+// --- VGC ITEM GLOSSARY ---
+const VGC_ITEMS = {
+    "None": "No item held.",
+    "Focus Sash": "Survive one OHKO attack with 1 HP if at full health. Great for frail, fast attackers.",
+    "Assault Vest": "Boosts Sp. Def by 50%, but disables status moves (like Protect).",
+    "Choice Scarf": "Boosts Speed by 50%, but locks you into your first move.",
+    "Choice Band": "Boosts Attack by 50%, but locks you into your first move.",
+    "Choice Specs": "Boosts Sp. Atk by 50%, but locks you into your first move.",
+    "Clear Amulet": "Protects your stats from being lowered by the opponent (e.g. Intimidate or Icy Wind).",
+    "Sitrus Berry": "Restores 25% HP when health drops below half. Great for bulky Pokémon.",
+    "Leftovers": "Restores 1/16th of max HP every turn. Good for slow, stalling games.",
+    "Life Orb": "Boosts damage by 30%, but drains 10% of your HP after every attack.",
+    "Rocky Helmet": "Damages the attacker for 1/6th of their max HP if they make physical contact.",
+    "Covert Cloak": "Protects you from secondary effects of attacks (like Fake Out flinches).",
+    "Mental Herb": "Cures Taunt or Encore once. Crucial for Trick Room setters to guarantee they move.",
+    "Eviolite": "Boosts Def and Sp. Def by 50% for Pokémon that can still evolve.",
+    "Mystic Water": "Boosts Water-type attacks by 20% without taking recoil damage.",
+    "Black Glasses": "Boosts Dark-type attacks by 20% without taking recoil damage."
+};
+
 function renderRoster() {
     let html = '';
     ROSTER_SECTIONS.forEach(sec => {
@@ -135,7 +155,7 @@ function showData(jsonId, displayName, spriteUrl) {
         megaDropdown = `<div style="margin: 10px 0; color: #aaddff; text-align: left;"><strong>Form / Mega:</strong> <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)"><option value="none">Base Form</option>${options}</select></div>`;
     }
 
-    pendingMon = { id: jsonId, name: monData.name || displayName, sprite: spriteUrl, types: monData.types, moves: [], item: "", teraType: "" };
+    pendingMon = { id: jsonId, name: monData.name || displayName, sprite: spriteUrl, types: monData.types, moves: [], item: "", ability: "" };
 
     content.innerHTML = `
       <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>${megaDropdown}
@@ -192,7 +212,7 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
         if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) megaItemName = match.stone;
     }
 
-    pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, teraType: "" };
+    pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName };
     addBtn.innerText = "Add Form to Team";
     fetchPokedexEntries(megaData.num);
 }
@@ -243,27 +263,40 @@ function getLegalMoves(monId) {
 }
 
 function openEditModal(index) {
-    let mon = currentTeam[index]; let legalMoves = getLegalMoves(mon.id);
+    let mon = currentTeam[index]; 
+    let legalMoves = getLegalMoves(mon.id);
     let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
-    let teraOptions = `<option value="">(Select Tera Type)</option>` + TERA_TYPES.map(t => `<option value="${t}">${t}</option>`).join('');
+    
+    let itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
 
     let html = `
-        <h2 style="color:#ffcc00; font-size:14px;">Edit ${mon.name}</h2>
+        <h2 style="color:#ffcc00; font-size:16px;">Edit ${mon.name}</h2>
         <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
-        <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
-        <input type="text" id="edit-item" list="item-list" placeholder="e.g. Focus Sash" style="width:100%; margin-bottom:10px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px; box-sizing:border-box;">
-        <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Tera Type:</strong></p>
-        <select id="edit-tera" style="width:100%; margin-bottom:15px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">${teraOptions}</select>
-        <p style="font-size:8px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
-        <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">${moveOptions}</select>
-        <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">${moveOptions}</select>
-        <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">${moveOptions}</select>
-        <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:6px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:7px;">${moveOptions}</select>
-        <button class="btn-action btn-add" style="margin-top:15px; font-size:10px;" onclick="saveMoves(${index})">Save Team Member</button>
+        
+        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
+        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="document.getElementById('item-desc').innerText = VGC_ITEMS[this.value || 'None']">
+            ${itemOptions}
+        </select>
+        <div id="item-desc" style="background:#111; padding:8px; font-size:10px; border-radius:4px; text-align:left; min-height:30px; margin-bottom:15px; margin-top:5px; color:#aaa; line-height: 1.4;">Select an item to see its competitive use.</div>
+        
+        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
+        <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
+        <button class="btn-action btn-add" style="margin-top:15px; font-size:12px;" onclick="saveMoves(${index})">Save Team Member</button>
     `;
+    
     document.getElementById('edit-modal-info').innerHTML = html;
-    if (mon.item) document.getElementById('edit-item').value = mon.item;
-    if (mon.teraType) document.getElementById('edit-tera').value = mon.teraType;
+    
+    if (mon.item && VGC_ITEMS[mon.item]) {
+        document.getElementById('edit-item').value = mon.item;
+        document.getElementById('item-desc').innerText = VGC_ITEMS[mon.item];
+    } else if (mon.item) {
+        document.getElementById('edit-item').value = mon.item;
+        document.getElementById('item-desc').innerText = "Imported Item.";
+    }
+    
     if (mon.moves) {
         if (mon.moves[0]) document.getElementById('edit-move1').value = mon.moves[0];
         if (mon.moves[1]) document.getElementById('edit-move2').value = mon.moves[1];
@@ -276,7 +309,6 @@ function openEditModal(index) {
 function saveMoves(index) {
     currentTeam[index].moves = [document.getElementById('edit-move1').value, document.getElementById('edit-move2').value, document.getElementById('edit-move3').value, document.getElementById('edit-move4').value].filter(m => m !== "");
     currentTeam[index].item = document.getElementById('edit-item').value;
-    currentTeam[index].teraType = document.getElementById('edit-tera').value;
     saveTeam(); closeEditModal(); renderAllUI();
 }
 
@@ -628,8 +660,9 @@ function runSimAnalysis() {
     let resDiv = document.getElementById('sim-analysis-results');
     if (simYourSelection.length !== 4 || simOppTeam.length === 0) { resDiv.innerHTML = `<p style="color:#888; font-size:12px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`; return; }
 
-    let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0; display:flex; align-items:center;">Offensive Pressure <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff;">Based on STAB (Same Type Attack Bonus). If a Fire-type Pokémon uses a Fire-type move, it does 50% extra damage!</span></span></h4>`;
-    let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0; display:flex; align-items:center;">Defensive Risks <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff;">Shows which opposing STAB types will hit your Pokémon for Super Effective (2x or 4x) damage.</span></span></h4>`;
+    let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0; display:flex; align-items:center;">Offensive Pressure <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">Based on STAB (Same Type Attack Bonus). If a Fire-type Pokémon uses a Fire-type move, it does 50% extra damage!</span></span></h4>`;
+    let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0; display:flex; align-items:center;">Defensive Risks <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">Shows which opposing STAB types will hit your Pokémon for Super Effective (2x or 4x) damage.</span></span></h4>`;
+
     simYourSelection.forEach(myMon => {
         let hitsSE = []; simOppTeam.forEach(oppMon => { let se = false; myMon.types.forEach(t => { if(getDefensiveMultiplier(oppMon.types, t) >= 2) se = true; }); if(se) hitsSE.push(oppMon.name); });
         if(hitsSE.length > 0) offenseText += `<div style="font-size:10px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> hits -> <span style="color:#ddd;">${hitsSE.join(', ')}</span></div>`;
@@ -650,20 +683,21 @@ function generate1v1LeadMatrix() {
 
     let legendHtml = `
         <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
-            <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px; display:flex; align-items:center;">
-                How the Duo Lead Matrix Works 
-                <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">This tool simulates Turn 1. It adds up the Speed and Type Advantage scores for all 4 Pokémon on the field to tell you who has the upper hand.</span></span>
+            <h4 style="color: #9c27b0; margin: 0 0 6px 0; font-size: 14px; display:flex; align-items:center;">
+                How the 1v1 Lead Matrix Works 
+                <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">This tool simulates Turn 1. It adds up the Speed and Type Advantage scores for a 1-on-1 matchup to tell you who has the upper hand.</span></span>
             </h4>
-            <p style="font-size: 10px; color: #888; margin-top: 0; margin-bottom: 10px;">In VGC Double Battles, picking your starting two Pokémon ("Leads") is crucial. This chart compares your Speed and Super Effective hits against theirs to find your safest opening pair.</p>
+            <p style="font-size: 10px; color: #888; margin-top: 0; margin-bottom: 10px;">In Singles or specific VGC situations, picking the right lead is crucial. This chart compares Speed and Super Effective hits against the opponent.</p>
             <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #ccc; line-height: 1.6;">
-                <li><strong style="color: #4CAF50;">Favorable:</strong> Your duo naturally outspeeds and threatens massive Super Effective damage to their duo. Excellent starting pair!</li>
-                <li><strong style="color: #81c784;">Advantage:</strong> Your team has the upper hand. You likely move first, or perfectly resist their attacks.</li>
-                <li><strong style="color: #aaa;">Neutral:</strong> A balanced matchup. Turn 1 will be decided by strategy (like Fake Out, Protect, or Terastallization).</li>
-                <li><strong style="color: #e57373;">Disadv:</strong> Their duo is faster and threatens your weaknesses. You will need a trick (like Tailwind or Trick Room) to survive.</li>
-                <li><strong style="color: #ff4444;">Poor:</strong> Their leads completely shut down both of your Pokémon. Do not start the battle with these two!</li>
+                <li><strong style="color: #4CAF50;">Favorable:</strong> You naturally outspeed and threaten Super Effective damage. Excellent lead!</li>
+                <li><strong style="color: #81c784;">Slight Adv:</strong> You outspeed or have better typing, but not both. A safe lead.</li>
+                <li><strong style="color: #aaa;">Neutral:</strong> A balanced matchup. Turn 1 will be decided by strategy.</li>
+                <li><strong style="color: #e57373;">Slight Dis:</strong> You are slightly outsped or have weaker typing. Somewhat risky lead.</li>
+                <li><strong style="color: #ff4444;">Poor:</strong> You are outsped and take Super Effective damage. DO NOT lead!</li>
             </ul>
         </div>
-    `;    let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
+    `;
+    let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
     simOppTeam.forEach(opp => { html += `<th style="min-width: 60px;"><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`; }); html += '</tr>';
     currentTeam.forEach(myMon => {
@@ -685,7 +719,22 @@ function generate2v2LeadMatrix() {
     if (currentTeam.length < 2 || simOppTeam.length < 2) { alert("You need at least 2 Pokémon on both teams to generate a 2v2 matrix!"); return; }
     resDiv.style.display = 'none'; matrixDiv.style.display = 'block';
 
-    let legendHtml = `<div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;"><h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px;">How to Read the 2v2 Duo Matrix</h4><ul style="margin: 0; padding-left: 15px; font-size: 12px; color: #ccc; line-height: 1.6;"><li><strong style="color: #4CAF50;">Favorable:</strong> Massive combined offensive pressure. Excellent pair!</li><li><strong style="color: #81c784;">Advantage:</strong> Covers weaknesses or pressures heavily.</li><li><strong style="color: #aaa;">Neutral:</strong> An even trade on the board.</li><li><strong style="color: #e57373;">Disadv:</strong> Inherently counters your STAB types or speed.</li><li><strong style="color: #ff4444;">Poor:</strong> Shuts down both of your Pokémon. Do not lead!</li></ul></div>`;
+    let legendHtml = `
+        <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+            <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px; display:flex; align-items:center;">
+                How the Duo Lead Matrix Works 
+                <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">This tool simulates Turn 1. It adds up the Speed and Type Advantage scores for all 4 Pokémon on the field to tell you who has the upper hand.</span></span>
+            </h4>
+            <p style="font-size: 10px; color: #888; margin-top: 0; margin-bottom: 10px;">In VGC Double Battles, picking your starting two Pokémon ("Leads") is crucial. This chart compares your Speed and Super Effective hits against theirs to find your safest opening pair.</p>
+            <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #ccc; line-height: 1.6;">
+                <li><strong style="color: #4CAF50;">Favorable:</strong> Your duo naturally outspeeds and threatens massive Super Effective damage to their duo. Excellent starting pair!</li>
+                <li><strong style="color: #81c784;">Advantage:</strong> Your team has the upper hand. You likely move first, or perfectly resist their attacks.</li>
+                <li><strong style="color: #aaa;">Neutral:</strong> A balanced matchup. Turn 1 will be decided by strategy (like Fake Out or Protect).</li>
+                <li><strong style="color: #e57373;">Disadv:</strong> Their duo is faster and threatens your weaknesses. You will need a trick (like Tailwind or Trick Room) to survive.</li>
+                <li><strong style="color: #ff4444;">Poor:</strong> Their leads completely shut down both of your Pokémon. Do not start the battle with these two!</li>
+            </ul>
+        </div>
+    `;
     let html = '<h3 style="color:#2196F3; font-size:14px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
     let oppPairs = []; for(let i=0; i<simOppTeam.length; i++) { for(let j=i+1; j<simOppTeam.length; j++) { oppPairs.push([simOppTeam[i], simOppTeam[j]]); } }
@@ -721,11 +770,10 @@ function processImport() {
         let species = firstLine; let match = firstLine.match(/.*\(([^)]+)\)$/); if (match) species = match[1].trim();
         let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, ''); if (jsonId === 'indeedeef') jsonId = 'indeedeef';
 
-        let ability = ""; let teraType = ""; let moves = [];
+        let ability = ""; let moves = [];
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i].trim();
             if (line.startsWith('Ability:')) ability = line.replace('Ability:', '').trim();
-            if (line.startsWith('Tera Type:')) teraType = line.replace('Tera Type:', '').trim();
             if (line.startsWith('-')) moves.push(line.replace('-', '').trim());
         }
         
@@ -735,7 +783,7 @@ function processImport() {
         if (monData) {
             let spriteName = monData.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
             let spriteUrl = CUSTOM_SPRITES[jsonId] ? CUSTOM_SPRITES[jsonId] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
-            importedTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types, ability: ability, item: item, teraType: teraType, moves: moves.slice(0, 4) });
+            importedTeam.push({ id: jsonId, name: monData.name, sprite: spriteUrl, types: monData.types, ability: ability, item: item, moves: moves.slice(0, 4) });
         }
     });
     
@@ -750,7 +798,6 @@ function exportTeam() {
     let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
     exportText += mon.item ? `${exportName} @ ${mon.item}\n` : `${exportName}\n`;
     exportText += `Level: 50\nAbility: ${mon.ability}\n`;
-    if (mon.teraType) exportText += `Tera Type: ${mon.teraType}\n`;
     if (mon.moves && mon.moves.length > 0) { mon.moves.forEach(move => { exportText += `- ${move}\n`; }); }
     exportText += `\n`; 
   });
@@ -784,7 +831,6 @@ function generateTeamSheet() {
             .mon-name { color: #aaddff; font-weight: bold; font-size: 16px; text-shadow: 1px 1px 2px #000; }
             .mon-item { color: #ccc; font-style: italic; }
             .mon-ability { color: #fff; }
-            .mon-tera { color: #ff9900; }
             .mon-moves { color: #ddd; margin-top: 5px; padding-left: 10px; border-left: 2px solid rgba(255, 255, 255, 0.2); }
             .team-acronym-container { text-align: center; background: rgba(30, 30, 30, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); margin-top: 10px; }
             .team-acronym-title { color: #aaa; font-family: sans-serif; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px 0; }
@@ -815,7 +861,6 @@ function generateTeamSheet() {
                 <div class="mon-details">
                     <span class="mon-name">${exportName}</span> ${mon.item ? `<span class="mon-item"><br>@ ${mon.item}</span>` : ''}<br>
                     <span class="mon-ability">Ability: ${mon.ability}</span><br>
-                    ${mon.teraType ? `<span class="mon-tera">Tera Type: ${mon.teraType}</span><br>` : ''}
                     <div class="mon-moves">${movesHTML}</div>
                 </div>
             </div>
@@ -837,16 +882,18 @@ function analyzeArchetype() {
     let totalMoves = 0; currentTeam.forEach(mon => { if (mon.moves && mon.moves.length > 0) totalMoves += mon.moves.length; });
     if (totalMoves === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px; margin:0;">Awaiting move selection...</p>'; return; }
 
-    let stats = { hasTR: false, hasTailwind: false, hasStickyWeb: false, hasDrizzle: false, hasRainAbuser: false, hasDrought: false, hasSunAbuser: false, hasSand: false, hasSnow: false, hasPsychicTerrain: false, hasExpandingForce: false, protectCount: 0, recoveryCount: 0, unawareCount: 0, statDroppers: 0, perishSongCount: 0, redirectorCount: 0, fakeOutCount: 0, pivotMoveCount: 0, hazardSetters: 0, hazardRemovers: 0, hasGholdengo: false, avgSpeed: 0, highSpeedCount: 0, suicideLeadPotential: false, hasDondozo: false, hasTatsugiri: false, hasMagnezone: false, dragonCount: 0, shadowTag: false };
+    let stats = { hasTR: false, hasTailwind: false, hasDrizzle: false, hasRainAbuser: false, hasDrought: false, hasSunAbuser: false, hasSand: false, hasSnow: false, hasPsychicTerrain: false, hasExpandingForce: false, protectCount: 0, recoveryCount: 0, unawareCount: 0, perishSongCount: 0, pivotMoveCount: 0, hazardSetters: 0, suicideLeadPotential: false, dragonCount: 0, shadowTag: false };
     let typesPresent = new Set();
+    
+    let teamNames = currentTeam.map(m => m.name.toLowerCase());
+    let hasMon = (nameFragment) => teamNames.some(n => n.includes(nameFragment));
+    let hasMove = (moveName) => currentTeam.some(m => m.moves && m.moves.includes(moveName));
 
     currentTeam.forEach(mon => {
         let baseSpe = showdownData[mon.id]? showdownData[mon.id].baseStats.spe : 50;
         stats.avgSpeed += baseSpe; if (baseSpe >= 110) stats.highSpeedCount++;
         mon.types.forEach(t => typesPresent.add(t));
         
-        if (mon.id.includes('dondozo')) stats.hasDondozo = true; if (mon.id.includes('tatsugiri')) stats.hasTatsugiri = true;
-        if (mon.id.includes('magnezone')) stats.hasMagnezone = true; if (mon.id.includes('gholdengo')) stats.hasGholdengo = true;
         if (mon.types.includes('Dragon')) stats.dragonCount++; if (mon.ability === 'Unaware') stats.unawareCount++;
         if (mon.ability === 'Drizzle') stats.hasDrizzle = true; if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
         if (mon.ability === 'Drought') stats.hasDrought = true; if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
@@ -855,25 +902,22 @@ function analyzeArchetype() {
 
         if (mon.moves) {
             if (mon.moves.includes('Trick Room')) stats.hasTR = true; if (mon.moves.includes('Tailwind')) stats.hasTailwind = true;
-            if (mon.moves.includes('Sticky Web')) stats.hasStickyWeb = true; if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
+            if (mon.moves.includes('Expanding Force')) stats.hasExpandingForce = true;
             if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => mon.moves.includes(m))) stats.pivotMoveCount++;
             if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => mon.moves.includes(m))) stats.hazardSetters++;
-            if (['Defog', 'Rapid Spin', 'Mortal Spin'].some(m => mon.moves.includes(m))) stats.hazardRemovers++;
             if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => mon.moves.includes(m))) stats.recoveryCount++;
             if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => mon.moves.includes(m))) stats.protectCount++;
             if (mon.moves.includes('Perish Song')) stats.perishSongCount++;
-            if (mon.moves.includes('Follow Me') || mon.moves.includes('Rage Powder')) stats.redirectorCount++;
-            if (mon.moves.includes('Fake Out')) stats.fakeOutCount++;
             if (mon.item === 'Focus Sash' && baseSpe > 100 && (mon.moves.includes('Stealth Rock') || mon.moves.includes('Taunt'))) stats.suicideLeadPotential = true;
         }
     });
     
     stats.avgSpeed /= currentTeam.length; let detectedModes = [];
 
-    if (stats.hasDondozo && stats.hasTatsugiri) detectedModes.push({name: "DozoGiri", desc: "Uses Commander to grant Dondozo double omni-boosts to sweep."});
-    if (stats.hasMagnezone && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
+    if (hasMon('dondozo') && hasMon('tatsugiri')) detectedModes.push({name: "DozoGiri", desc: "Uses Commander to grant Dondozo double omni-boosts to sweep."});
+    if (hasMon('magnezone') && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
     if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) detectedModes.push({name: "Perish Trap", desc: "Traps opponents and uses Perish Song to force KOs within 3 turns."});
-    if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim sweepers."});
+    if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim partners."});
     else if (stats.hasDrizzle) detectedModes.push({name: "Rain Mode", desc: "Utilizes Rain to boost Water attacks and mitigate Fire weaknesses."});
     if (stats.hasDrought && stats.hasSunAbuser) detectedModes.push({name: "Sun Offense", desc: "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate pressure."});
     else if (stats.hasDrought) detectedModes.push({name: "Sun Mode", desc: "Utilizes Sun to boost Fire attacks and mitigate Water weaknesses."});
@@ -893,14 +937,44 @@ function analyzeArchetype() {
     let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
     if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
 
-    let cores = [];
-    if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) cores.push("🔥💧🌿 Fire / Water / Grass Core");
-    if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) cores.push("⚙️🧚🐉 Steel / Fairy / Dragon Core");
+    function createBadge(title, tooltipText, colorHex) {
+        return `<span class="tooltip" style="width: auto !important; height: auto !important; border-radius: 6px !important; background:#1e293b; color:${colorHex}; padding:6px 10px; font-weight:bold; font-size:11px; border:1px solid ${colorHex}; cursor:help; display:inline-block; white-space: nowrap;">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
+    }
+    // GAMIFIED SYNERGY BADGES & DEFENSIVE CORES
+    let badges = [];
+    
+    // Defensive Cores
+    if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) {
+        badges.push(createBadge("🔥💧🌿 F/W/G Core", "A perfectly balanced defensive core. Grass covers Water's weaknesses, Water covers Fire's, and Fire covers Grass's.", "#4ade80"));
+    }
+    if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) {
+        badges.push(createBadge("⚙️🧚🐉 Fantasy Core", "A top-tier defensive core. Steel covers Fairy and Dragon's weaknesses, while Fairy provides immunity to Dragon.", "#f472b6"));
+    }
+    
+    // Synergy Combos
+    if ((hasMon('pelipper') || hasMon('politoed')) && (stats.hasRainAbuser || hasMon('palafin') || hasMon('archaludon'))) {
+        badges.push(createBadge("⛈️ Rain Synergy", "A weather setter creates Rain, boosting Water moves and doubling the speed of Swift Swim partners.", "#60a5fa"));
+    }
+    if ((hasMon('torkoal') || hasMon('ninetales')) && (stats.hasSunAbuser || hasMon('charizard') || hasMon('venusaur'))) {
+        badges.push(createBadge("☀️ Sun Synergy", "A weather setter creates Sun, boosting Fire moves and doubling the speed of Chlorophyll partners.", "#f87171"));
+    }
+    if ((hasMon('indeedee') || hasMon('tapu lele')) && (hasMon('armarouge') || hasMon('hatterene') || hasMove('Expanding Force'))) {
+        badges.push(createBadge("🧠 Psyspam", "Psychic Terrain blocks priority moves (like Fake Out) and powers up the devastating multi-target move Expanding Force.", "#e879f9"));
+    }
+    if (hasMon('dondozo') && hasMon('tatsugiri')) {
+        badges.push(createBadge("🍣 DozoGiri", "Tatsugiri jumps inside Dondozo's mouth, giving it +2 to all stats but leaving you with only one active Pokémon.", "#22d3ee"));
+    }
+    if (hasMove('Fake Out') && hasMove('Trick Room')) {
+        badges.push(createBadge("⏱️ TR Setup", "Using Fake Out to flinch a threat allows your Trick Room setter to safely reverse the turn order.", "#a78bfa"));
+    }
+    if (hasMove('Earthquake') && currentTeam.some(m => m.types.includes('Flying') || m.ability === 'Levitate')) {
+        badges.push(createBadge("🌍 DisQuake", "Pairing an Earthquake user with a Flying/Levitate partner lets you spam spread damage without hitting your own teammate!", "#fbbf24"));
+    }
+    
+    let badgeHtml = badges.length > 0 ? `<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #555; display:flex; gap:8px; flex-wrap:wrap;">${badges.join('')}</div>` : "";
 
-    let coreHtml = cores.length > 0 ? `<div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #555; color: #aaddff;"><strong>Active Defensive Cores:</strong><br>${cores.join('<br>')}</div>` : "";
-    container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${coreHtml}`;
-}
-
+    container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${badgeHtml}`;
+}    
 function getDefensiveMultiplier(defendingTypes, attackingType) {
   let mult = 1;
   defendingTypes.forEach(type => {
