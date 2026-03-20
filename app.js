@@ -11,26 +11,6 @@ let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", repla
 let currentTeamIndex = 0; let currentTeam = []; let pendingMon = null; let draggedSlotIndex = null;
 let simYourSelection = []; let simOppTeam = [];
 
-// --- VGC ITEM GLOSSARY ---
-const VGC_ITEMS = {
-    "None": "No item held.",
-    "Focus Sash": "Survive one OHKO attack with 1 HP if at full health. Great for frail, fast attackers.",
-    "Assault Vest": "Boosts Sp. Def by 50%, but disables status moves (like Protect).",
-    "Choice Scarf": "Boosts Speed by 50%, but locks you into your first move.",
-    "Choice Band": "Boosts Attack by 50%, but locks you into your first move.",
-    "Choice Specs": "Boosts Sp. Atk by 50%, but locks you into your first move.",
-    "Clear Amulet": "Protects your stats from being lowered by the opponent (e.g. Intimidate or Icy Wind).",
-    "Sitrus Berry": "Restores 25% HP when health drops below half. Great for bulky Pokémon.",
-    "Leftovers": "Restores 1/16th of max HP every turn. Good for slow, stalling games.",
-    "Life Orb": "Boosts damage by 30%, but drains 10% of your HP after every attack.",
-    "Rocky Helmet": "Damages the attacker for 1/6th of their max HP if they make physical contact.",
-    "Covert Cloak": "Protects you from secondary effects of attacks (like Fake Out flinches).",
-    "Mental Herb": "Cures Taunt or Encore once. Crucial for Trick Room setters to guarantee they move.",
-    "Eviolite": "Boosts Def and Sp. Def by 50% for Pokémon that can still evolve.",
-    "Mystic Water": "Boosts Water-type attacks by 20% without taking recoil damage.",
-    "Black Glasses": "Boosts Dark-type attacks by 20% without taking recoil damage."
-};
-
 function renderRoster() {
     let html = '';
     ROSTER_SECTIONS.forEach(sec => {
@@ -267,17 +247,23 @@ function openEditModal(index) {
     let legalMoves = getLegalMoves(mon.id);
     let moveOptions = `<option value="">(Select Move)</option>` + legalMoves.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
     
-    let itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
+    // Check if VGC_ITEMS is defined (it's in new_features.js now, so we need a fallback just in case)
+    let itemOptions = "";
+    if (typeof VGC_ITEMS !== 'undefined') {
+        itemOptions = Object.keys(VGC_ITEMS).map(item => `<option value="${item === 'None' ? '' : item}">${item}</option>`).join('');
+    } else {
+        itemOptions = `<option value="">None</option><option value="Focus Sash">Focus Sash</option>`; 
+    }
 
     let html = `
         <h2 style="color:#ffcc00; font-size:16px;">Edit ${mon.name}</h2>
         <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;">
         
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
-        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="document.getElementById('item-desc').innerText = VGC_ITEMS[this.value || 'None']">
+        <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="document.getElementById('item-desc').innerText = (typeof VGC_ITEMS !== 'undefined' ? VGC_ITEMS[this.value || 'None'] : 'Item selected.')">
             ${itemOptions}
         </select>
-        <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="loadStarterKit(${index})">🎒 Load Starter Kit</button>
+        <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
         <div id="item-desc" style="background:#111; padding:8px; font-size:10px; border-radius:4px; text-align:left; min-height:30px; margin-bottom:15px; margin-top:5px; color:#aaa; line-height: 1.4;">Select an item to see its competitive use.</div>
         
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
@@ -290,12 +276,13 @@ function openEditModal(index) {
     
     document.getElementById('edit-modal-info').innerHTML = html;
     
-    if (mon.item && VGC_ITEMS[mon.item]) {
+    if (mon.item) {
         document.getElementById('edit-item').value = mon.item;
-        document.getElementById('item-desc').innerText = VGC_ITEMS[mon.item];
-    } else if (mon.item) {
-        document.getElementById('edit-item').value = mon.item;
-        document.getElementById('item-desc').innerText = "Imported Item.";
+        if (typeof VGC_ITEMS !== 'undefined' && VGC_ITEMS[mon.item]) {
+            document.getElementById('item-desc').innerText = VGC_ITEMS[mon.item];
+        } else {
+            document.getElementById('item-desc').innerText = "Imported Item.";
+        }
     }
     
     if (mon.moves) {
@@ -379,8 +366,9 @@ function renderAllUI() {
     renderTypeChart(); 
     analyzeArchetype(); 
     renderSpeedTiers(); 
-    if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook(); // <--- Add this line
+    if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook();
 }
+
 function renderTeamUI() {
   const container = document.getElementById('team-container'); container.innerHTML = '';
   for (let i = 0; i < 6; i++) {
@@ -943,9 +931,11 @@ function analyzeArchetype() {
     let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
     if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
 
+    // Use our shiny new CSS class from style.css instead of forcing inline tooltips
     function createBadge(title, tooltipText, colorHex) {
-        return `<span class="tooltip" style="width: auto !important; height: auto !important; border-radius: 6px !important; background:#1e293b; color:${colorHex}; padding:6px 10px; font-weight:bold; font-size:11px; border:1px solid ${colorHex}; cursor:help; display:inline-block; white-space: nowrap;">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
+        return `<span class="synergy-badge" style="color:${colorHex}; border:1px solid ${colorHex};">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
     }
+
     // GAMIFIED SYNERGY BADGES & DEFENSIVE CORES
     let badges = [];
     
@@ -980,7 +970,8 @@ function analyzeArchetype() {
     let badgeHtml = badges.length > 0 ? `<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #555; display:flex; gap:8px; flex-wrap:wrap;">${badges.join('')}</div>` : "";
 
     container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${badgeHtml}`;
-}    
+}
+
 function getDefensiveMultiplier(defendingTypes, attackingType) {
   let mult = 1;
   defendingTypes.forEach(type => {
