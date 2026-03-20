@@ -59,12 +59,20 @@
       <div class="team-slots" id="team-container"></div>
       
       <h3 style="margin-top: 30px; margin-bottom: 5px;">Speed War Matrix (Lv. 50)</h3>
-      <div style="margin-bottom: 10px; display: flex; gap: 10px; font-size: 12px; color: #ccc; flex-wrap: wrap;">
-          <label style="cursor:pointer;"><input type="checkbox" id="speed-tailwind" onchange="renderSpeedTiers()"> Tailwind (x2)</label>
-          <label style="cursor:pointer;"><input type="checkbox" id="speed-trickroom" onchange="renderSpeedTiers()"> Trick Room</label>
-          <label style="cursor:pointer;"><input type="checkbox" id="speed-drop" onchange="renderSpeedTiers()"> Icy Wind/Webs (-1 Stage)</label>
+      <div style="margin-bottom: 10px; display: flex; gap: 15px; font-size: 12px; color: #ccc; flex-wrap: wrap; align-items: center;">
+          <label style="cursor:pointer; display:flex; align-items:center;">
+             <input type="checkbox" id="speed-tailwind" onchange="renderSpeedTiers()"> Tailwind (x2)
+             <span class="tooltip">?<span class="tooltip-text">Doubles your entire team's Speed stat for 4 turns. Essential for hyper-offense teams.</span></span>
+          </label>
+          <label style="cursor:pointer; display:flex; align-items:center;">
+             <input type="checkbox" id="speed-trickroom" onchange="renderSpeedTiers()"> Trick Room
+             <span class="tooltip">?<span class="tooltip-text">Inverts the Speed order for 5 turns. Slower Pokémon will move first. Great for countering fast teams!</span></span>
+          </label>
+          <label style="cursor:pointer; display:flex; align-items:center;">
+             <input type="checkbox" id="speed-drop" onchange="renderSpeedTiers()"> Icy Wind/Webs
+             <span class="tooltip">?<span class="tooltip-text">Simulates the opponent being hit by Icy Wind, Electroweb, or Scary Face, which drops their Speed by 33%.</span></span>
+          </label>
       </div>
-
       <div id="speed-tier-container" style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555; min-height: 40px; margin-bottom: 20px;">
          <p style="color: #888; font-size: 12px; margin:0;">Add Pokémon to see speed tiers.</p>
       </div>
