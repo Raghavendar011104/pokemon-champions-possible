@@ -628,9 +628,8 @@ function runSimAnalysis() {
     let resDiv = document.getElementById('sim-analysis-results');
     if (simYourSelection.length !== 4 || simOppTeam.length === 0) { resDiv.innerHTML = `<p style="color:#888; font-size:12px; text-align:center;">Select 4 Pokémon and Load an Opponent to see STAB Matchup Data.</p>`; return; }
 
-    let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0;">Offensive Pressure (STAB)</h4>`;
-    let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0;">Defensive Risks (STAB)</h4>`;
-
+    let offenseText = `<h4 style="color:#4CAF50; margin:0 0 10px 0; display:flex; align-items:center;">Offensive Pressure <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff;">Based on STAB (Same Type Attack Bonus). If a Fire-type Pokémon uses a Fire-type move, it does 50% extra damage!</span></span></h4>`;
+    let defenseText = `<h4 style="color:#ff4444; margin:15px 0 10px 0; display:flex; align-items:center;">Defensive Risks <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff;">Shows which opposing STAB types will hit your Pokémon for Super Effective (2x or 4x) damage.</span></span></h4>`;
     simYourSelection.forEach(myMon => {
         let hitsSE = []; simOppTeam.forEach(oppMon => { let se = false; myMon.types.forEach(t => { if(getDefensiveMultiplier(oppMon.types, t) >= 2) se = true; }); if(se) hitsSE.push(oppMon.name); });
         if(hitsSE.length > 0) offenseText += `<div style="font-size:10px; margin-bottom:4px;"><strong style="color:#ffcc00;">${myMon.name}</strong> hits -> <span style="color:#ddd;">${hitsSE.join(', ')}</span></div>`;
@@ -649,8 +648,22 @@ function generate1v1LeadMatrix() {
     if (currentTeam.length === 0 || simOppTeam.length === 0) { alert("You need both your team and an opponent loaded to generate a matrix!"); return; }
     resDiv.style.display = 'none'; matrixDiv.style.display = 'block';
 
-    let legendHtml = `<div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;"><h4 style="color: #ff9900; margin: 0 0 6px 0; font-size: 14px;">How to Read the 1v1 Matrix</h4><ul style="margin: 0; padding-left: 15px; font-size: 12px; color: #ccc; line-height: 1.6;"><li><strong style="color: #4CAF50;">Favorable:</strong> Major STAB or Speed advantage.</li><li><strong style="color: #81c784;">Slight Adv:</strong> Outspeed or better typing.</li><li><strong style="color: #aaa;">Neutral:</strong> Even matchup.</li><li><strong style="color: #e57373;">Slight Dis:</strong> Slightly outsped or weaker typing.</li><li><strong style="color: #ff4444;">Poor:</strong> Outsped and take SE damage. DO NOT lead.</li></ul></div>`;
-    let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
+    let legendHtml = `
+        <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+            <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px; display:flex; align-items:center;">
+                How the Duo Lead Matrix Works 
+                <span class="tooltip" style="background:#1e293b;">?<span class="tooltip-text" style="color:#fff; font-weight:normal;">This tool simulates Turn 1. It adds up the Speed and Type Advantage scores for all 4 Pokémon on the field to tell you who has the upper hand.</span></span>
+            </h4>
+            <p style="font-size: 10px; color: #888; margin-top: 0; margin-bottom: 10px;">In VGC Double Battles, picking your starting two Pokémon ("Leads") is crucial. This chart compares your Speed and Super Effective hits against theirs to find your safest opening pair.</p>
+            <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #ccc; line-height: 1.6;">
+                <li><strong style="color: #4CAF50;">Favorable:</strong> Your duo naturally outspeeds and threatens massive Super Effective damage to their duo. Excellent starting pair!</li>
+                <li><strong style="color: #81c784;">Advantage:</strong> Your team has the upper hand. You likely move first, or perfectly resist their attacks.</li>
+                <li><strong style="color: #aaa;">Neutral:</strong> A balanced matchup. Turn 1 will be decided by strategy (like Fake Out, Protect, or Terastallization).</li>
+                <li><strong style="color: #e57373;">Disadv:</strong> Their duo is faster and threatens your weaknesses. You will need a trick (like Tailwind or Trick Room) to survive.</li>
+                <li><strong style="color: #ff4444;">Poor:</strong> Their leads completely shut down both of your Pokémon. Do not start the battle with these two!</li>
+            </ul>
+        </div>
+    `;    let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml + '<div style="overflow-x: auto;"><table class="matrix-table"><tr><th style="min-width: 60px;">VS</th>';
 
     simOppTeam.forEach(opp => { html += `<th style="min-width: 60px;"><img src="${opp.sprite}" class="matrix-sprite"><br>${opp.name.substring(0, 10)}</th>`; }); html += '</tr>';
     currentTeam.forEach(myMon => {
