@@ -48,6 +48,11 @@
         </div>
 
         <div style="margin-top:10px; display: flex; gap: 5px; flex-wrap: wrap;">
+	   <label class="coach-toggle-container">
+           <input type="checkbox" id="coach-toggle" checked onchange="toggleBeginnerMode()">
+           <span class="coach-text">Coach Mode</span>
+           </label>
+           <button class="btn-action" style="padding: 8px; background-color: #e83e8c; color: #fff;" onclick="drawShareCard()">📷 Share Card</button>
            <button class="btn-action" style="padding: 8px; background-color: #4a90e2; color: #fff;" onclick="openImportModal()">Import</button>
            <button class="btn-action" style="padding: 8px;" onclick="exportTeam()">Export</button>
            <button class="btn-action" style="padding: 8px; background-color: #4CAF50; color: #fff;" onclick="openAutoBuildModal()">Auto-Build</button>
@@ -448,6 +453,7 @@
   </div>
 
   <script src="data.js"></script>
+  <script src="new_features.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
