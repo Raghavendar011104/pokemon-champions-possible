@@ -94,6 +94,7 @@ function applyCardDecorations() {
 }
 
 // 4. The Rookie Mistake Checker
+// 4. The Rookie Mistake Checker
 function runRookieMistakeChecker() {
     let container = document.getElementById('rookie-mistake-container');
     if (!container) {
@@ -112,15 +113,35 @@ function runRookieMistakeChecker() {
     let weatherSetters = 0;
 
     currentTeam.forEach(mon => {
-        // Assault Vest Anti-Synergy
-        if (mon.item === 'Assault Vest') {
-            let hasStatus = mon.moves.some(m => {
-                let moveData = movesData[m.toLowerCase().replace(/[^a-z0-9]/g, '')];
-                return moveData && moveData.category === "Status";
-            });
-            if (hasStatus) mistakes.push(`<strong>Assault Vest Error:</strong> ${mon.name} holds an Assault Vest but has a Status move. The vest prevents you from using it!`);
+        let damagingMoveCount = 0;
+        let totalMovesEquipped = 0;
+        let hasStatus = false;
+
+        // Loop through their equipped moves to check categories
+        mon.moves.forEach(m => {
+            if (m) {
+                totalMovesEquipped++;
+                let moveId = m.toLowerCase().replace(/[^a-z0-9]/g, '');
+                let moveData = movesData[moveId] || Object.values(movesData).find(d => d.name === m);
+                
+                if (moveData) {
+                    if (moveData.category === "Status") hasStatus = true;
+                    else damagingMoveCount++; // Physical or Special move found!
+                }
+            }
+        });
+
+        // 1. Assault Vest Anti-Synergy Check
+        if (mon.item === 'Assault Vest' && hasStatus) {
+            mistakes.push(`<strong>Assault Vest Error:</strong> ${mon.name} holds an Assault Vest but has a Status move. The vest prevents you from using it!`);
         }
 
+        // 2. NEW: Taunt Bait (Zero Damaging Moves) Check
+        if (totalMovesEquipped > 0 && damagingMoveCount === 0) {
+            mistakes.push(`<strong>Taunt Bait:</strong> ${mon.name} has zero attacking moves! If the opponent uses Taunt, ${mon.name} will be completely useless and forced to use Struggle.`);
+        }
+
+        // Track global team stats
         if (['Protect', 'Detect', 'Spiky Shield'].some(m => mon.moves.includes(m))) protectCount++;
         if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => mon.moves.includes(m))) speedControl = true;
         if (['Drizzle', 'Drought', 'Sand Stream', 'Snow Warning'].includes(mon.ability)) weatherSetters++;
@@ -144,7 +165,6 @@ function runRookieMistakeChecker() {
         container.innerHTML = `<div style="background:#14532d; border-left:4px solid #4ade80; padding:10px; margin-bottom:8px; border-radius:4px; font-size:11px; color:#a7f3d0;">✅ <strong>Coach Says:</strong> Your team fundamentals look solid! No major rookie mistakes detected.</div>`;
     }
 }
-
 // 5. Offensive Coverage Analyzer
 function generateOffensiveCoverage() {
     let container = document.getElementById('offensive-coverage-container');
