@@ -331,3 +331,74 @@ function runNewFeaturesHook() {
     runRookieMistakeChecker();
     generateOffensiveCoverage();
 }
+// 7. Quick Add Autocomplete Search
+function handleQuickAddSearch() {
+    let input = document.getElementById('quick-add-input').value.toLowerCase().trim();
+    let resultsBox = document.getElementById('quick-add-results');
+    
+    // Stop searching if the box is empty
+    if (input.length < 1) {
+        resultsBox.style.display = 'none';
+        return;
+    }
+
+    let matches = [];
+    
+    // Search through the allowed VGC Roster
+    Object.keys(POKEMON_AESTHETICS).forEach(id => {
+        let monData = showdownData[id];
+        if (monData && monData.name.toLowerCase().includes(input)) {
+            matches.push({ id: id, name: monData.name });
+        } else if (id.includes(input)) {
+            matches.push({ id: id, name: monData ? monData.name : id });
+        }
+    });
+
+    // Sort matches so exact starting letters appear at the top (e.g., typing "Cha" puts Charizard before Hawlucha)
+    matches.sort((a, b) => {
+        let aStarts = a.name.toLowerCase().startsWith(input) ? -1 : 1;
+        let bStarts = b.name.toLowerCase().startsWith(input) ? -1 : 1;
+        return aStarts - bStarts || a.name.localeCompare(b.name);
+    });
+
+    // Take the top 8 results so the dropdown doesn't get too massive
+    matches = matches.slice(0, 8);
+
+    if (matches.length > 0) {
+        let html = "";
+        matches.forEach(match => {
+            let spriteName = match.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
+            let spriteUrl = CUSTOM_SPRITES[match.id] ? CUSTOM_SPRITES[match.id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
+            
+            html += `
+                <div style="display:flex; align-items:center; padding: 8px 15px; cursor: pointer; border-bottom: 1px solid #334155; transition: background 0.2s;" 
+                     onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='transparent'"
+                     onclick="selectQuickAdd('${match.id}', '${match.name.replace(/'/g, "\\'")}', '${spriteUrl}')">
+                    <img src="${spriteUrl}" style="height:35px; image-rendering:pixelated; margin-right: 15px;">
+                    <span style="color:#fff; font-weight:bold; font-size: 13px;">${match.name}</span>
+                </div>
+            `;
+        });
+        resultsBox.innerHTML = html;
+        resultsBox.style.display = 'block';
+    } else {
+        resultsBox.innerHTML = `<div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No Pokémon found in roster.</div>`;
+        resultsBox.style.display = 'block';
+    }
+}
+
+// When a user clicks a result, it triggers the official "Add" Modal
+function selectQuickAdd(id, name, spriteUrl) {
+    document.getElementById('quick-add-input').value = "";
+    document.getElementById('quick-add-results').style.display = 'none';
+    showData(id, name, spriteUrl);
+}
+
+// Security feature: Close the dropdown if the user clicks anywhere else on the screen
+document.addEventListener('click', function(e) {
+    let searchBox = document.getElementById('quick-add-input');
+    let resultsBox = document.getElementById('quick-add-results');
+    if (searchBox && resultsBox && e.target !== searchBox && !resultsBox.contains(e.target)) {
+        resultsBox.style.display = 'none';
+    }
+});
