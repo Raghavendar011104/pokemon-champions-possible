@@ -1,0 +1,166 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+:root {
+  /* Scaled-Up Golden Ratio Typography */
+  --text-xs: 12px;
+  --text-sm: 16px;
+  --text-md: 26px; /* 16 * 1.618 */
+  --text-lg: 42px; /* 26 * 1.618 */
+}
+
+body { background-color: #1e3a5f; color: #e2e8f0; font-family: 'Inter', sans-serif; font-size: var(--text-sm); line-height: 1.6; padding: 20px; margin: 0; }
+h1, h2 { font-family: 'Press Start 2P', monospace; }
+h1 { text-align: center; color: #ffcc00; text-shadow: 3px 3px 0 #111; font-size: var(--text-lg); margin-bottom: 20px; margin-top: 10px; }
+h2 { color: #ff9900; text-shadow: 2px 2px 0 #111; border-bottom: 3px solid #cbd5e1; padding-bottom: 10px; margin-top: 40px; font-size: var(--text-md); }
+h3 { color: #aaddff; font-family: 'Press Start 2P', monospace; font-size: 13px; margin-top: 20px; margin-bottom: 15px; line-height: 1.4; }
+
+/* --- DASHBOARD --- */
+#dashboard { display: flex; flex-wrap: wrap; gap: 20px; background-color: #0f172a; border: 3px solid #ffcc00; padding: 20px; border-radius: 12px; margin-bottom: 40px; box-shadow: 8px 8px 0 #070f1a; }
+#team-builder { flex: 1.618; min-width: 320px; } /* Golden Ratio Layout */
+.team-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+
+/* --- TABS --- */
+#team-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn-tab { background-color: #1e293b; color: #94a3b8; border: 1px solid #334155; padding: 10px 16px; font-family: 'Inter', sans-serif; font-weight: 600; font-size: 13px; cursor: pointer; border-radius: 6px; transition: 0.2s; }
+.btn-tab.active { background-color: #ffcc00; color: #0f172a; border-color: #ffcc00; box-shadow: 0 0 10px rgba(255, 204, 0, 0.4); }
+.btn-tab:hover:not(.active) { background-color: #334155; color: #fff; }
+
+.team-slots { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; justify-content: center; }
+
+/* --- DRAG & DROP SLOTS --- */
+.team-slot { width: 75px !important; height: 85px !important; flex-direction: column !important; justify-content: center !important; gap: 4px !important; background-color: #1e293b; border: 2px dashed #475569; border-radius: 8px; display: flex; align-items: center; cursor: grab; position: relative; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.team-slot:active { cursor: grabbing; transform: scale(0.95); }
+.team-slot.drag-over { border-color: #4CAF50; background-color: #14532d; transform: scale(1.05); }
+.team-slot img { max-width: 65px !important; max-height: 45px !important; object-fit: contain !important; image-rendering: pixelated; pointer-events: none; }
+.team-slot:hover { border-color: #ffcc00; background-color: #334155; }
+.team-slot.filled .remove-x { display: none; position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; padding: 4px 6px; border-radius: 50%; font-size: 10px; font-weight: bold; font-family: 'Inter', sans-serif; z-index: 10; cursor: pointer; pointer-events: auto; box-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.team-slot.filled:hover .remove-x { display: block; }
+
+#type-chart-container { flex: 1; min-width: 300px; background-color: #0f172a; padding: 20px; border-radius: 12px; border: 2px solid #334155; height: fit-content; }
+
+details { background-color: #1e293b; margin-bottom: 8px; border-radius: 6px; border: 1px solid #334155; }
+summary { padding: 12px; cursor: pointer; font-size: 14px; font-weight: 600; outline: none; display: flex; justify-content: space-between; align-items: center; }
+summary:hover { background-color: #334155; }
+.summary-content { padding: 12px; border-top: 1px solid #334155; background-color: #0f172a; max-height: 250px; overflow-y: auto; }
+.summary-row { display: flex; align-items: center; margin-bottom: 8px; }
+.type-label { padding: 4px 6px; border-radius: 4px; text-shadow: 1px 1px 0 #000; width: 60px; text-align: center; margin-right: 12px; font-weight: bold; font-size: 12px; font-family: 'Inter', sans-serif; }
+.summary-sprites { display: flex; gap: 6px; flex-wrap: wrap; }
+.summary-sprites img { height: 28px; width: 28px; object-fit: contain; image-rendering: pixelated; background: #1e293b; border-radius: 4px; padding: 2px; border: 1px solid #475569; }
+
+.grid-container { display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px; }
+.poke-box { background-color: #0f172a; border: 2px solid #334155; border-radius: 8px; padding: 12px; box-shadow: 4px 4px 0 rgba(0,0,0,0.5); display: flex; align-items: center; transition: transform 0.2s, border-color 0.2s; font-weight: 600; }
+.poke-box:hover { transform: translateY(-4px); border-color: #ffcc00; }
+.arrow { color: #ef4444; margin: 0 12px; font-size: 14px; }
+.stage-container { display: flex; align-items: center; gap: 10px; }
+.poke-sprite-container { display: flex; flex-direction: column; align-items: center; text-align: center; min-width: 64px; cursor: pointer; transition: all 0.2s; }
+.poke-sprite-container:hover { transform: scale(1.15); color: #ffcc00; }
+.poke-sprite { image-rendering: pixelated; max-height: 60px; margin-bottom: 4px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.5)); }
+.branch-divider { color: #64748b; margin: 0 8px; font-weight: bold; font-size: 16px !important; }
+
+/* --- MODALS & BUTTONS --- */
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(15, 23, 42, 0.9); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-content { background-color: #0f172a; border: 3px solid #ffcc00; padding: 25px; width: 340px; text-align: center; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; max-height: 90vh; overflow-y: auto; }
+.close-btn { position: absolute; top: 12px; right: 18px; color: #ef4444; font-size: 20px; font-weight: bold; cursor: pointer; font-family: 'Inter', sans-serif; transition: 0.2s; }
+.close-btn:hover { color: #ffcc00; transform: scale(1.2); }
+.stat-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; font-family: 'Press Start 2P', monospace; }
+
+.btn-action { background-color: #ffcc00; color: #0f172a; border: none; padding: 12px 16px !important; font-family: 'Inter', sans-serif; font-weight: 800; font-size: 13px !important; text-transform: uppercase; cursor: pointer; border-radius: 6px; transition: all 0.2s; box-shadow: 0 4px 0 rgba(0,0,0,0.3); }
+.btn-action:hover { transform: translateY(-2px); box-shadow: 0 6px 0 rgba(0,0,0,0.3); filter: brightness(1.1); }
+.btn-action:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.3); }
+.btn-add { margin-top: 15px; width: 100%; padding: 14px; font-size: 13px; }
+
+input, select, textarea { font-family: 'Inter', sans-serif; border-radius: 6px; padding: 10px !important; font-size: 14px !important; box-sizing: border-box; height: auto !important; }
+
+/* Lead Matrix Styles */
+.matrix-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px !important; font-weight: bold; text-align: center; white-space: nowrap; }
+.matrix-table th, .matrix-table td { border: 1px solid #334155; padding: 10px !important; }
+.matrix-table th { background: #1e293b; color: #aaddff; }
+.matrix-great { background: rgba(76, 175, 80, 0.3); color: #86efac; }
+.matrix-good { background: rgba(76, 175, 80, 0.1); color: #4ade80; }
+.matrix-terrible { background: rgba(239, 68, 68, 0.3); color: #fca5a5; }
+.matrix-bad { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+.matrix-neutral { background: rgba(255, 255, 255, 0.03); color: #94a3b8; }
+.matrix-sprite { height: 32px; image-rendering: pixelated; margin-bottom: 4px; }
+
+/* --- MOBILE POLISH (RESPONSIVE DESIGN) --- */
+@media (max-width: 800px) {
+    #dashboard { flex-direction: column; padding: 10px; gap: 10px; }
+    #team-builder, #type-chart-container { min-width: 100%; }
+    .team-slot { width: 65px !important; height: 75px !important; }
+    .team-slot img { max-height: 40px !important; }
+    .btn-action { padding: 8px !important; font-size: 11px !important; flex: 1 1 30%; }
+    h1 { font-size: 24px; }
+    h2 { font-size: 16px; }
+    .poke-box { width: 100%; justify-content: center; }
+    .stage-container { flex-wrap: wrap; justify-content: center; }
+}
+
+/* --- TYPOGRAPHY OVERRIDES --- */
+.poke-sprite-container span { font-size: 13px !important; font-weight: 700 !important; margin-top: 4px !important; }
+#archetype-summary { font-size: 14px !important; padding: 15px !important; line-height: 1.6 !important; }
+#archetype-summary span, #archetype-summary p { font-size: 14px !important; line-height: 1.6 !important; }
+.stat-row, .stat-row span { font-size: 13px !important; }
+#pokedex-entry-container, #pokedex-entry-container div { font-size: 12px !important; line-height: 1.5 !important; }
+#suggest-results p, #suggest-results h4, #suggest-results span { font-size: 13px !important; }
+
+/* 6. Scale up the Matrix Legend text */
+#sim-matrix-results h4 { font-size: 16px !important; margin-bottom: 10px !important; font-family: 'Inter', sans-serif !important; }
+#sim-matrix-results ul { font-size: 14px !important; padding-left: 20px !important; color: #e2e8f0 !important; }
+#sim-matrix-results li { margin-bottom: 6px !important; line-height: 1.6 !important; }
+
+/* 7. Pokédex Data Modal fixes (Types, Abilities, Description) */
+#modal-dynamic-area p { font-size: 18px !important; margin: 12px 0 !important; }
+#modal-dynamic-area p strong { color: #aaddff !important; font-size: 18px !important; }
+.modal-content strong { font-size: 18px !important; }
+#modal-dynamic-area label { font-size: 16px !important; margin: 12px 0 !important; display: flex !important; align-items: center !important; gap: 10px !important; font-weight: 600 !important; cursor: pointer !important; }
+#modal-dynamic-area input[type="radio"] { width: 18px !important; height: 18px !important; cursor: pointer !important; }
+#ability-desc { font-size: 14px !important; padding: 15px !important; margin-top: 12px !important; line-height: 1.6 !important; background-color: #1e293b !important; border: 1px solid #475569 !important; border-radius: 8px !important; }
+
+/* --- DRY REFACTOR: Extracted inline styles --- */
+.stat-card { text-align:left; background-color:#222; padding: 10px; border-radius: 4px; margin-top: 15px; border: 1px solid #ffcc00; }
+.stat-card-header { color:#ffcc00; margin-bottom: 5px; text-align: center; border-bottom: 1px solid #444; padding-bottom: 3px; }
+.pokedex-entry-box { margin-top: 15px; font-size: 8px; color: #ccc; text-align: left; background: #222; padding: 10px; border-radius: 4px; border: 1px solid #444; }
+.team-name-label { color: #ff9900; font-size: 12px; font-family: 'Press Start 2P', monospace; }
+.btn-import { padding: 8px; background-color: #4a90e2; color: #fff; }
+.btn-export { padding: 8px; }
+.btn-autobuild { padding: 8px; background-color: #4CAF50; color: #fff; }
+.btn-sim { padding: 8px; background-color: #9c27b0; color: #fff; }
+.btn-vgcsheet { padding: 8px; background-color: #ff9800; color: #111; }
+.btn-suggest { padding: 6px; font-size: 8px; background-color: #ff9800; color: #111; }
+.speed-tier-row { display:flex; align-items:center; gap:15px; margin-bottom:8px; background:#1e293b; padding:8px 12px; border-radius:6px; border-left:4px solid #ffcc00; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+.speed-tier-value { color:#ffcc00; width:45px; text-align:right; font-size:14px; font-weight:bold; font-family:'Press Start 2P', monospace; }
+.speed-tier-name { font-size:15px; font-family:'Inter', sans-serif; font-weight:600; color:#fff; }
+.speed-tier-item { color:#94a3b8; font-weight:400; font-size:13px; }
+.speed-tier-sprite { height:36px; image-rendering:pixelated; }
+.notes-vault-box { background:#111; padding:15px; border-radius:4px; border: 1px solid #555; }
+.notes-vault-title { margin-top:0; color:#ff9900; }
+.archetype-box { background:#222; padding:10px; border-radius:4px; font-size:9px; line-height:1.4; margin-bottom:15px; border: 1px solid #ffcc00; }
+.suggest-card { display:flex; align-items:center; background:#222; padding:10px; margin-bottom:10px; border-radius:4px; border:1px solid #444; text-align:left; }
+.suggest-sprite { width:50px; image-rendering:pixelated; margin-right:15px; }
+.suggest-name { margin:0; color:#ffcc00; font-size:10px; }
+.suggest-desc { margin:4px 0 0 0; font-size:8px; color:#aaa; line-height:1.4; }
+
+/* --- LAYOUT & OVERFLOW FIXES --- */
+
+/* 1. Force the Simulator into a perfect 3x2 Grid */
+#sim-your-team, #sim-opp-team {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px !important;
+    justify-items: center !important;
+    margin-bottom: 15px !important;
+}
+
+/* 2. Make the Sim boxes larger and trap the sprites inside */
+.sim-slot {
+    width: 70px !important;
+    height: 70px !important;
+    margin: 0 !important;
+}
+.sim-slot img {
+    max-height: 55px !important;
+    max-width: 55px !important;
+    object-fit: contain !important; /* Acts like a cage so wide sprites can't break out */
+}
