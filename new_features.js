@@ -246,14 +246,31 @@ function drawShareCard() {
 
     let loadedImages = 0;
     
+    // Safety function: Triggers the download once all 6 slots are processed (even if an image fails)
+    function triggerDownload() {
+        if (loadedImages === currentTeam.length) {
+            try {
+                let link = document.createElement('a');
+                link.download = 'VGC_Team.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (err) {
+                alert("Your browser's strict security settings blocked the image generation. Try disabling adblockers for this page!");
+            }
+        }
+    }
+
     currentTeam.forEach((mon, i) => {
         let row = i < 3 ? 0 : 1;
         let col = i % 3;
         let x = 30 + (col * 250);
         let y = 70 + (row * 160);
 
-        ctx.fillStyle = '#1e293b'; ctx.fillRoundRect = function(x,y,w,h,r) { this.beginPath(); this.moveTo(x+r,y); this.arcTo(x+w,y,x+w,y+h,r); this.arcTo(x+w,y+h,x,y+h,r); this.arcTo(x,y+h,x,y,r); this.arcTo(x,y,x+w,y,r); this.closePath(); this.fill(); }
-        ctx.fillRoundRect(x, y, 230, 140, 10);
+        // Draw Card Background
+        ctx.fillStyle = '#1e293b'; 
+        ctx.beginPath(); 
+        ctx.moveTo(x+10,y); ctx.arcTo(x+230,y,x+230,y+140,10); ctx.arcTo(x+230,y+140,x,y+140,10); ctx.arcTo(x,y+140,x,y,10); ctx.arcTo(x,y,x+230,y,10); 
+        ctx.closePath(); ctx.fill();
 
         ctx.fillStyle = '#aaddff'; ctx.font = 'bold 16px sans-serif'; ctx.textAlign = 'left';
         let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
@@ -270,23 +287,29 @@ function drawShareCard() {
             mon.moves.forEach((move, mIdx) => { ctx.fillText(`- ${move}`, x + 85, y + 80 + (mIdx * 16)); });
         }
 
+        // Handle Image fetching safely to bypass Canvas Tainting
         let img = new Image();
-        img.crossOrigin = "anonymous"; // Bypass CORS for Canvas
+        img.crossOrigin = "anonymous";
+        
         img.onload = () => {
             ctx.drawImage(img, x + 5, y + 30, 70, 70);
             loadedImages++;
-            if (loadedImages === currentTeam.length) {
-                let link = document.createElement('a');
-                link.download = 'VGC_Team.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            }
+            triggerDownload();
         };
-        img.onerror = () => { loadedImages++; };
-        img.src = mon.sprite;
+        img.onerror = () => { 
+            // If the image fails, skip drawing it but STILL trigger the download
+            loadedImages++; 
+            triggerDownload(); 
+        };
+        
+        // Route external images through a safe proxy so the browser allows the download
+        if (mon.sprite.startsWith('http')) {
+            img.src = "https://api.allorigins.win/raw?url=" + encodeURIComponent(mon.sprite);
+        } else {
+            img.src = mon.sprite;
+        }
     });
 }
-
 // Master Hook
 function runNewFeaturesHook() {
     applyCardDecorations();
