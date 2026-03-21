@@ -200,7 +200,7 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
     dynamicArea.innerHTML = `
       <img src="${megaSprite}" style="height:80px; image-rendering:pixelated;" onerror="this.src='${baseSprite}'">
       <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>
-      <label style="display:block; margin:6px 0; font-size:9px; cursor:pointer; text-align: left;"><input type="radio" name="ability-select" value="${megaAbilityName}" checked> ${megaAbilityName}</label>
+        ${abilitiesHtml}
       <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
       <div class="stat-card">
         <div class="stat-card-header"><strong>Lv. 50 Stats (0 EVs)</strong></div>
