@@ -303,7 +303,7 @@ function openEditModal(index) {
             let isNonStandard = item.isNonstandard; // Excludes unreleased/past items
             let isPokeball = item.isPokeball; // Excludes catching balls
             
-            if (item.name && !item.megaStone && !item.zMove && !isTMTR && !isSpeciesSpecific && !isNonStandard && !isPokeball && !VGC_ITEMS[item.name]) {
+           if (item.name && !item.zMove && !isTMTR && !isSpeciesSpecific && !isNonStandard && !isPokeball && !VGC_ITEMS[item.name]) {
                 dynamicItems.push(item.name);
             }
         });
