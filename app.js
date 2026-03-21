@@ -184,7 +184,16 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
     let hp50  = calcLv50Stat(stats.hp,  true); let atk50 = calcLv50Stat(stats.atk); let def50 = calcLv50Stat(stats.def);
     let spa50 = calcLv50Stat(stats.spa); let spd50 = calcLv50Stat(stats.spd); let spe50 = calcLv50Stat(stats.spe);
 
-    let megaAbilityName = megaData.abilities[0] || megaData.abilities['0'];
+    // Generate Radio Buttons for ALL form abilities
+    let abilitiesHtml = `<div style="margin: 6px 0 2px 0; text-align: left; color: #ff9900; font-size:9px;"><strong>Select Ability:</strong></div>`;
+    let first = true; let megaAbilityName = "";
+    for(let key in megaData.abilities) {
+        let aName = megaData.abilities[key];
+        if (first) megaAbilityName = aName;
+        abilitiesHtml += `<label style="display:block; margin:4px 0; font-size:9px; cursor:pointer; text-align: left;"><input type="radio" name="ability-select" value="${aName}" ${first ? 'checked' : ''}> ${aName} ${key === 'H' ? '<span style="color:#888;">(Hidden)</span>' : ''}</label>`;
+        first = false;
+    }
+
     let showdownSpriteName = megaId.replace('mega', '-mega');
     let megaSprite = CUSTOM_SPRITES[megaId] ? CUSTOM_SPRITES[megaId] : `https://play.pokemonshowdown.com/sprites/gen5/${showdownSpriteName}.png`;
 
