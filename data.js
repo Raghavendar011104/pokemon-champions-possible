@@ -116,7 +116,7 @@ const MEGA_MAP = {
   ],
   "tatsugiri": [
       { stone: "Droopy Form", id: "tatsugiridroopy" }, { stone: "Stretchy Form", id: "tatsugiristretchy" }, { stone: "Curly Form", id: "tatsugiricurly" }
-  ]
+  ],
   "gastrodon": [
     { stone: "West Sea (Pink)", id: "gastrodon" },
     { stone: "East Sea (Blue)", id: "gastrodoneast" }
