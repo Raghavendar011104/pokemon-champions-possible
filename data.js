@@ -117,6 +117,10 @@ const MEGA_MAP = {
   "tatsugiri": [
       { stone: "Droopy Form", id: "tatsugiridroopy" }, { stone: "Stretchy Form", id: "tatsugiristretchy" }, { stone: "Curly Form", id: "tatsugiricurly" }
   ]
+  "gastrodon": [
+    { stone: "West Sea (Pink)", id: "gastrodon" },
+    { stone: "East Sea (Blue)", id: "gastrodoneast" }
+],
 };
 
 const ABILITY_DEFENSES = {
@@ -155,6 +159,7 @@ const POKEMON_AESTHETICS = {
   "charmander": { letter: "C", color: "#F08030" }, "charmeleon": { letter: "C", color: "#F08030" }, "charizard": { letter: "C", color: "#F08030" },
   "squirtle": { letter: "S", color: "#6890F0" }, "wartortle": { letter: "W", color: "#6890F0" }, "blastoise": { letter: "B", color: "#6890F0" },
   "pichu": { letter: "P", color: "#F8D030" }, "pikachu": { letter: "P", color: "#F8D030" }, "raichu": { letter: "R", color: "#F8D030" },
+  "gastrodoneast": { letter: "G", color: "#6890F0" },
   "gastly": { letter: "G", color: "#705898" }, "haunter": { letter: "H", color: "#705898" }, "gengar": { letter: "G", color: "#705898" },
   "kangaskhan": { letter: "K", color: "#A8A878" }, "staryu": { letter: "S", color: "#6890F0" }, "starmie": { letter: "S", color: "#F85888" },
   "pinsir": { letter: "P", color: "#A8B820" }, "magikarp": { letter: "M", color: "#F08030" }, "gyarados": { letter: "G", color: "#6890F0" },
