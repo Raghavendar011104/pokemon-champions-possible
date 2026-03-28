@@ -35,65 +35,71 @@ function loadStarterKit(index) {
     alert(`Loaded standard VGC Starter Kit for ${mon.name}!`);
 }
 
-// 2 & 3. Role Tags & Turn 1 Flow Indicators
+// 2 & 3. Role Tags & Turn 1 Flow Indicators (NOW FAIL-PROOF!)
 function applyCardDecorations() {
     if (!beginnerModeEnabled) return;
     
     let slots = document.querySelectorAll('.team-slot.filled');
     slots.forEach((slot, i) => {
-        let mon = currentTeam[i];
-        if (!mon) return;
+        try {
+            let mon = currentTeam[i];
+            if (!mon) return;
 
-        // Flow Icons (Added pointer-events: auto so native tooltips work!)
-        let iconsHTML = "";
-        if (mon.moves.includes('Fake Out')) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Fake Out">✋</span>`;
-        if (['Protect', 'Detect', 'Spiky Shield', 'Wide Guard'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Protect">🛡️</span>`;
-        if (['Follow Me', 'Rage Powder'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Redirection">🧲</span>`;
-        if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => mon.moves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Speed Control">⏱️</span>`;
-        
-        if (iconsHTML !== "") {
-            slot.insertAdjacentHTML('beforeend', `<div class="flow-icons">${iconsHTML}</div>`);
-        }
+            let safeMoves = (mon.moves && Array.isArray(mon.moves)) ? mon.moves : [];
 
-        // Role Tags with Tooltip Explanations
-        let tagClass = ""; let tagText = ""; let tagDesc = "";
-        let atk = showdownData[mon.id] ? showdownData[mon.id].baseStats.atk : 50;
-        let spa = showdownData[mon.id] ? showdownData[mon.id].baseStats.spa : 50;
-        let isSupport = ['Fake Out', 'Parting Shot', 'Spore', 'Tailwind', 'Will-O-Wisp'].filter(m => mon.moves.includes(m)).length >= 2;
+            // Flow Icons
+            let iconsHTML = "";
+            if (safeMoves.includes('Fake Out')) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Fake Out">✋</span>`;
+            if (['Protect', 'Detect', 'Spiky Shield', 'Wide Guard'].some(m => safeMoves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Protect">🛡️</span>`;
+            if (['Follow Me', 'Rage Powder'].some(m => safeMoves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Redirection">🧲</span>`;
+            if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => safeMoves.includes(m))) iconsHTML += `<span style="pointer-events: auto; cursor: help;" title="Has Speed Control">⏱️</span>`;
+            
+            if (iconsHTML !== "") {
+                slot.insertAdjacentHTML('beforeend', `<div class="flow-icons">${iconsHTML}</div>`);
+            }
 
-        if (isSupport || mon.item === 'Mental Herb') { 
-            tagClass = "tag-support"; 
-            tagText = "SUPPORT"; 
-            tagDesc = "Focuses on helping the team with speed control, redirection, or status moves rather than direct damage.";
-        }
-        else if (mon.item === 'Assault Vest' || mon.item === 'Rocky Helmet' || mon.ability === 'Regenerator') { 
-            tagClass = "tag-tank"; 
-            tagText = "BULKY/TANK"; 
-            tagDesc = "Designed to take multiple hits and disrupt the opponent while surviving longer than standard attackers.";
-        }
-        else if (atk > spa) { 
-            tagClass = "tag-physical"; 
-            tagText = "PHYSICAL"; 
-            tagDesc = "A primary attacker that uses its Attack stat. Be careful, its damage can be reduced by Intimidate and Burn!";
-        }
-        else { 
-            tagClass = "tag-special"; 
-            tagText = "SPECIAL"; 
-            tagDesc = "A primary attacker that uses its Special Attack stat. Great because it ignores Intimidate and Burn penalties.";
-        }
+            // Role Tags with Safe Data Access
+            let tagClass = ""; let tagText = ""; let tagDesc = "";
+            let atk = (showdownData[mon.id] && showdownData[mon.id].baseStats) ? showdownData[mon.id].baseStats.atk : 50;
+            let spa = (showdownData[mon.id] && showdownData[mon.id].baseStats) ? showdownData[mon.id].baseStats.spa : 50;
+            
+            let isSupport = ['Fake Out', 'Parting Shot', 'Spore', 'Tailwind', 'Will-O-Wisp'].filter(m => safeMoves.includes(m)).length >= 2;
 
-        if (mon.moves.length > 0) {
-            slot.insertAdjacentHTML('beforeend', `
-                <div class="role-tag ${tagClass} tooltip" style="width: auto !important; height: auto !important; border-radius: 4px !important; pointer-events: auto; cursor: help; margin: 0;">
-                    ${tagText}
-                    <span class="tooltip-text" style="font-weight: normal; text-transform: none; bottom: 150%; white-space: normal; font-size: 10px; color: #fff;">${tagDesc}</span>
-                </div>
-            `);
+            if (isSupport || mon.item === 'Mental Herb') { 
+                tagClass = "tag-support"; 
+                tagText = "SUPPORT"; 
+                tagDesc = "Focuses on helping the team with speed control, redirection, or status moves rather than direct damage.";
+            }
+            else if (mon.item === 'Assault Vest' || mon.item === 'Rocky Helmet' || mon.ability === 'Regenerator') { 
+                tagClass = "tag-tank"; 
+                tagText = "BULKY/TANK"; 
+                tagDesc = "Designed to take multiple hits and disrupt the opponent while surviving longer than standard attackers.";
+            }
+            else if (atk > spa) { 
+                tagClass = "tag-physical"; 
+                tagText = "PHYSICAL"; 
+                tagDesc = "A primary attacker that uses its Attack stat. Be careful, its damage can be reduced by Intimidate and Burn!";
+            }
+            else { 
+                tagClass = "tag-special"; 
+                tagText = "SPECIAL"; 
+                tagDesc = "A primary attacker that uses its Special Attack stat. Great because it ignores Intimidate and Burn penalties.";
+            }
+
+            if (safeMoves.length > 0) {
+                slot.insertAdjacentHTML('beforeend', `
+                    <div class="role-tag ${tagClass} tooltip" style="width: auto !important; height: auto !important; border-radius: 4px !important; pointer-events: auto; cursor: help; margin: 0;">
+                        ${tagText}
+                        <span class="tooltip-text" style="font-weight: normal; text-transform: none; bottom: 150%; white-space: normal; font-size: 10px; color: #fff;">${tagDesc}</span>
+                    </div>
+                `);
+            }
+        } catch (e) {
+            console.error("Safely caught a rendering error on slot:", i, e);
         }
     });
 }
 
-// 4. The Rookie Mistake Checker
 // 4. The Rookie Mistake Checker
 function runRookieMistakeChecker() {
     let container = document.getElementById('rookie-mistake-container');
@@ -113,37 +119,36 @@ function runRookieMistakeChecker() {
     let weatherSetters = 0;
 
     currentTeam.forEach(mon => {
+        if (!mon) return;
         let damagingMoveCount = 0;
         let totalMovesEquipped = 0;
         let hasStatus = false;
 
-        // Loop through their equipped moves to check categories
-        mon.moves.forEach(m => {
+        let safeMoves = (mon.moves && Array.isArray(mon.moves)) ? mon.moves : [];
+
+        safeMoves.forEach(m => {
             if (m) {
                 totalMovesEquipped++;
                 let moveId = m.toLowerCase().replace(/[^a-z0-9]/g, '');
-                let moveData = movesData[moveId] || Object.values(movesData).find(d => d.name === m);
+                let moveData = movesData[moveId] || Object.values(movesData).find(d => d && d.name === m);
                 
                 if (moveData) {
                     if (moveData.category === "Status") hasStatus = true;
-                    else damagingMoveCount++; // Physical or Special move found!
+                    else damagingMoveCount++; 
                 }
             }
         });
 
-        // 1. Assault Vest Anti-Synergy Check
         if (mon.item === 'Assault Vest' && hasStatus) {
             mistakes.push(`<strong>Assault Vest Error:</strong> ${mon.name} holds an Assault Vest but has a Status move. The vest prevents you from using it!`);
         }
 
-        // 2. NEW: Taunt Bait (Zero Damaging Moves) Check
         if (totalMovesEquipped > 0 && damagingMoveCount === 0) {
             mistakes.push(`<strong>Taunt Bait:</strong> ${mon.name} has zero attacking moves! If the opponent uses Taunt, ${mon.name} will be completely useless and forced to use Struggle.`);
         }
 
-        // Track global team stats
-        if (['Protect', 'Detect', 'Spiky Shield'].some(m => mon.moves.includes(m))) protectCount++;
-        if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => mon.moves.includes(m))) speedControl = true;
+        if (['Protect', 'Detect', 'Spiky Shield'].some(m => safeMoves.includes(m))) protectCount++;
+        if (['Tailwind', 'Trick Room', 'Icy Wind', 'Electroweb'].some(m => safeMoves.includes(m))) speedControl = true;
         if (['Drizzle', 'Drought', 'Sand Stream', 'Snow Warning'].includes(mon.ability)) weatherSetters++;
     });
 
@@ -165,46 +170,43 @@ function runRookieMistakeChecker() {
         container.innerHTML = `<div style="background:#14532d; border-left:4px solid #4ade80; padding:10px; margin-bottom:8px; border-radius:4px; font-size:11px; color:#a7f3d0;">✅ <strong>Coach Says:</strong> Your team fundamentals look solid! No major rookie mistakes detected.</div>`;
     }
 }
+
 // 5. Offensive Coverage Analyzer
 function generateOffensiveCoverage() {
     let container = document.getElementById('offensive-coverage-container');
     if (!container) {
         let typeSumContainer = document.getElementById('type-summary-container');
-        typeSumContainer.insertAdjacentHTML('beforebegin', `
-            <div style="display:flex; gap:5px; margin-bottom:10px; border-bottom:1px solid #444;">
-                <button id="tab-def-cov" class="coverage-tab-btn active" onclick="switchCoverageTab('def')">🛡️ Defenses</button>
-                <button id="tab-off-cov" class="coverage-tab-btn" onclick="switchCoverageTab('off')">⚔️ Offenses</button>
-            </div>
-        `);
-        typeSumContainer.insertAdjacentHTML('afterend', `<div id="offensive-coverage-container" style="display:none;"></div>`);
-        container = document.getElementById('offensive-coverage-container');
+        if (typeSumContainer) {
+            typeSumContainer.insertAdjacentHTML('beforebegin', `
+                <div style="display:flex; gap:5px; margin-bottom:10px; border-bottom:1px solid #444;">
+                    <button id="tab-def-cov" class="coverage-tab-btn active" onclick="switchCoverageTab('def')">🛡️ Defenses</button>
+                    <button id="tab-off-cov" class="coverage-tab-btn" onclick="switchCoverageTab('off')">⚔️ Offenses</button>
+                </div>
+            `);
+            typeSumContainer.insertAdjacentHTML('afterend', `<div id="offensive-coverage-container" style="display:none;"></div>`);
+            container = document.getElementById('offensive-coverage-container');
+        }
     }
+
+    if (!container) return;
 
     let hitTypes = new Set();
     currentTeam.forEach(mon => {
-        if (mon.moves) {
+        if (mon && mon.moves && Array.isArray(mon.moves)) {
             mon.moves.forEach(mName => {
+                if (!mName || typeof mName !== 'string') return;
                 let moveId = mName.toLowerCase().replace(/[^a-z0-9]/g, '');
-                let moveData = movesData[moveId] || Object.values(movesData).find(d => d.name === mName);
-                if (moveData && moveData.category !== "Status") {
+                let moveData = movesData[moveId] || Object.values(movesData).find(d => d && d.name === mName);
+                if (moveData && moveData.category !== "Status" && moveData.type) {
                     hitTypes.add(moveData.type);
                     
-                    // --- DYNAMIC MOVE SMART OVERRIDES ---
-                    
-                    // 1. Make Weather Ball context-aware
                     if (moveId === 'weatherball') {
                         if (currentTeam.some(m => m.ability === 'Drizzle')) hitTypes.add('Water');
                         if (currentTeam.some(m => m.ability === 'Drought')) hitTypes.add('Fire');
                         if (currentTeam.some(m => ['Snow Warning', 'Chilly Reception'].includes(m.ability))) hitTypes.add('Ice');
                         if (currentTeam.some(m => m.ability === 'Sand Stream')) hitTypes.add('Rock');
                     }
-                    
-                    // 2. Make Tera Blast context-aware
-                    if (moveId === 'terablast' && mon.teraType) {
-                        hitTypes.add(mon.teraType);
-                    }
-                    
-                    // 3. Make Ivy Cudgel context-aware
+                    if (moveId === 'terablast' && mon.teraType) hitTypes.add(mon.teraType);
                     if (moveId === 'ivycudgel') {
                         if (mon.id === 'ogerponhearthflame') hitTypes.add('Fire');
                         if (mon.id === 'ogerponwellspring') hitTypes.add('Water');
@@ -216,13 +218,15 @@ function generateOffensiveCoverage() {
     });
 
     let misses = [];
-    Object.keys(TYPE_DATA).forEach(targetType => {
-        let canHitSE = false;
-        hitTypes.forEach(atkType => {
-            if (TYPE_DATA[targetType] && TYPE_DATA[targetType].weakTo.includes(atkType)) canHitSE = true;
+    if (typeof TYPE_DATA !== 'undefined') {
+        Object.keys(TYPE_DATA).forEach(targetType => {
+            let canHitSE = false;
+            hitTypes.forEach(atkType => {
+                if (TYPE_DATA[targetType] && TYPE_DATA[targetType].weakTo && Array.isArray(TYPE_DATA[targetType].weakTo) && TYPE_DATA[targetType].weakTo.includes(atkType)) canHitSE = true;
+            });
+            if (!canHitSE) misses.push(targetType);
         });
-        if (!canHitSE) misses.push(targetType);
-    });
+    }
 
     if (misses.length === 0) {
         container.innerHTML = `<div style="color:#4ade80; font-size:11px; padding:10px; background:#14532d; border-radius:4px;">Perfect Coverage! Your equipped attacks can hit EVERY type for Super Effective damage.</div>`;
@@ -258,7 +262,6 @@ function drawShareCard() {
     canvas.width = 800; canvas.height = 420;
     const ctx = canvas.getContext('2d');
 
-    // Draw Background
     ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = '#ffcc00'; ctx.lineWidth = 4; ctx.strokeRect(2, 2, canvas.width-4, canvas.height-4);
     
@@ -307,20 +310,10 @@ function drawShareCard() {
         }
 
         let img = new Image();
-        // This line tells the browser "We have permission to use this!"
         img.crossOrigin = "anonymous";
         
-        img.onload = () => {
-            ctx.drawImage(img, x + 5, y + 30, 70, 70);
-            loadedImages++;
-            triggerDownload();
-        };
-        img.onerror = () => { 
-            loadedImages++; 
-            triggerDownload(); 
-        };
-        
-        // Directly hit the Showdown server!
+        img.onload = () => { ctx.drawImage(img, x + 5, y + 30, 70, 70); loadedImages++; triggerDownload(); };
+        img.onerror = () => { loadedImages++; triggerDownload(); };
         img.src = mon.sprite;
     });
 }
@@ -331,12 +324,12 @@ function runNewFeaturesHook() {
     runRookieMistakeChecker();
     generateOffensiveCoverage();
 }
+
 // 7. Quick Add Autocomplete Search
 function handleQuickAddSearch() {
     let input = document.getElementById('quick-add-input').value.toLowerCase().trim();
     let resultsBox = document.getElementById('quick-add-results');
     
-    // Stop searching if the box is empty
     if (input.length < 1) {
         resultsBox.style.display = 'none';
         return;
@@ -344,37 +337,33 @@ function handleQuickAddSearch() {
 
     let matches = [];
     
-    // Search through the allowed VGC Roster
-    Object.keys(POKEMON_AESTHETICS).forEach(id => {
-        let monData = showdownData[id];
-        if (monData && monData.name.toLowerCase().includes(input)) {
-            matches.push({ id: id, name: monData.name });
-        } else if (id.includes(input)) {
-            matches.push({ id: id, name: monData ? monData.name : id });
+    Object.values(showdownData).forEach(monData => {
+        if (!isValidRosterMon(monData)) return;
+
+        if (monData.name.toLowerCase().includes(input) || monData.id.includes(input)) {
+            matches.push({ id: monData.id, name: monData.name });
         }
     });
 
-    // Sort matches so exact starting letters appear at the top (e.g., typing "Cha" puts Charizard before Hawlucha)
     matches.sort((a, b) => {
         let aStarts = a.name.toLowerCase().startsWith(input) ? -1 : 1;
         let bStarts = b.name.toLowerCase().startsWith(input) ? -1 : 1;
         return aStarts - bStarts || a.name.localeCompare(b.name);
     });
 
-    // Take the top 8 results so the dropdown doesn't get too massive
     matches = matches.slice(0, 8);
 
     if (matches.length > 0) {
         let html = "";
         matches.forEach(match => {
-            let spriteName = match.name.toLowerCase().replace(/[^a-z0-9-]/g, '').replace('-mega-x', '-megax').replace('-mega-y', '-megay');
-            let spriteUrl = CUSTOM_SPRITES[match.id] ? CUSTOM_SPRITES[match.id] : `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
+            let spriteName = match.name.toLowerCase().replace(/[^a-z0-9-]/g, '');
+            let spriteUrl = `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png`;
             
             html += `
                 <div style="display:flex; align-items:center; padding: 8px 15px; cursor: pointer; border-bottom: 1px solid #334155; transition: background 0.2s;" 
                      onmouseover="this.style.background='#1e293b'" onmouseout="this.style.background='transparent'"
                      onclick="selectQuickAdd('${match.id}', '${match.name.replace(/'/g, "\\'")}', '${spriteUrl}')">
-                    <img src="${spriteUrl}" style="height:35px; image-rendering:pixelated; margin-right: 15px;">
+                    <img src="${spriteUrl}" style="height:35px; image-rendering:pixelated; margin-right: 15px;" onerror="this.src='https://play.pokemonshowdown.com/sprites/gen5/substitute.png'">
                     <span style="color:#fff; font-weight:bold; font-size: 13px;">${match.name}</span>
                 </div>
             `;
@@ -382,19 +371,17 @@ function handleQuickAddSearch() {
         resultsBox.innerHTML = html;
         resultsBox.style.display = 'block';
     } else {
-        resultsBox.innerHTML = `<div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No Pokémon found in roster.</div>`;
+        resultsBox.innerHTML = `<div style="padding: 10px; color: #888; font-size: 12px; text-align: center;">No Pokémon found matching criteria.</div>`;
         resultsBox.style.display = 'block';
     }
 }
 
-// When a user clicks a result, it triggers the official "Add" Modal
 function selectQuickAdd(id, name, spriteUrl) {
     document.getElementById('quick-add-input').value = "";
     document.getElementById('quick-add-results').style.display = 'none';
     showData(id, name, spriteUrl);
 }
 
-// Security feature: Close the dropdown if the user clicks anywhere else on the screen
 document.addEventListener('click', function(e) {
     let searchBox = document.getElementById('quick-add-input');
     let resultsBox = document.getElementById('quick-add-results');
