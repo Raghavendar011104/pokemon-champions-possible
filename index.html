@@ -87,7 +87,11 @@
       <div style="background:#111; padding:15px; border-radius:4px; border: 1px solid #555;">
          <h3 style="margin-top:0; color:#ff9900;">Match Notes & Vault</h3>
          <textarea id="team-notes" placeholder="Write matchup notes here..." style="width:100%; height:80px; background:#222; color:#fff; border:1px solid #444; padding:8px; font-family:monospace; margin-bottom:10px; border-radius:4px; box-sizing:border-box;" onchange="saveTeam()"></textarea>
-         <input type="text" id="team-replays" placeholder="Paste Showdown replay URL..." style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:8px; font-family:monospace; border-radius:4px; box-sizing:border-box;" onchange="saveTeam()">
+         <input type="text" id="team-replays" placeholder="Paste Showdown replay URL here to watch..." style="width:100%; background:#222; color:#fff; border:1px solid #444; padding:8px; font-family:monospace; border-radius:4px; box-sizing:border-box;" oninput="updateReplayEmbed()" onchange="saveTeam()">
+         
+         <div id="replay-container" style="margin-top: 15px; display: none; width: 100%;">
+             <iframe id="replay-iframe" style="width: 100%; height: 360px; border: 1px solid #444; border-radius: 4px; background: #000;"></iframe>
+         </div>
       </div>
     </div>
 
@@ -113,8 +117,7 @@
       <input type="text" id="universal-search" placeholder="🔍 Search Name, Type, or Ability (e.g. Charizard, Fire, Intimidate)..." onkeyup="universalSearch()" style="padding: 14px; width: 80%; max-width: 500px; background: #0f172a; color: #fff; border: 2px solid #4a90e2; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.5); outline: none; transition: border-color 0.2s;">
   </div>
   
-  <div id="roster-wrapper">
-      </div>
+  <div id="roster-wrapper"></div>
 
   <div id="data-modal" class="modal">
     <div class="modal-content">
@@ -124,7 +127,7 @@
   </div>
 
   <div id="edit-modal" class="modal">
-    <div class="modal-content" style="width: 280px;">
+    <div class="modal-content" style="width: 340px; padding-bottom: 25px;">
       <span class="close-btn" onclick="closeEditModal()">X</span>
       <div id="edit-modal-info">Loading...</div>
     </div>
@@ -231,7 +234,7 @@
     </div>
   </div>
 
-<script src="data.js"></script>
+  <script src="data.js"></script>
   <script src="new_features.js"></script>
   <script src="app.js"></script>
 </body>
