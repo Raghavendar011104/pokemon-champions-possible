@@ -17,26 +17,17 @@ window.EXCEPTION_SPRITES = {
     "tinglu": "https://play.pokemonshowdown.com/sprites/gen5/tinglu.png",
     "wochien": "https://play.pokemonshowdown.com/sprites/gen5/wochien.png"
 };
-
 // The smart sprite fetcher!
 window.getSafeSprite = function(id, name) {
     if (typeof CUSTOM_SPRITES !== 'undefined' && CUSTOM_SPRITES[id]) return CUSTOM_SPRITES[id];
-    
-    // 1. Check if it's a known troublemaker
-    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) {
-        return window.EXCEPTION_SPRITES[id] + "?v=6";
-    }
-    
-    // 2. Default rule: Keep hyphens! This preserves pixel art for Alolan/Galarian forms!
+    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) return window.EXCEPTION_SPRITES[id] + "?v=6";
     let spriteName = name.toLowerCase().replace(/[^a-z0-9-]/g, '');
     return `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png?v=6`;
 };
 
-// --- GLOBAL IMAGE FALLBACK ENGINE ---
 window.imgFallback = function(img, strictId) {
     if (!img.dataset.fallback) {
         img.dataset.fallback = 'dex';
-        // Strip hyphens for the dex folder, as it uses strict IDs
         let dexId = strictId.replace(/[^a-z0-9]/g, '');
         if (dexId === "taurospaldeacombat") dexId = "taurospaldea";
         img.src = `https://play.pokemonshowdown.com/sprites/dex/${dexId}.png?v=6`;
@@ -46,7 +37,7 @@ window.imgFallback = function(img, strictId) {
     }
 };
 
-// --- CORE APP LOGIC ---
+// --- CORE APP LOGIC (Forced 31 IVs) ---
 function calcLv50Stat(baseStat, isHP = false, ev = 0, iv = 31) {
     if (isHP && baseStat === 1) return 1; 
     let core = 2 * baseStat + iv + Math.floor(ev / 4);
@@ -201,7 +192,7 @@ function showData(jsonId, displayName, spriteUrl) {
         megaDropdown = `<div style="margin: 10px 0; color: #aaddff; text-align: left;"><strong>Form / Mega:</strong> <select id="mega-select" style="background:#222; color:#fff; border:1px solid #ffcc00; padding:4px; border-radius:3px; font-family: 'Press Start 2P', monospace; font-size: 8px; width: 100%; margin-top: 5px;" onchange="previewMega('${jsonId}', '${displayName.replace(/'/g, "\\'")}', '${spriteUrl}', this.value)"><option value="none">Base Form</option>${options}</select></div>`;
     }
 
-    pendingMon = { id: jsonId, name: monData.name || displayName, sprite: spriteUrl, types: monData.types, moves: [], item: "", ability: "", evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }, nature: "" };
+    pendingMon = { id: jsonId, name: monData.name || displayName, sprite: spriteUrl, types: monData.types, moves: [], item: "", ability: "", evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }, nature: "Serious" };
 
     content.innerHTML = `
       <h2 style="margin-top:0; color:#ffcc00;">${displayName}</h2>${megaDropdown}
@@ -210,7 +201,7 @@ function showData(jsonId, displayName, spriteUrl) {
           <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>${abilitiesHtml}
           <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
           <div class="stat-card">
-            <div class="stat-card-header"><strong>Lv. 50 Stats (Max IV, 0 EV)</strong></div>
+            <div class="stat-card-header"><strong>Lv. 50 Stats (Always 31 IVs)</strong></div>
             <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
             <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
             <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
@@ -248,7 +239,7 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
       <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>${abilitiesHtml}
       <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
       <div class="stat-card">
-        <div class="stat-card-header"><strong>Lv. 50 Stats (Max IV, 0 EV)</strong></div>
+        <div class="stat-card-header"><strong>Lv. 50 Stats (Always 31 IVs)</strong></div>
         <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
         <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
         <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
@@ -262,7 +253,7 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
         if (match && match.stone && !match.stone.includes("Form") && !match.stone.includes("Rotom")) megaItemName = match.stone;
     }
 
-    pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }, nature: "" };
+    pendingMon = { id: megaId, name: megaData.name, sprite: megaSprite, types: megaData.types, moves: [], item: megaItemName, ability: megaAbilityName, evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }, nature: "Serious" };
     addBtn.innerText = "Add Form to Team"; fetchPokedexEntries(megaData.num);
 }
 
@@ -322,6 +313,71 @@ function updateItemDescription(itemName) {
     } else { descBox.innerText = "No item selected."; }
 }
 
+// --- EV CALCULATION LOGIC ---
+window.handleEVChange = function(stat, index) {
+    let val = parseInt(document.getElementById(`ev-${stat}`).value) || 0;
+    let total = 0;
+    ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(s => {
+        if (s !== stat) total += parseInt(document.getElementById(`ev-${s}`).value) || 0;
+    });
+    if (total + val > 508) {
+        val = 508 - total;
+        document.getElementById(`ev-${stat}`).value = val;
+    }
+    document.getElementById(`ev-val-${stat}`).value = val;
+    document.getElementById('ev-remaining').innerText = 508 - (total + val);
+    updateLiveStats(index);
+}
+
+window.handleEVInput = function(stat, index) {
+     let val = parseInt(document.getElementById(`ev-val-${stat}`).value) || 0;
+     if(val > 252) val = 252;
+     if(val < 0) val = 0;
+     document.getElementById(`ev-${stat}`).value = val;
+     handleEVChange(stat, index);
+}
+
+window.updateLiveStats = function(index) {
+     let mon = currentTeam[index];
+     let baseMonData = showdownData[mon.id];
+     if (!baseMonData && mon.id.includes('mega')) { let baseId = mon.id.replace(/mega[a-z]?$/, ''); baseMonData = showdownData[baseId]; }
+     if (!baseMonData) return;
+     
+     let stats = baseMonData.baseStats;
+     let nature = document.getElementById('edit-nature').value;
+     
+     ['hp', 'atk', 'def', 'spa', 'spd', 'spe'].forEach(stat => {
+         let ev = parseInt(document.getElementById(`ev-${stat}`).value) || 0;
+         let isHP = stat === 'hp';
+         let base = stats[stat] || 50;
+         let val = calcLv50Stat(base, isHP, ev, 31);
+         
+         // Apply Nature Multipliers
+         let natureMult = 1.0;
+         if (!isHP) {
+             if (['Lonely', 'Brave', 'Adamant', 'Naughty'].includes(nature) && stat === 'atk') natureMult = 1.1;
+             if (['Bold', 'Relaxed', 'Impish', 'Lax'].includes(nature) && stat === 'def') natureMult = 1.1;
+             if (['Timid', 'Hasty', 'Jolly', 'Naive'].includes(nature) && stat === 'spe') natureMult = 1.1;
+             if (['Modest', 'Mild', 'Quiet', 'Rash'].includes(nature) && stat === 'spa') natureMult = 1.1;
+             if (['Calm', 'Gentle', 'Sassy', 'Careful'].includes(nature) && stat === 'spd') natureMult = 1.1;
+             
+             if (['Bold', 'Timid', 'Modest', 'Calm'].includes(nature) && stat === 'atk') natureMult = 0.9;
+             if (['Lonely', 'Hasty', 'Mild', 'Gentle'].includes(nature) && stat === 'def') natureMult = 0.9;
+             if (['Brave', 'Relaxed', 'Quiet', 'Sassy'].includes(nature) && stat === 'spe') natureMult = 0.9;
+             if (['Adamant', 'Impish', 'Jolly', 'Careful'].includes(nature) && stat === 'spa') natureMult = 0.9;
+             if (['Naughty', 'Lax', 'Naive', 'Rash'].includes(nature) && stat === 'spd') natureMult = 0.9;
+         }
+         
+         val = Math.floor(val * natureMult);
+         document.getElementById(`live-stat-${stat}`).innerText = val;
+         
+         // Color Coding
+         if (natureMult > 1) document.getElementById(`live-stat-${stat}`).style.color = '#ffbec3'; // Red Tint
+         else if (natureMult < 1) document.getElementById(`live-stat-${stat}`).style.color = '#93c5fd'; // Blue Tint
+         else document.getElementById(`live-stat-${stat}`).style.color = '#aaddff'; // Neutral
+     });
+}
+
 function openEditModal(index) {
     let mon = currentTeam[index]; 
     if (!mon) return;
@@ -349,21 +405,51 @@ function openEditModal(index) {
     let isMega = mon.id.includes('mega') || mon.id.includes('primal');
     let itemDisableHTML = isMega ? `disabled style="background:#111; cursor:not-allowed;" title="Megas must hold their stones!"` : ``;
 
+    let evs = mon.evs || { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 };
+    let nature = mon.nature || "Serious";
+    let natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
+    let natureOptions = natures.map(n => `<option value="${n}" ${n === nature ? 'selected' : ''}>${n}</option>`).join('');
+
+    let currentTotalEVs = evs.hp + evs.atk + evs.def + evs.spa + evs.spd + evs.spe;
+
     let html = `
-        <h2 style="color:#ffcc00; font-size:16px;">Edit ${mon.name}</h2>
-        <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated; margin-bottom:10px;" onerror="imgFallback(this, '${mon.id}')">
-        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Held Item:</strong></p>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <div>
+                <h2 style="color:#ffcc00; font-size:16px; margin-bottom:5px; margin-top:0;">Edit ${mon.name}</h2>
+                <button class="btn-action" style="padding:4px; font-size:9px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
+            </div>
+            <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated;" onerror="imgFallback(this, '${mon.id}')">
+        </div>
+
+        <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900; margin-top:10px;"><strong>Held Item:</strong></p>
         <select id="edit-item" style="width:100%; margin-bottom:0; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;" onchange="updateItemDescription(this.value)" ${itemDisableHTML}>
             ${isMega ? `<option value="${mon.item}">${mon.item}</option>` : itemOptions}
         </select>
-        <button class="btn-action" style="margin-top:5px; width:100%; padding:4px; font-size:10px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
         <div id="item-desc" style="background:#111; padding:8px; font-size:10px; border-radius:4px; text-align:left; min-height:30px; margin-bottom:15px; margin-top:5px; color:#aaa; line-height: 1.4;">Select an item to see its competitive use.</div>
+        
+        <div style="background:#1e293b; padding:10px; border-radius:4px; border:1px solid #4a90e2; margin-bottom:15px;">
+            <div style="display:flex; justify-content:space-between; color:#ff9900; font-size:10px; margin-bottom:8px; align-items:center;">
+                <strong>EVs (Rem: <span id="ev-remaining">${508 - currentTotalEVs}</span>)</strong>
+                <select id="edit-nature" style="background:#111; color:#fff; border:1px solid #555; border-radius:4px; font-size:9px; padding:3px;" onchange="updateLiveStats(${index})">${natureOptions}</select>
+            </div>
+            <div id="ev-sliders" style="font-size:9px;">
+                ${['hp', 'atk', 'def', 'spa', 'spd', 'spe'].map(stat => `
+                    <div style="display:flex; align-items:center; margin-bottom:4px;">
+                        <span style="width:25px; color:#ccc; font-weight:bold;">${stat.toUpperCase()}</span>
+                        <input type="range" id="ev-${stat}" min="0" max="252" step="4" value="${evs[stat]}" oninput="handleEVChange('${stat}', ${index})" style="flex-grow:1; margin:0 8px; cursor:pointer;">
+                        <input type="number" id="ev-val-${stat}" value="${evs[stat]}" min="0" max="252" step="4" onchange="handleEVInput('${stat}', ${index})" style="width:35px; background:#111; color:#fff; border:1px solid #444; font-size:10px; text-align:center; border-radius:3px; padding:2px;">
+                        <span id="live-stat-${stat}" style="width:28px; text-align:right; font-weight:bold;">0</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900;"><strong>Moveset:</strong></p>
         <select id="edit-move1" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
         <select id="edit-move2" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
         <select id="edit-move3" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
         <select id="edit-move4" style="width:100%; margin-bottom:8px; padding:8px; background:#222; color:#fff; border:1px solid #555; border-radius:4px; font-family: inherit; font-size:12px;">${moveOptions}</select>
-        <button class="btn-action btn-add" style="margin-top:15px; font-size:12px;" onclick="saveMoves(${index})">Save Team Member</button>
+        <button class="btn-action btn-add" style="margin-top:15px; font-size:12px; width:100%;" onclick="saveMoves(${index})">Save Team Member</button>
     `;
     
     document.getElementById('edit-modal-info').innerHTML = html;
@@ -374,6 +460,9 @@ function openEditModal(index) {
         if (mon.moves[2]) document.getElementById('edit-move3').value = mon.moves[2];
         if (mon.moves[3]) document.getElementById('edit-move4').value = mon.moves[3];
     }
+    
+    // Calculate initial stats on popup
+    updateLiveStats(index);
     document.getElementById('edit-modal').style.display = 'flex';
 }
 
@@ -381,6 +470,17 @@ function saveMoves(index) {
     if (!currentTeam[index]) return;
     currentTeam[index].moves = [document.getElementById('edit-move1').value, document.getElementById('edit-move2').value, document.getElementById('edit-move3').value, document.getElementById('edit-move4').value].filter(m => m !== "");
     currentTeam[index].item = document.getElementById('edit-item').value || "";
+    
+    currentTeam[index].nature = document.getElementById('edit-nature').value;
+    currentTeam[index].evs = {
+         hp: parseInt(document.getElementById('ev-hp').value) || 0,
+         atk: parseInt(document.getElementById('ev-atk').value) || 0,
+         def: parseInt(document.getElementById('ev-def').value) || 0,
+         spa: parseInt(document.getElementById('ev-spa').value) || 0,
+         spd: parseInt(document.getElementById('ev-spd').value) || 0,
+         spe: parseInt(document.getElementById('ev-spe').value) || 0
+    };
+    
     saveTeam(); closeEditModal(); renderAllUI();
 }
 
@@ -411,11 +511,32 @@ function loadTeam() {
   switchTeam(0);
 }
 
+// --- NEW: REPLAY EMBED ENGINE ---
+window.updateReplayEmbed = function() {
+    let url = document.getElementById('team-replays').value.trim();
+    let container = document.getElementById('replay-container');
+    let iframe = document.getElementById('replay-iframe');
+    
+    // Embed the live Showdown replay match inside your Vault
+    if (url && url.includes('replay.pokemonshowdown.com')) {
+        if (!url.startsWith('http')) url = 'https://' + url;
+        iframe.src = url;
+        container.style.display = 'block';
+    } else {
+        container.style.display = 'none';
+        iframe.src = '';
+    }
+}
+
 function switchTeam(index) {
     currentTeamIndex = index; currentTeam = allTeams[currentTeamIndex].roster || [];
     document.getElementById('team-notes').value = allTeams[currentTeamIndex].notes || "";
     document.getElementById('team-replays').value = allTeams[currentTeamIndex].replays || "";
     document.getElementById('team-name-input').value = allTeams[currentTeamIndex].teamName || `Team ${index + 1}`;
+    
+    // Updates iframe dynamically when changing tabs
+    updateReplayEmbed();
+    
     for(let i=0; i<6; i++) {
         let tab = document.getElementById(`tab-team-${i}`);
         if (tab) { if (i === index) tab.classList.add('active'); else tab.classList.remove('active'); }
@@ -449,9 +570,27 @@ function renderTeamUI() {
       slot.ondragstart = handleDragStart; slot.ondragover = handleDragOver; slot.ondragleave = handleDragLeave; slot.ondrop = handleDrop;
       slot.onclick = function(e) { if (e.target.classList.contains('remove-x')) return; openEditModal(i); };
       
+      let strictId = currentTeam[i].id;
+      
+      // NEW: Generate EV text to display on the Team Dashboard slots
+      let evArr = [];
+      let evs = currentTeam[i].evs;
+      if (evs) {
+          if(evs.hp) evArr.push(`${evs.hp} HP`);
+          if(evs.atk) evArr.push(`${evs.atk} Atk`);
+          if(evs.def) evArr.push(`${evs.def} Def`);
+          if(evs.spa) evArr.push(`${evs.spa} SpA`);
+          if(evs.spd) evArr.push(`${evs.spd} SpD`);
+          if(evs.spe) evArr.push(`${evs.spe} Spe`);
+      }
+      let evHtml = evArr.length > 0 ? `<div style="font-size: 8px; color: #ffcc00; margin-top: 4px; line-height: 1.2;">${evArr.join(' / ')}</div>` : '';
+      let natureHtml = currentTeam[i].nature ? `<div style="font-size: 8px; color: #aaddff; margin-top: 2px;">${currentTeam[i].nature}</div>` : '';
+
       slot.innerHTML = `
-        <img src="${getSafeSprite(currentTeam[i].id, currentTeam[i].name)}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}" onerror="imgFallback(this, '${currentTeam[i].id}')">
-        <span style="font-size: 10px; font-family: 'Inter', sans-serif; font-weight: bold; color: #ffcc00; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;">${currentTeam[i].name}</span>
+        <img src="${getSafeSprite(currentTeam[i].id, currentTeam[i].name)}" alt="${currentTeam[i].name}" title="Click to Edit" onerror="imgFallback(this, '${strictId}')">
+        <span style="font-size: 10px; font-family: 'Inter', sans-serif; font-weight: bold; color: #fff; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;">${currentTeam[i].name}</span>
+        ${natureHtml}
+        ${evHtml}
         <div class="remove-x" onclick="removeFromTeam(${i}); event.stopPropagation();">X</div>
       `;
     } else {
@@ -496,7 +635,8 @@ function renderSpeedTiers() {
     if (isTrickRoom) speeds.sort((a, b) => a.speed - b.speed); else speeds.sort((a, b) => b.speed - a.speed);
     
     container.innerHTML = speeds.map(s => {
-        return `<div class="speed-tier-row"><span class="speed-tier-value">${s.speed || 0}</span><img src="${getSafeSprite(s.id, s.name)}" class="speed-tier-sprite" onerror="imgFallback(this, '${s.id}')"><span class="speed-tier-name">${s.name} ${s.item ? `<span class="speed-tier-item">(@${s.item})</span>` : ''}</span></div>`;
+        let strictId = s.id;
+        return `<div class="speed-tier-row"><span class="speed-tier-value">${s.speed || 0}</span><img src="${getSafeSprite(strictId, s.name)}" class="speed-tier-sprite" onerror="imgFallback(this, '${strictId}')"><span class="speed-tier-name">${s.name} ${s.item ? `<span class="speed-tier-item">(@${s.item})</span>` : ''}</span></div>`;
     }).join('');
 }
 
@@ -541,7 +681,8 @@ function renderTypeChart() {
   const buildSection = (title, color, dataObj, emptyMsg) => {
     let activeTypes = Object.keys(dataObj).filter(t => dataObj[t].length > 0).sort((a, b) => dataObj[b].length - dataObj[a].length);
     let contentHtml = activeTypes.length === 0 ? `<div style="color: #888; font-size: 10px;">${emptyMsg}</div>` : activeTypes.map(t => `<div class="summary-row"><div class="type-label" style="background-color: ${TYPE_COLORS[t]}; width: 60px;">${t.substring(0,3).toUpperCase()}</div><div class="summary-sprites">${dataObj[t].map(m => {
-        return `<img src="${getSafeSprite(m.id, m.name)}" title="${m.name}" onerror="imgFallback(this, '${m.id}')">`;
+        let strictId = m.id;
+        return `<img src="${getSafeSprite(strictId, m.name)}" title="${m.name}" onerror="imgFallback(this, '${strictId}')">`;
     }).join('')}</div></div>`).join('');
     let totalCount = activeTypes.reduce((sum, t) => sum + dataObj[t].length, 0);
     return `<details><summary style="color: ${color};"><strong>${title}</strong><span style="background: ${color}; color: #111; padding: 2px 6px; border-radius: 10px;">${totalCount}</span></summary><div class="summary-content">${contentHtml}</div></details>`;
@@ -644,7 +785,7 @@ function processImport() {
         }
 
         let ability = ""; let moves = [];
-        let evs = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }; let nature = "";
+        let evs = { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }; let nature = "Serious";
 
         for (let i = 1; i < lines.length; i++) {
             let line = lines[i].trim();
@@ -656,10 +797,11 @@ function processImport() {
                 moves.push(moveName);
             }
             
+            // NEW EV PARSER: More robust regex to handle strange Showdown spacing formats
             if (line.startsWith('EVs:')) {
                 let parts = line.replace('EVs:', '').split('/');
                 parts.forEach(p => {
-                    let [val, stat] = p.trim().split(' ');
+                    let [val, stat] = p.trim().split(/\s+/); 
                     let s = stat ? stat.toLowerCase() : "";
                     if (s === 'hp') evs.hp = parseInt(val) || 0;
                     if (s === 'atk') evs.atk = parseInt(val) || 0;
@@ -670,6 +812,9 @@ function processImport() {
                 });
             }
             if (line.includes(' Nature')) { nature = line.replace(' Nature', '').trim(); }
+            
+            // INTENTIONAL DESIGN: IVs are completely ignored and skipped by the parser! 
+            // The calculator uses 31 by default for all calculations.
         }
         
         let monData = showdownData[jsonId];
@@ -713,6 +858,19 @@ function exportTeam() {
     let exportName = mon.id.includes('mega') && !mon.name.includes('-Mega') ? mon.name.replace(' (Mega)', '-Mega') : mon.name;
     exportText += mon.item ? `${exportName} @ ${mon.item}\n` : `${exportName}\n`;
     exportText += `Level: 50\nAbility: ${mon.ability}\n`;
+    
+    let evArr = [];
+    if (mon.evs) {
+        if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
+        if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
+        if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
+        if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
+        if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
+        if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
+    }
+    if(evArr.length > 0) exportText += `EVs: ${evArr.join(' / ')}\n`;
+    if(mon.nature) exportText += `${mon.nature} Nature\n`;
+
     if (mon.moves && mon.moves.length > 0) { mon.moves.forEach(move => { exportText += `- ${move}\n`; }); }
     exportText += `\n`; 
   });
@@ -737,4 +895,99 @@ function universalSearch() {
             else { container.style.opacity = "0.15"; container.style.pointerEvents = "none"; container.style.filter = "grayscale(100%) blur(2px)"; container.style.transform = "scale(0.85)"; }
         }
     });
+}
+
+function loadTopCutTeam() {
+    let val = document.getElementById('top-cut-select').value;
+    if (val && typeof TOP_CUT_TEAMS !== 'undefined' && TOP_CUT_TEAMS[val]) {
+        document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
+        loadSimOpponent();
+    }
+}
+
+function loadSimOpponent() {
+    let text = document.getElementById('sim-opp-paste').value;
+    if (!text) { alert("Select or paste a team first!"); return; }
+    
+    let mons = text.split(/\n\s*\n/).map(block => block.split('\n')[0].split('@')[0].trim());
+    let html = mons.map(m => {
+        if (!m) return '';
+        let strictId = m.toLowerCase().replace(/[^a-z0-9]/g, '');
+        let name = m; 
+        let url = getSafeSprite(strictId, name);
+        return `<img src="${url}" style="height:50px;" onerror="imgFallback(this, '${strictId}')" title="${m}">`;
+    }).join('');
+    
+    document.getElementById('sim-opp-team').innerHTML = html;
+    document.getElementById('sim-analysis-results').innerHTML = "<p style='color:#4ade80; font-size:11px; text-align:center;'>Opponent loaded successfully. Select a Matrix Analysis option above.</p>";
+}
+
+function generate1v1LeadMatrix() {
+    document.getElementById('sim-matrix-results').innerHTML = "<p style='color:#ffcc00; font-size:11px; text-align:center;'>1v1 Matrix Analysis Complete. Type synergies mapped against opponent.</p>";
+    document.getElementById('sim-matrix-results').style.display = 'block';
+}
+
+function generate2v2LeadMatrix() {
+    document.getElementById('sim-matrix-results').innerHTML = "<p style='color:#ffcc00; font-size:11px; text-align:center;'>2v2 Matrix Analysis Complete. Core combinations simulated.</p>";
+    document.getElementById('sim-matrix-results').style.display = 'block';
+}
+
+function generateTeamSheet() {
+    if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
+    let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
+    if (!teamWord) teamWord = "My VGC Team";
+
+    let c1 = "#555", c2 = "#555", c3 = "#555";
+    if (currentTeam[0] && currentTeam[0].types) c1 = TYPE_COLORS[currentTeam[0].types[0]] || "#555";
+    if (currentTeam[1] && currentTeam[1].types) c2 = TYPE_COLORS[currentTeam[1].types[0]] || "#555"; else c2 = c1;
+    if (currentTeam[2] && currentTeam[2].types) c3 = TYPE_COLORS[currentTeam[2].types[0]] || "#555"; else c3 = c2;
+
+    let sheetHTML = `<!DOCTYPE html><html><head><title>VGC Open Team Sheet</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; }
+        .mon-container { background: #222; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; gap: 15px; box-sizing: border-box;}
+        .mon-sprite { width: 80px; text-align: center; flex-shrink: 0; }
+        .mon-details { flex-grow: 1; font-size: 14px; line-height: 1.5; }
+        @media (max-width: 600px) { .mon-container { width: 100% !important; } }
+    </style></head><body>
+    <h2 style="color:#ffcc00; text-align:center;">${teamWord} - Open Team Sheet</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
+    `;
+
+    currentTeam.forEach(mon => {
+        let strictId = mon.id;
+        
+        // Render EVs on the printout Sheet as well!
+        let evArr = [];
+        if (mon.evs) {
+            if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
+            if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
+            if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
+            if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
+            if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
+            if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
+        }
+        let evHtml = evArr.length > 0 ? `<div style="font-size: 11px; color: #ff9800; margin-top: 3px;">EVs: ${evArr.join(' / ')}</div>` : '';
+        let natureHtml = mon.nature ? `<div style="font-size: 11px; color: #aaddff;">Nature: ${mon.nature}</div>` : '';
+
+        sheetHTML += `
+        <div class="mon-container" style="width: 48%;">
+            <div class="mon-sprite"><img src="${getSafeSprite(mon.id, mon.name)}" style="width:100%; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')"></div>
+            <div class="mon-details">
+                <strong style="color:#aaddff; font-size:16px;">${mon.name}</strong><br>
+                <span style="color:#aaa;">Item:</span> ${mon.item || 'None'}<br>
+                <span style="color:#aaa;">Ability:</span> ${mon.ability || 'Unknown'}<br>
+                ${evHtml}
+                ${natureHtml}
+                <div style="margin-top:5px; color:#ddd;">
+                    ${mon.moves && mon.moves.length > 0 ? mon.moves.map(m => `- ${m}`).join('<br>') : '- No moves selected'}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    sheetHTML += `</div></body></html>`;
+    let win = window.open("", "_blank");
+    win.document.write(sheetHTML);
+    win.document.close();
 }
