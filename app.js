@@ -1005,38 +1005,223 @@ function runAutoBuild() {
     alert("Auto-Build preferences noted! Feature executing logic pipeline...");
     closeAutoBuildModal();
 }
+// --- BATTLE PREP SIMULATOR ENGINE ---
 
-function openSimModal() {
+window.openSimModal = function() {
     if (currentTeam.length < 4) { alert("You need at least 4 Pokémon on your team to simulate a battle!"); return; }
-    document.getElementById('sim-your-team').innerHTML = currentTeam.map(m => {
-        // Also uses the getSafeSprite engine so Regional forms don't break in the Simulator!
-        let strictId = m.id;
-        return `<img src="${getSafeSprite(strictId, m.name)}" style="height:50px; cursor:pointer;" title="${m.name}" onerror="imgFallback(this, '${strictId}')">`;
-    }).join('');
+    
+    // Auto-select the first 4 Pokemon by default
+    simYourSelection = currentTeam.slice(0, 4); 
+    renderSimYourTeam();
     document.getElementById('sim-modal').style.display = 'flex';
 }
-function closeSimModal() { document.getElementById('sim-modal').style.display = 'none'; }
 
-function suggestTeammate() {
-    document.getElementById('suggest-modal').style.display = 'flex';
-    document.getElementById('suggest-results').innerHTML = `
-        <div style="background:#111; padding:10px; border-left: 3px solid #ffcc00; margin-bottom:5px;">
-            <strong style="color:#fff;">Amoonguss</strong><br>
-            <span style="color:#aaa; font-size:10px;">Incredible defensive glue. Provides Spore and Rage Powder redirection.</span>
-        </div>
-        <div style="background:#111; padding:10px; border-left: 3px solid #ff9800; margin-bottom:5px;">
-            <strong style="color:#fff;">Incineroar</strong><br>
-            <span style="color:#aaa; font-size:10px;">The king of VGC. Intimidate, Fake Out, and Parting Shot pivoting.</span>
-        </div>
-    `;
+window.renderSimYourTeam = function() {
+    document.getElementById('sim-your-team').innerHTML = currentTeam.map(m => {
+        let isSelected = simYourSelection.find(s => s.id === m.id);
+        let border = isSelected ? "border: 2px solid #4ade80; transform: scale(1.15); background: rgba(74, 222, 128, 0.2);" : "border: 2px solid transparent; opacity: 0.4;";
+        return `<img src="${getSafeSprite(m.id, m.name)}" style="height:50px; cursor:pointer; transition: 0.2s; ${border} border-radius: 50%; padding: 4px;" title="${m.name} (Click to Select)" onclick="toggleSimSelection('${m.id}')" onerror="imgFallback(this, '${m.id}')">`;
+    }).join('');
 }
-function closeSuggestModal() { document.getElementById('suggest-modal').style.display = 'none'; }
 
-window.onclick = function(event) {
-  if (event.target == document.getElementById('data-modal')) closeModal();
-  if (event.target == document.getElementById('edit-modal')) closeEditModal();
-  if (event.target == document.getElementById('import-modal')) closeImportModal();
-  if (event.target == document.getElementById('suggest-modal')) closeSuggestModal();
-  if (event.target == document.getElementById('sim-modal')) closeSimModal();
-  if (event.target == document.getElementById('autobuild-modal')) closeAutoBuildModal();
+window.toggleSimSelection = function(id) {
+    let index = simYourSelection.findIndex(s => s.id === id);
+    if (index > -1) {
+        if (simYourSelection.length > 1) simYourSelection.splice(index, 1);
+    } else {
+        if (simYourSelection.length < 4) {
+            let mon = currentTeam.find(m => m.id === id);
+            if (mon) simYourSelection.push(mon);
+        }
+    }
+    renderSimYourTeam();
+}
+
+function loadTopCutTeam() {
+    let val = document.getElementById('top-cut-select').value;
+    if (val && typeof TOP_CUT_TEAMS !== 'undefined' && TOP_CUT_TEAMS[val]) {
+        document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
+        loadSimOpponent();
+    }
+}
+
+function loadSimOpponent() {
+    let text = document.getElementById('sim-opp-paste').value;
+    if (!text) { alert("Select or paste a team first!"); return; }
+    
+    simOppTeam = [];
+    let blocks = text.trim().split(/\n\s*\n/);
+    
+    blocks.forEach(block => {
+        let lines = block.split('\n'); if (lines.length === 0 || lines[0] === '') return;
+        let firstLine = lines[0].trim();
+        if (firstLine.includes('@')) firstLine = firstLine.split('@')[0].trim();
+        firstLine = firstLine.replace(/\s*\([MFN]\)$/i, '').trim();
+        
+        let species = firstLine; let match = firstLine.match(/.*\(([^)]+)\)$/); if (match) species = match[1].trim();
+        let jsonId = species.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        let monData = showdownData[jsonId];
+        if (!monData) {
+            let found = Object.values(showdownData).find(d => d.name === species);
+            if (found) { monData = found; jsonId = found.id; }
+        }
+        
+        if (monData) {
+            simOppTeam.push({ id: jsonId, name: monData.name, types: monData.types });
+        } else {
+            simOppTeam.push({ id: jsonId, name: species, types: ["Normal"] });
+        }
+    });
+
+    let html = simOppTeam.map(m => {
+        return `<img src="${getSafeSprite(m.id, m.name)}" style="height:50px;" onerror="imgFallback(this, '${m.id}')" title="${m.name}">`;
+    }).join('');
+    
+    document.getElementById('sim-opp-team').innerHTML = html;
+    document.getElementById('sim-analysis-results').innerHTML = "<p style='color:#4ade80; font-size:11px; text-align:center;'>Opponent loaded successfully. Select a Matrix Analysis option below.</p>";
+}
+
+function generate1v1LeadMatrix() {
+    if (simYourSelection.length === 0 || simOppTeam.length === 0) { alert("Need both teams loaded!"); return; }
+
+    let html = `<table style="width:100%; border-collapse: collapse; font-size:12px; color:#fff; text-align:center; background: #222; margin-top:10px;">`;
+    html += `<tr><th style="padding:8px; border: 1px solid #444; background:#111; color:#ffcc00;">You \\ Opp</th>`;
+    simOppTeam.forEach(opp => {
+        html += `<th style="padding:8px; border: 1px solid #444; background:#111;"><img src="${getSafeSprite(opp.id, opp.name)}" style="height:35px;" onerror="imgFallback(this, '${opp.id}')" title="${opp.name}"></th>`;
+    });
+    html += `</tr>`;
+
+    simYourSelection.forEach(you => {
+        html += `<tr><td style="padding:8px; border: 1px solid #444; background:#111;"><img src="${getSafeSprite(you.id, you.name)}" style="height:35px;" onerror="imgFallback(this, '${you.id}')" title="${you.name}"></td>`;
+        simOppTeam.forEach(opp => {
+            // Calculate highest STAB damage multiplier for both sides
+            let yourAtk = Math.max(...you.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
+            let oppAtk = Math.max(...opp.types.map(t => getDefensiveMultiplier(you.types, t) || 1));
+
+            let color = "#333"; let text = "Neutral";
+            if (yourAtk > oppAtk) { color = "rgba(76, 175, 80, 0.3)"; text = "Wins"; } // Favorable
+            else if (yourAtk < oppAtk) { color = "rgba(244, 67, 54, 0.3)"; text = "Loses"; } // Unfavorable
+            else if (yourAtk > 1 && oppAtk > 1) { color = "rgba(255, 152, 0, 0.3)"; text = "Volatile"; } // Both hit super effectively
+
+            html += `<td style="background:${color}; border: 1px solid #444; padding:8px; font-weight:bold;">${text}</td>`;
+        });
+        html += `</tr>`;
+    });
+    html += `</table>`;
+
+    document.getElementById('sim-matrix-results').innerHTML = `<p style='color:#ffcc00; font-size:13px; text-align:center; margin-top:0; font-weight:bold;'>1v1 STAB Matchup Matrix</p>` + html;
+    document.getElementById('sim-matrix-results').style.display = 'block';
+}
+
+function generate2v2LeadMatrix() {
+    if (simYourSelection.length === 0 || simOppTeam.length === 0) { alert("Need both teams loaded!"); return; }
+
+    let bestPairs = [];
+    for (let i=0; i<simYourSelection.length; i++) {
+        for (let j=i+1; j<simYourSelection.length; j++) {
+            let mon1 = simYourSelection[i]; let mon2 = simYourSelection[j];
+            let score = 0;
+            
+            simOppTeam.forEach(opp => {
+                let m1Atk = Math.max(...mon1.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
+                let m2Atk = Math.max(...mon2.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
+                let oppAtk1 = Math.max(...opp.types.map(t => getDefensiveMultiplier(mon1.types, t) || 1));
+                let oppAtk2 = Math.max(...opp.types.map(t => getDefensiveMultiplier(mon2.types, t) || 1));
+
+                let bestAtk = Math.max(m1Atk, m2Atk);
+                let worstDef = Math.max(oppAtk1, oppAtk2);
+
+                if (bestAtk > worstDef) score += 1;
+                else if (bestAtk < worstDef) score -= 1;
+            });
+            bestPairs.push({ mon1, mon2, score });
+        }
+    }
+    
+    // Sort pairs so highest scores are at the top
+    bestPairs.sort((a,b) => b.score - a.score);
+
+    let html = `<p style='color:#ffcc00; font-size:13px; text-align:center; margin-top:0; font-weight:bold;'>Best 2-Pokémon Lead Cores (Coverage vs Opponent)</p><div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">`;
+
+    bestPairs.forEach(pair => {
+         let borderColor = pair.score > 0 ? '#4ade80' : (pair.score < 0 ? '#f44336' : '#555');
+         let scoreColor = pair.score > 0 ? '#4ade80' : (pair.score < 0 ? '#f44336' : '#fff');
+         
+         html += `<div style="display:flex; justify-content:center; align-items:center; background:#222; padding:10px; border-radius:8px; border: 1px solid ${borderColor};">
+             <img src="${getSafeSprite(pair.mon1.id, pair.mon1.name)}" style="height:40px; margin-right:10px;" onerror="imgFallback(this, '${pair.mon1.id}')">
+             <span style="color:#fff; font-size:16px; font-weight:bold;">+</span>
+             <img src="${getSafeSprite(pair.mon2.id, pair.mon2.name)}" style="height:40px; margin-left:10px;" onerror="imgFallback(this, '${pair.mon2.id}')">
+             <span style="margin-left: 20px; color:${scoreColor}; font-size: 14px; font-weight: bold;">Score: ${pair.score > 0 ? '+' : ''}${pair.score}</span>
+         </div>`;
+    });
+    html += `</div>`;
+
+    document.getElementById('sim-matrix-results').innerHTML = html;
+    document.getElementById('sim-matrix-results').style.display = 'block';
+}
+
+function generateTeamSheet() {
+    if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
+    let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
+    if (!teamWord) teamWord = "My VGC Team";
+
+    let c1 = "#555", c2 = "#555", c3 = "#555";
+    if (currentTeam[0] && currentTeam[0].types) c1 = TYPE_COLORS[currentTeam[0].types[0]] || "#555";
+    if (currentTeam[1] && currentTeam[1].types) c2 = TYPE_COLORS[currentTeam[1].types[0]] || "#555"; else c2 = c1;
+    if (currentTeam[2] && currentTeam[2].types) c3 = TYPE_COLORS[currentTeam[2].types[0]] || "#555"; else c3 = c2;
+
+    let sheetHTML = `<!DOCTYPE html><html><head><title>VGC Open Team Sheet</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; }
+        .mon-container { background: #222; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; gap: 15px; box-sizing: border-box;}
+        .mon-sprite { width: 80px; text-align: center; flex-shrink: 0; }
+        .mon-details { flex-grow: 1; font-size: 14px; line-height: 1.5; }
+        @media (max-width: 600px) { .mon-container { width: 100% !important; } }
+    </style></head><body>
+    <h2 style="color:#ffcc00; text-align:center;">${teamWord} - Open Team Sheet</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
+    `;
+
+    currentTeam.forEach(mon => {
+        let strictId = mon.id;
+        
+        let evArr = [];
+        if (mon.evs) {
+            if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
+            if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
+            if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
+            if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
+            if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
+            if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
+        }
+        let evHtml = evArr.length > 0 ? `<div style="font-size: 11px; color: #ff9800; margin-top: 3px;">EVs: ${evArr.join(' / ')}</div>` : '';
+        let natureHtml = mon.nature ? `<div style="font-size: 11px; color: #aaddff;">Nature: ${mon.nature}</div>` : '';
+
+        sheetHTML += `
+        <div class="mon-container" style="width: 48%;">
+            <div class="mon-sprite"><img src="${getSafeSprite(mon.id, mon.name)}" style="width:100%; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')"></div>
+            <div class="mon-details">
+                <strong style="color:#aaddff; font-size:16px;">${mon.name}</strong><br>
+                <span style="color:#aaa;">Item:</span> ${mon.item || 'None'}<br>
+                <span style="color:#aaa;">Ability:</span> ${mon.ability || 'Unknown'}<br>
+                ${evHtml}
+                ${natureHtml}
+                <div style="margin-top:5px; color:#ddd;">
+                    ${mon.moves && mon.moves.length > 0 ? mon.moves.map(m => `- ${m}`).join('<br>') : '- No moves selected'}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    sheetHTML += `</div></body></html>`;
+    let win = window.open("", "_blank");
+    win.document.write(sheetHTML);
+    win.document.close();
+}
+
+function runNewFeaturesHook() {
+    try { applyCardDecorations(); } catch(e){ console.error(e); }
+    try { runRookieMistakeChecker(); } catch(e){ console.error(e); }
+    try { generateOffensiveCoverage(); } catch(e){ console.error(e); }
 }
