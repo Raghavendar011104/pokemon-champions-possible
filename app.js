@@ -21,9 +21,9 @@ window.EXCEPTION_SPRITES = {
 // The smart sprite fetcher!
 window.getSafeSprite = function(id, name) {
     if (typeof CUSTOM_SPRITES !== 'undefined' && CUSTOM_SPRITES[id]) return CUSTOM_SPRITES[id];
-    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) return window.EXCEPTION_SPRITES[id] + "?v=7";
+    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) return window.EXCEPTION_SPRITES[id] + "?v=8";
     let spriteName = name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-    return `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png?v=7`;
+    return `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png?v=8`;
 };
 
 window.imgFallback = function(img, strictId) {
@@ -31,10 +31,10 @@ window.imgFallback = function(img, strictId) {
         img.dataset.fallback = 'dex';
         let dexId = strictId.replace(/[^a-z0-9]/g, '');
         if (dexId === "taurospaldeacombat") dexId = "taurospaldea";
-        img.src = `https://play.pokemonshowdown.com/sprites/dex/${dexId}.png?v=7`;
+        img.src = `https://play.pokemonshowdown.com/sprites/dex/${dexId}.png?v=8`;
     } else if (img.dataset.fallback === 'dex') {
         img.dataset.fallback = 'sub';
-        img.src = `https://play.pokemonshowdown.com/sprites/gen5/substitute.png?v=7`;
+        img.src = `https://play.pokemonshowdown.com/sprites/gen5/substitute.png?v=8`;
     }
 };
 
@@ -46,73 +46,53 @@ function calcLv50Stat(baseStat, isHP = false, ev = 0, iv = 31) {
     return Math.floor(core * 0.5) + 5;
 }
 
-function getGeneration(num) {
-    if (num <= 151) return 1; if (num <= 251) return 2; if (num <= 386) return 3;
-    if (num <= 493) return 4; if (num <= 649) return 5; if (num <= 721) return 6;
-    if (num <= 809) return 7; if (num <= 905) return 8; return 9;
-}
-
 let showdownData = {}; let abilitiesData = {}; let movesData = {}; let learnsetsData = {}; let itemsData = {};
 let allTeams = Array.from({length: 6}, (_, i) => ({ roster: [], notes: "", replays: "", teamName: `Team ${i+1}` }));
 let currentTeamIndex = 0; let currentTeam = []; let pendingMon = null; let draggedSlotIndex = null;
 let simYourSelection = []; let simOppTeam = [];
 
-const VGC_ITEMS = { "None": "No item held.", "Focus Sash": "Survive one OHKO attack.", "Assault Vest": "Boosts Sp. Def by 50%, disables status.", "Choice Scarf": "Boosts Speed by 50%, locks move.", "Choice Band": "Boosts Attack by 50%, locks move.", "Choice Specs": "Boosts Sp. Atk by 50%, locks move.", "Clear Amulet": "Protects stats from lowering.", "Sitrus Berry": "Restores 25% HP.", "Leftovers": "Restores HP every turn.", "Life Orb": "Boosts damage by 30%, drains 10% HP.", "Rocky Helmet": "Damages physical attackers.", "Covert Cloak": "Protects from secondary effects.", "Mental Herb": "Cures Taunt.", "Eviolite": "Boosts Def/Sp. Def by 50% for NFE.", "Mystic Water": "Boosts Water attacks.", "Black Glasses": "Boosts Dark attacks." };
-
-function isValidRosterMon(mon) {
-    if (!mon || mon.num <= 0) return false; 
-    if (mon.id === 'floetteeternal') return true;
-    if (mon.isNonstandard && mon.isNonstandard !== "Past") return false; 
-    let baseMon = mon;
-    if (mon.baseSpecies && mon.baseSpecies !== mon.name) {
-        let baseId = mon.baseSpecies.toLowerCase().replace(/[^a-z0-9]/g, '');
-        if (showdownData[baseId]) baseMon = showdownData[baseId];
-    }
-    let allTags = [...(mon.tags || []), ...(baseMon.tags || [])];
-    if (allTags.includes("Restricted Legendary") || allTags.includes("Sub-Legendary") || 
-        allTags.includes("Mythical") || allTags.includes("Paradox") || allTags.includes("Ultra Beast")) {
-        return false;
-    }
-    let n = mon.name;
-    if (n.includes('Pikachu-') && mon.id !== 'pikachu') return false;
-    if (n.includes('Pichu-')) return false;
-    if (n.includes('Eevee-Starter')) return false;
-    if (n.includes('Alcremie-')) return false;
-    if (n.includes('Greninja-') && !n.includes('-Mega')) return false;
-    if (n.includes('Ursaluna-Bloodmoon')) return false;
-    if (mon.baseSpecies === 'Furfrou' && n !== 'Furfrou') return false;
-    if (mon.baseSpecies === 'Minior' && mon.id !== 'minior') return false;
-    if (mon.baseSpecies === 'Vivillon' && mon.id !== 'vivillon') return false;
-    if (mon.baseSpecies === 'Flabebe' && mon.id !== 'flabebe') return false;
-    if (mon.baseSpecies === 'Floette' && mon.id !== 'floette' && mon.id !== 'floetteeternal') return false;
-    if (mon.baseSpecies === 'Florges' && mon.id !== 'florges') return false;
-    if (mon.baseSpecies === 'Gastrodon' && mon.id !== 'gastrodon') return false;
-    if (n.includes("-Mega") || n.includes("-Primal") || n.includes("-Gmax") || n.includes("-Totem")) return false;
-    let hasEvos = mon.evos && mon.evos.length > 0;
-    if (hasEvos && mon.id !== 'pikachu') return false;
-    return true;
-}
-
+// OVERRIDE DATA.JS ROSTER RENDERER
 function renderRoster() {
-    let gens = { 1: { name: "Kanto", mons: [] }, 2: { name: "Johto", mons: [] }, 3: { name: "Hoenn", mons: [] }, 4: { name: "Sinnoh", mons: [] }, 5: { name: "Unova", mons: [] }, 6: { name: "Kalos", mons: [] }, 7: { name: "Alola", mons: [] }, 8: { name: "Galar & Hisui", mons: [] }, 9: { name: "Paldea", mons: [] } };
-
-    Object.values(showdownData).forEach(mon => {
-        if (isValidRosterMon(mon)) { let genNum = getGeneration(mon.num); if (gens[genNum]) gens[genNum].mons.push(mon); }
-    });
-
-    let html = ``;
-    Object.keys(gens).forEach(genNum => {
-        let group = gens[genNum];
-        if (group.mons.length === 0) return;
-        html += `<h3 style="color: #aaddff; font-family: 'Press Start 2P', monospace; font-size: 13px; margin-top: 20px; margin-bottom: 15px; line-height: 1.4;">Generation ${genNum} - ${group.name}</h3><div class="grid-container">`;
-        group.mons.sort((a, b) => { if (a.num !== b.num) return a.num - b.num; return a.name.localeCompare(b.name); });
-
-        group.mons.forEach(mon => {
-            let url = getSafeSprite(mon.id, mon.name);
-            html += `<div class="poke-box" style="justify-content: center; min-width: 100px;"><div class="poke-sprite-container" onclick="showData('${mon.id}', '${mon.name.replace(/'/g, "\\'")}', '${url}')"><img src="${url}" alt="${mon.name}" class="poke-sprite" loading="lazy" onerror="imgFallback(this, '${mon.id}')"><span>${mon.name}</span></div></div>`;
+    let html = '';
+    if (typeof ROSTER_SECTIONS !== 'undefined') {
+        ROSTER_SECTIONS.forEach(sec => {
+            html += `<${sec.heading}>${sec.text}</${sec.heading}>`;
+            sec.subsections.forEach(sub => {
+                if (sub.heading) html += `<${sub.heading}>${sub.text}</${sub.heading}>`;
+                html += `<div class="grid-container">`;
+                sub.lines.forEach(line => {
+                    html += `<div class="poke-box">` + line.split(' / ').map(stage => {
+                        return `<div class="stage-container">` + stage.split('|').map(name => {
+                            let clean = name.trim();
+                            let id = clean.toLowerCase().replace(/[^a-z0-9]/g, '');
+                            
+                            // Map formatting from data.js
+                            if (clean.includes("Alolan ")) { id = clean.replace("Alolan ", "").toLowerCase() + "alola"; }
+                            else if (clean.includes("Galarian ")) { id = clean.replace("Galarian ", "").toLowerCase() + "galar"; }
+                            else if (clean.includes("Hisuian ")) { id = clean.replace("Hisuian ", "").toLowerCase() + "hisui"; }
+                            else if (clean.includes("Paldean ")) { id = clean.replace("Paldean ", "").toLowerCase() + "paldea"; }
+                            
+                            if (clean === 'Flabébé') id = 'flabebe';
+                            if (clean === 'Porygon-Z') id = 'porygonz';
+                            if (clean === 'Mime Jr.') id = 'mimejr';
+                            if (clean === 'Mr. Mime') id = 'mrmime';
+                            if (clean === 'Jangmo-o') id = 'jangmoo';
+                            if (clean === 'Hakamo-o') id = 'hakamoo';
+                            if (clean === 'Kommo-o') id = 'kommoo';
+                            if (clean === 'Ho-Oh') id = 'hooh';
+                            
+                            let url = getSafeSprite(id, clean);
+                            return `<div class="poke-sprite-container" onclick="showData('${id}', '${clean.replace(/'/g, "\\'")}', '${url}')">
+                                <img src="${url}" alt="${clean}" class="poke-sprite" loading="lazy" onerror="imgFallback(this, '${id}')">
+                                <span>${clean}</span>
+                            </div>`;
+                        }).join('<div class="branch-divider">/</div>') + `</div>`;
+                    }).join('<span class="arrow">▶</span>') + `</div>`;
+                });
+                html += `</div>`;
+            });
         });
-        html += `</div>`;
-    });
+    }
     document.getElementById('roster-wrapper').innerHTML = html;
 }
 
@@ -258,12 +238,12 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
     addBtn.innerText = "Add Form to Team"; fetchPokedexEntries(megaData.num);
 }
 
-// --- MODAL TOGGLES ---
 function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
 function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
 function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
 function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
 function closeSuggestModal() { document.getElementById('suggest-modal').style.display = 'none'; }
+function closeSimModal() { document.getElementById('sim-modal').style.display = 'none'; }
 function openAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'flex'; }
 function closeAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'none'; }
 
@@ -314,7 +294,6 @@ function updateItemDescription(itemName) {
     } else { descBox.innerText = "No item selected."; }
 }
 
-// --- EV CALCULATION LOGIC ---
 window.handleEVChange = function(stat, index) {
     let val = parseInt(document.getElementById(`ev-${stat}`).value) || 0;
     let total = 0;
@@ -351,7 +330,7 @@ window.updateLiveStats = function(index) {
          let ev = parseInt(document.getElementById(`ev-${stat}`).value) || 0;
          let isHP = stat === 'hp';
          let base = stats[stat] || 50;
-         let val = calcLv50Stat(base, isHP, ev, 31); // 31 IV forced
+         let val = calcLv50Stat(base, isHP, ev, 31);
          
          let natureMult = 1.0;
          if (!isHP) {
@@ -408,6 +387,7 @@ function openEditModal(index) {
     let nature = mon.nature || "Serious";
     let natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
     let natureOptions = natures.map(n => `<option value="${n}" ${n === nature ? 'selected' : ''}>${n}</option>`).join('');
+
     let currentTotalEVs = evs.hp + evs.atk + evs.def + evs.spa + evs.spd + evs.spe;
 
     let strictId = mon.id;
@@ -508,7 +488,6 @@ function loadTeam() {
   switchTeam(0);
 }
 
-// --- NEW: REPLAY EMBED ENGINE ---
 window.updateReplayEmbed = function() {
     let url = document.getElementById('team-replays').value.trim();
     let container = document.getElementById('replay-container');
@@ -548,7 +527,6 @@ function removeFromTeam(index) { currentTeam.splice(index, 1); saveTeam(); rende
 function renderAllUI() { 
     try { renderTeamUI(); } catch(e){ console.error(e); }
     try { renderTypeChart(); } catch(e){ console.error(e); }
-    try { analyzeArchetype(); } catch(e){ console.error(e); }
     try { renderSpeedTiers(); } catch(e){ console.error(e); }
     try { if (typeof runNewFeaturesHook === 'function') runNewFeaturesHook(); } catch(e){ console.error(e); }
 }
@@ -690,156 +668,6 @@ function renderTypeChart() {
   `;
 }
 
-// --- YOUR RESTORED SYNERGY BADGES ---
-function analyzeArchetype() {
-    let container = document.getElementById('archetype-summary');
-    if (!container) return;
-    if (currentTeam.length === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px; margin:0;">Add Pokémon to analyze archetype.</p>'; return; }
-    
-    let totalMoves = 0; currentTeam.forEach(mon => { if (mon && mon.moves && Array.isArray(mon.moves)) totalMoves += mon.moves.length; });
-    if (totalMoves === 0) { container.innerHTML = '<p style="color: #888; font-size: 12px; margin:0;">Awaiting move selection...</p>'; return; }
-
-    let stats = { hasTR: false, hasTailwind: false, hasDrizzle: false, hasRainAbuser: false, hasDrought: false, hasSunAbuser: false, hasSand: false, hasSnow: false, hasPsychicTerrain: false, hasExpandingForce: false, protectCount: 0, recoveryCount: 0, unawareCount: 0, perishSongCount: 0, pivotMoveCount: 0, hazardSetters: 0, suicideLeadPotential: false, dragonCount: 0, shadowTag: false, avgSpeed: 0, highSpeedCount: 0 };
-    let typesPresent = new Set();
-    
-    let teamNames = currentTeam.map(m => (m && m.name) ? m.name.toLowerCase() : "");
-    let hasMon = (nameFragment) => teamNames.some(n => n.includes(nameFragment));
-    let hasMove = (moveName) => currentTeam.some(m => m.moves && m.moves.includes(moveName));
-
-    currentTeam.forEach(mon => {
-        if (!mon || !mon.id) return;
-        let baseSpe = (showdownData[mon.id] && showdownData[mon.id].baseStats) ? showdownData[mon.id].baseStats.spe : 50;
-        stats.avgSpeed += baseSpe; if (baseSpe >= 110) stats.highSpeedCount++;
-        
-        if (mon.types && Array.isArray(mon.types)) { mon.types.forEach(t => typesPresent.add(t)); if (mon.types.includes('Dragon')) stats.dragonCount++; }
-        
-        if (mon.ability === 'Unaware') stats.unawareCount++;
-        if (mon.ability === 'Drizzle') stats.hasDrizzle = true; if (['Swift Swim'].includes(mon.ability)) stats.hasRainAbuser = true;
-        if (mon.ability === 'Drought') stats.hasDrought = true; if (['Chlorophyll', 'Protosynthesis'].includes(mon.ability)) stats.hasSunAbuser = true;
-        if (mon.ability === 'Sand Stream') stats.hasSand = true; if (['Snow Warning', 'Chilly Reception'].includes(mon.ability)) stats.hasSnow = true;
-        if (mon.ability === 'Psychic Surge') stats.hasPsychicTerrain = true; if (['Shadow Tag', 'Arena Trap'].includes(mon.ability)) stats.shadowTag = true;
-
-        if (mon.moves && Array.isArray(mon.moves)) {
-            let cleanMoves = mon.moves.map(m => m.trim());
-            if (cleanMoves.includes('Trick Room')) stats.hasTR = true; if (cleanMoves.includes('Tailwind')) stats.hasTailwind = true;
-            if (cleanMoves.includes('Expanding Force')) stats.hasExpandingForce = true;
-            if (['U-turn', 'Volt Switch', 'Flip Turn', 'Parting Shot'].some(m => cleanMoves.includes(m))) stats.pivotMoveCount++;
-            if (['Stealth Rock', 'Spikes', 'Toxic Spikes'].some(m => cleanMoves.includes(m))) stats.hazardSetters++;
-            if (['Recover', 'Roost', 'Soft-Boiled', 'Slack Off', 'Morning Sun', 'Synthesis'].some(m => cleanMoves.includes(m))) stats.recoveryCount++;
-            if (['Protect', 'Detect', 'Spiky Shield', 'Baneful Bunker'].some(m => cleanMoves.includes(m))) stats.protectCount++;
-            if (cleanMoves.includes('Perish Song')) stats.perishSongCount++;
-            if (mon.item === 'Focus Sash' && baseSpe > 100 && (cleanMoves.includes('Stealth Rock') || cleanMoves.includes('Taunt'))) stats.suicideLeadPotential = true;
-        }
-    });
-    
-    stats.avgSpeed /= currentTeam.length; let detectedModes = [];
-
-    if (hasMon('dondozo') && hasMon('tatsugiri')) detectedModes.push({name: "DozoGiri", desc: "Uses Commander to grant Dondozo double omni-boosts to sweep."});
-    if (hasMon('magnezone') && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
-    if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) detectedModes.push({name: "Perish Trap", desc: "Traps opponents and uses Perish Song to force KOs within 3 turns."});
-    if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim partners."});
-    else if (stats.hasDrizzle) detectedModes.push({name: "Rain Mode", desc: "Utilizes Rain to boost Water attacks and mitigate Fire weaknesses."});
-    if (stats.hasDrought && stats.hasSunAbuser) detectedModes.push({name: "Sun Offense", desc: "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate pressure."});
-    else if (stats.hasDrought) detectedModes.push({name: "Sun Mode", desc: "Utilizes Sun to boost Fire attacks and mitigate Water weaknesses."});
-    if (stats.hasSand) detectedModes.push({name: "Sand Mode", desc: "Uses Sandstorm for residual damage and to grant Special Defense boosts to Rock types."});
-    if (stats.hasSnow) detectedModes.push({name: "Snow Mode", desc: "Sets Snow to boost Ice-type Defense and enable Aurora Veil support."});
-    if (stats.hasPsychicTerrain && stats.hasExpandingForce) detectedModes.push({name: "Psyspam", desc: "Abuses Psychic Terrain to block priority and fire off high-powered Expanding Force attacks."});
-    if (stats.hasTailwind) detectedModes.push({name: "Tailwind Control", desc: "Utilizes Tailwind for an immediate, team-wide speed advantage."});
-    if (stats.hasTR && stats.avgSpeed < 75) detectedModes.push({name: "Hard Trick Room", desc: "Committed to speed inversion. Relies on slow juggernauts to sweep."});
-    else if (stats.hasTR) detectedModes.push({name: "Trick Room Mode", desc: "Features Trick Room as an alternate form of speed control for hybrid flexibility."});
-
-    if (detectedModes.length === 0) {
-        if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) detectedModes.push({name: "Stall / Semi-Stall", desc: "Wins through attrition, passive damage, and extreme defensive redundancy."});
-        else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) detectedModes.push({name: "Hyper Offense (HO)", desc: "Total aggression. Uses a lead to set hazards/screens then chains sweepers."});
-        else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) detectedModes.push({name: "Bulky Offense / Pivot Balance", desc: "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers."});
-    }
-
-    let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
-    if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
-
-    function createBadge(title, tooltipText, colorHex) {
-        return `<span class="tooltip" style="width: auto !important; height: auto !important; border-radius: 6px !important; background:#1e293b; color:${colorHex}; padding:6px 10px; font-weight:bold; font-size:11px; border:1px solid ${colorHex}; cursor:help; display:inline-block; white-space: nowrap;">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
-    }
-    
-    let badges = [];
-    if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) badges.push(createBadge("🔥💧🌿 F/W/G Core", "A perfectly balanced defensive core. Grass covers Water's weaknesses, Water covers Fire's, and Fire covers Grass's.", "#4ade80"));
-    if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) badges.push(createBadge("⚙️🧚🐉 Fantasy Core", "A top-tier defensive core. Steel covers Fairy and Dragon's weaknesses, while Fairy provides immunity to Dragon.", "#f472b6"));
-    if ((hasMon('pelipper') || hasMon('politoed')) && (stats.hasRainAbuser || hasMon('palafin') || hasMon('archaludon'))) badges.push(createBadge("⛈️ Rain Synergy", "A weather setter creates Rain, boosting Water moves and doubling the speed of Swift Swim partners.", "#60a5fa"));
-    if ((hasMon('torkoal') || hasMon('ninetales')) && (stats.hasSunAbuser || hasMon('charizard') || hasMon('venusaur'))) badges.push(createBadge("☀️ Sun Synergy", "A weather setter creates Sun, boosting Fire moves and doubling the speed of Chlorophyll partners.", "#f87171"));
-    if ((hasMon('indeedee') || hasMon('tapu lele')) && (hasMon('armarouge') || hasMon('hatterene') || hasMove('Expanding Force'))) badges.push(createBadge("🧠 Psyspam", "Psychic Terrain blocks priority moves (like Fake Out) and powers up the devastating multi-target move Expanding Force.", "#e879f9"));
-    if (hasMon('dondozo') && hasMon('tatsugiri')) badges.push(createBadge("🍣 DozoGiri", "Tatsugiri jumps inside Dondozo's mouth, giving it +2 to all stats but leaving you with only one active Pokémon.", "#22d3ee"));
-    if (hasMove('Fake Out') && hasMove('Trick Room')) badges.push(createBadge("⏱️ TR Setup", "Using Fake Out to flinch a threat allows your Trick Room setter to safely reverse the turn order.", "#a78bfa"));
-    if (hasMove('Earthquake') && currentTeam.some(m => m.types.includes('Flying') || m.ability === 'Levitate')) badges.push(createBadge("🌍 DisQuake", "Pairing an Earthquake user with a Flying/Levitate partner lets you spam spread damage without hitting your own teammate!", "#fbbf24"));
-    
-    let badgeHtml = badges.length > 0 ? `<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #555; display:flex; gap:8px; flex-wrap:wrap;">${badges.join('')}</div>` : "";
-
-    container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${badgeHtml}`;
-}
-
-function suggestTeammate() {
-    if(currentTeam.length >= 6) { alert("Your team is full!"); return; }
-    if(currentTeam.length === 0) { alert("Add at least one Pokémon first to find synergies."); return; }
-
-    let typeBalance = {};
-    Object.keys(TYPE_DATA).forEach(targetType => {
-        let weakCount = 0; let resistCount = 0;
-        currentTeam.forEach(mon => {
-            let defMult = getDefensiveMultiplier(mon.types, targetType);
-            if(defMult > 1) weakCount++;
-            if(defMult < 1) resistCount++;
-            if(mon.ability && ABILITY_DEFENSES[mon.ability]) {
-                 let abilDef = ABILITY_DEFENSES[mon.ability];
-                 if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType)) resistCount += 2;
-            }
-        });
-        typeBalance[targetType] = { weak: weakCount, resist: resistCount };
-    });
-    
-    let candidates = [];
-    Object.keys(POKEMON_AESTHETICS).forEach(id => {
-        if(currentTeam.some(m => m.id === id)) return;
-        let mon = showdownData[id]; if(!mon) return;
-        if(mon.evos && mon.evos.length > 0) return;
-        if(mon.requiredItem || id.includes('mega')) return;
-        
-        let score = 0; let goodAgainst = [];
-        Object.keys(typeBalance).forEach(type => {
-            let balance = typeBalance[type];
-            if (balance.weak > balance.resist) {
-                let defMult = getDefensiveMultiplier(mon.types, type);
-                if(defMult < 1) { score += (balance.weak - balance.resist) * 2; goodAgainst.push(type); }
-                if(defMult > 1) score -= 2; 
-            }
-        });
-        if(score > 0 && goodAgainst.length > 0) candidates.push({ id, name: mon.name, score, goodAgainst });
-    });
-    
-    candidates.sort((a,b) => b.score - a.score);
-    let top = candidates.slice(0, 4);
-
-    let html = "";
-    if(top.length === 0) { html = `<p style="font-size:10px;">Your team doesn't have any major unresisted weaknesses!</p>`; } 
-    else {
-        top.forEach(cand => {
-            let spriteUrl = getSafeSprite(cand.id, cand.name);
-            html += `
-                <div class="suggest-card">
-                    <img src="${spriteUrl}" class="suggest-sprite" onerror="imgFallback(this, '${cand.id}')">
-                    <div style="flex:1;">
-                        <h4 class="suggest-name">${cand.name}</h4>
-                        <p class="suggest-desc">Plugs weaknesses to: <span style="color:#ff4444;">${cand.goodAgainst.join(', ')}</span></p>
-                    </div>
-                    <button class="btn-action" style="padding:5px 10px; font-size:8px;" onclick="addSuggestion('${cand.id}', '${cand.name.replace(/'/g, "\\'")}', '${spriteUrl}')">Select</button>
-                </div>
-            `;
-        });
-    }
-    document.getElementById('suggest-results').innerHTML = html;
-    document.getElementById('suggest-modal').style.display = 'flex';
-}
-
-function addSuggestion(id, name, sprite) { closeSuggestModal(); showData(id, name, sprite); }
-
 function processImport() {
     let text = document.getElementById('import-text').value; 
     let blocks = text.trim().split(/\n\s*\n/); 
@@ -968,65 +796,6 @@ function universalSearch() {
     });
 }
 
-function generateTeamSheet() {
-    if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
-    let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
-    if (!teamWord) teamWord = "My VGC Team";
-
-    let c1 = "#555", c2 = "#555", c3 = "#555";
-    if (currentTeam[0] && currentTeam[0].types) c1 = TYPE_COLORS[currentTeam[0].types[0]] || "#555";
-    if (currentTeam[1] && currentTeam[1].types) c2 = TYPE_COLORS[currentTeam[1].types[0]] || "#555"; else c2 = c1;
-    if (currentTeam[2] && currentTeam[2].types) c3 = TYPE_COLORS[currentTeam[2].types[0]] || "#555"; else c3 = c2;
-
-    let sheetHTML = `<!DOCTYPE html><html><head><title>VGC Open Team Sheet</title>
-    <style>
-        body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; }
-        .mon-container { background: #222; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; gap: 15px; box-sizing: border-box;}
-        .mon-sprite { width: 80px; text-align: center; flex-shrink: 0; }
-        .mon-details { flex-grow: 1; font-size: 14px; line-height: 1.5; }
-        @media (max-width: 600px) { .mon-container { width: 100% !important; } }
-    </style></head><body>
-    <h2 style="color:#ffcc00; text-align:center;">${teamWord} - Open Team Sheet</h2>
-    <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
-    `;
-
-    currentTeam.forEach(mon => {
-        let strictId = mon.id;
-        
-        let evArr = [];
-        if (mon.evs) {
-            if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
-            if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
-            if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
-            if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
-            if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
-            if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
-        }
-        let evHtml = evArr.length > 0 ? `<div style="font-size: 11px; color: #ff9800; margin-top: 3px;">EVs: ${evArr.join(' / ')}</div>` : '';
-        let natureHtml = mon.nature ? `<div style="font-size: 11px; color: #aaddff;">Nature: ${mon.nature}</div>` : '';
-
-        sheetHTML += `
-        <div class="mon-container" style="width: 48%;">
-            <div class="mon-sprite"><img src="${getSafeSprite(mon.id, mon.name)}" style="width:100%; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')"></div>
-            <div class="mon-details">
-                <strong style="color:#aaddff; font-size:16px;">${mon.name}</strong><br>
-                <span style="color:#aaa;">Item:</span> ${mon.item || 'None'}<br>
-                <span style="color:#aaa;">Ability:</span> ${mon.ability || 'Unknown'}<br>
-                ${evHtml}
-                ${natureHtml}
-                <div style="margin-top:5px; color:#ddd;">
-                    ${mon.moves && mon.moves.length > 0 ? mon.moves.map(m => `- ${m}`).join('<br>') : '- No moves selected'}
-                </div>
-            </div>
-        </div>`;
-    });
-
-    sheetHTML += `</div></body></html>`;
-    let win = window.open("", "_blank");
-    win.document.write(sheetHTML);
-    win.document.close();
-}
-
 // --- BATTLE PREP SIMULATOR ENGINE ---
 
 window.openSimModal = function() {
@@ -1100,82 +869,189 @@ function loadSimOpponent() {
     }).join('');
     
     document.getElementById('sim-opp-team').innerHTML = html;
+    document.getElementById('sim-analysis-results').style.display = 'block';
+    document.getElementById('sim-matrix-results').style.display = 'none';
     document.getElementById('sim-analysis-results').innerHTML = "<p style='color:#4ade80; font-size:11px; text-align:center;'>Opponent loaded successfully. Select a Matrix Analysis option below.</p>";
 }
 
+function get1v1Score(myMon, oppMon) {
+    let myBaseSpe = showdownData[myMon.id] ? showdownData[myMon.id].baseStats.spe : 50; 
+    let mySpd = calcLv50Stat(myBaseSpe, false, myMon.evs ? myMon.evs.spe : 0, 31);
+    if(myMon.item === 'Choice Scarf') mySpd = Math.floor(mySpd * 1.5); 
+    if(myMon.item === 'Iron Ball' || myMon.item === 'Macho Brace') mySpd = Math.floor(mySpd * 0.5);
+    
+    let oppBaseSpe = showdownData[oppMon.id] ? showdownData[oppMon.id].baseStats.spe : 50; 
+    let oppSpd = calcLv50Stat(oppBaseSpe);
+    
+    let myMaxOffense = 0; myMon.types.forEach(t => { let mult = getDefensiveMultiplier(oppMon.types, t); if (mult > myMaxOffense) myMaxOffense = mult; });
+    let theirMaxOffense = 0; oppMon.types.forEach(t => { let mult = getDefensiveMultiplier(myMon.types, t); if (mult > theirMaxOffense) theirMaxOffense = mult; });
+
+    let score = 0;
+    if (myMaxOffense > theirMaxOffense) score += 1; else if (myMaxOffense < theirMaxOffense) score -= 1;
+    if (mySpd > oppSpd) score += 0.5; else if (mySpd < oppSpd) score -= 0.5;
+    return score;
+}
+
 function generate1v1LeadMatrix() {
-    if (simYourSelection.length === 0 || simOppTeam.length === 0) { alert("Need both teams loaded!"); return; }
+    let matrixDiv = document.getElementById('sim-matrix-results');
+    let myTeamToUse = simYourSelection.length >= 1 ? simYourSelection : currentTeam;
+    
+    if (myTeamToUse.length === 0 || simOppTeam.length === 0) { alert("Need both teams loaded!"); return; }
 
-    let html = `<table style="width:100%; border-collapse: collapse; font-size:12px; color:#fff; text-align:center; background: #222; margin-top:10px;">`;
-    html += `<tr><th style="padding:8px; border: 1px solid #444; background:#111; color:#ffcc00;">You \\ Opp</th>`;
-    simOppTeam.forEach(opp => {
-        html += `<th style="padding:8px; border: 1px solid #444; background:#111;"><img src="${getSafeSprite(opp.id, opp.name)}" style="height:35px;" onerror="imgFallback(this, '${opp.id}')" title="${opp.name}"></th>`;
-    });
-    html += `</tr>`;
+    let legendHtml = `
+        <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+            <h4 style="color: #9c27b0; margin: 0 0 6px 0; font-size: 14px;">How to Read the 1v1 Matrix</h4>
+            <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #ccc; line-height: 1.6;">
+                <li><strong style="color: #4CAF50;">Favorable:</strong> You naturally outspeed and threaten Super Effective damage.</li>
+                <li><strong style="color: #81c784;">Slight Adv:</strong> You outspeed or have better typing, but not both.</li>
+                <li><strong style="color: #aaa;">Neutral:</strong> A balanced matchup.</li>
+                <li><strong style="color: #e57373;">Slight Dis:</strong> You are slightly outsped or have weaker typing.</li>
+                <li><strong style="color: #ff4444;">Poor:</strong> You are outsped and take Super Effective damage. DO NOT lead!</li>
+            </ul>
+        </div>
+    `;
 
-    simYourSelection.forEach(you => {
-        html += `<tr><td style="padding:8px; border: 1px solid #444; background:#111;"><img src="${getSafeSprite(you.id, you.name)}" style="height:35px;" onerror="imgFallback(this, '${you.id}')" title="${you.name}"></td>`;
-        simOppTeam.forEach(opp => {
-            let yourAtk = Math.max(...you.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
-            let oppAtk = Math.max(...opp.types.map(t => getDefensiveMultiplier(you.types, t) || 1));
+    let html = '<h3 style="color:#9c27b0; font-size:14px; margin-top:0;">Turn 1 Lead Matrix (1v1)</h3>' + legendHtml;
+    html += '<div style="overflow-x: auto;"><table style="width:100%; border-collapse: collapse; font-size:11px; color:#fff; text-align:center; background: #222; margin-top:10px;"><tr><th style="padding:8px; border: 1px solid #444; background:#111; color:#ffcc00; min-width:60px;">VS</th>';
 
+    simOppTeam.forEach(opp => { 
+        html += `<th style="padding:4px; border: 1px solid #444; background:#111; min-width: 60px;">
+            <img src="${getSafeSprite(opp.id, opp.name)}" style="height:35px; image-rendering:pixelated;" onerror="imgFallback(this, '${opp.id}')">
+        </th>`; 
+    }); 
+    html += '</tr>';
+
+    myTeamToUse.forEach(myMon => {
+        html += `<tr><th style="padding:4px; border: 1px solid #444; background:#111;">
+            <img src="${getSafeSprite(myMon.id, myMon.name)}" style="height:35px; image-rendering:pixelated;" onerror="imgFallback(this, '${myMon.id}')">
+        </th>`;
+        simOppTeam.forEach(oppMon => {
+            let score = get1v1Score(myMon, oppMon);
             let color = "#333"; let text = "Neutral";
-            if (yourAtk > oppAtk) { color = "rgba(76, 175, 80, 0.3)"; text = "Wins"; } 
-            else if (yourAtk < oppAtk) { color = "rgba(244, 67, 54, 0.3)"; text = "Loses"; } 
-            else if (yourAtk > 1 && oppAtk > 1) { color = "rgba(255, 152, 0, 0.3)"; text = "Volatile"; } 
-
+            if (score >= 1) { color = "rgba(76, 175, 80, 0.4)"; text = "Favorable"; } 
+            else if (score <= -1) { color = "rgba(244, 67, 54, 0.4)"; text = "Poor"; }
+            else if (score > 0) { color = "rgba(129, 199, 132, 0.3)"; text = "Slight Adv"; } 
+            else if (score < 0) { color = "rgba(229, 115, 115, 0.3)"; text = "Slight Dis"; }
             html += `<td style="background:${color}; border: 1px solid #444; padding:8px; font-weight:bold;">${text}</td>`;
         });
-        html += `</tr>`;
+        html += '</tr>';
     });
-    html += `</table>`;
-
-    document.getElementById('sim-matrix-results').innerHTML = `<p style='color:#ffcc00; font-size:13px; text-align:center; margin-top:0; font-weight:bold;'>1v1 STAB Matchup Matrix</p>` + html;
-    document.getElementById('sim-matrix-results').style.display = 'block';
+    html += '</table></div>'; 
+    matrixDiv.innerHTML = html;
+    matrixDiv.style.display = 'block';
+    document.getElementById('sim-analysis-results').style.display = 'none';
 }
 
 function generate2v2LeadMatrix() {
-    if (simYourSelection.length === 0 || simOppTeam.length === 0) { alert("Need both teams loaded!"); return; }
-
-    let bestPairs = [];
-    for (let i=0; i<simYourSelection.length; i++) {
-        for (let j=i+1; j<simYourSelection.length; j++) {
-            let mon1 = simYourSelection[i]; let mon2 = simYourSelection[j];
-            let score = 0;
-            
-            simOppTeam.forEach(opp => {
-                let m1Atk = Math.max(...mon1.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
-                let m2Atk = Math.max(...mon2.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
-                let oppAtk1 = Math.max(...opp.types.map(t => getDefensiveMultiplier(mon1.types, t) || 1));
-                let oppAtk2 = Math.max(...opp.types.map(t => getDefensiveMultiplier(mon2.types, t) || 1));
-
-                let bestAtk = Math.max(m1Atk, m2Atk);
-                let worstDef = Math.max(oppAtk1, oppAtk2);
-
-                if (bestAtk > worstDef) score += 1;
-                else if (bestAtk < worstDef) score -= 1;
-            });
-            bestPairs.push({ mon1, mon2, score });
-        }
-    }
+    let matrixDiv = document.getElementById('sim-matrix-results');
+    let myTeamToUse = simYourSelection.length >= 2 ? simYourSelection : currentTeam;
     
-    bestPairs.sort((a,b) => b.score - a.score);
+    if (myTeamToUse.length < 2 || simOppTeam.length < 2) { alert("You need at least 2 Pokémon on your side and the opponent's side to do a 2v2 matrix!"); return; }
 
-    let html = `<p style='color:#ffcc00; font-size:13px; text-align:center; margin-top:0; font-weight:bold;'>Best 2-Pokémon Lead Cores (Coverage vs Opponent)</p><div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">`;
+    let oppPairs = []; for(let i=0; i<simOppTeam.length; i++) { for(let j=i+1; j<simOppTeam.length; j++) { oppPairs.push([simOppTeam[i], simOppTeam[j]]); } }
+    let myPairs = []; for(let i=0; i<myTeamToUse.length; i++) { for(let j=i+1; j<myTeamToUse.length; j++) { myPairs.push([myTeamToUse[i], myTeamToUse[j]]); } }
 
-    bestPairs.forEach(pair => {
-         let borderColor = pair.score > 0 ? '#4ade80' : (pair.score < 0 ? '#f44336' : '#555');
-         let scoreColor = pair.score > 0 ? '#4ade80' : (pair.score < 0 ? '#f44336' : '#fff');
-         
-         html += `<div style="display:flex; justify-content:center; align-items:center; background:#222; padding:10px; border-radius:8px; border: 1px solid ${borderColor};">
-             <img src="${getSafeSprite(pair.mon1.id, pair.mon1.name)}" style="height:40px; margin-right:10px;" onerror="imgFallback(this, '${pair.mon1.id}')">
-             <span style="color:#fff; font-size:16px; font-weight:bold;">+</span>
-             <img src="${getSafeSprite(pair.mon2.id, pair.mon2.name)}" style="height:40px; margin-left:10px;" onerror="imgFallback(this, '${pair.mon2.id}')">
-             <span style="margin-left: 20px; color:${scoreColor}; font-size: 14px; font-weight: bold;">Score: ${pair.score > 0 ? '+' : ''}${pair.score}</span>
-         </div>`;
+    let legendHtml = `
+        <div style="background: #1a1a1a; border: 1px solid #444; border-radius: 4px; padding: 10px; margin-bottom: 10px; text-align: left;">
+            <h4 style="color: #2196F3; margin: 0 0 6px 0; font-size: 14px;">How to Read the 2v2 Duo Matrix</h4>
+            <ul style="margin: 0; padding-left: 15px; font-size: 11px; color: #ccc; line-height: 1.6;">
+                <li><strong style="color: #4CAF50;">Favorable:</strong> Both of your Pokémon apply massive combined offensive pressure or speed control over their duo. Excellent lead pair!</li>
+                <li><strong style="color: #81c784;">Advantage:</strong> Your duo naturally covers each other's weaknesses or pressures at least one of their leads heavily.</li>
+                <li><strong style="color: #aaa;">Neutral:</strong> An even trade on the board. Game will be decided by Turn 1 positioning and Terastallization.</li>
+                <li><strong style="color: #e57373;">Disadv:</strong> Their duo inherently counters your lead pair's STAB types or speed tiers.</li>
+                <li><strong style="color: #ff4444;">Poor:</strong> Their duo completely shuts down both of your Pokémon. Highly recommended to keep this pair in the back!</li>
+            </ul>
+        </div>
+    `;
+
+    let html = '<h3 style="color:#2196F3; font-size:14px; margin-top:0;">Turn 1 Duo Lead Matrix (2v2)</h3>' + legendHtml;
+    html += '<div style="overflow-x: auto;"><table style="width:100%; border-collapse: collapse; font-size:11px; color:#fff; text-align:center; background: #222; margin-top:10px;"><tr><th style="padding:8px; border: 1px solid #444; background:#111; color:#ffcc00; min-width:60px;">VS</th>';
+
+    oppPairs.forEach(opp => { 
+        html += `<th style="padding:4px; border: 1px solid #444; background:#111; min-width: 60px;">
+            <img src="${getSafeSprite(opp[0].id, opp[0].name)}" style="height:30px; image-rendering:pixelated; margin-right:-5px;" onerror="imgFallback(this, '${opp[0].id}')">
+            <img src="${getSafeSprite(opp[1].id, opp[1].name)}" style="height:30px; image-rendering:pixelated;" onerror="imgFallback(this, '${opp[1].id}')">
+        </th>`; 
+    }); 
+    html += '</tr>';
+
+    myPairs.forEach(myPair => {
+        html += `<tr><th style="padding:4px; border: 1px solid #444; background:#111;">
+            <img src="${getSafeSprite(myPair[0].id, myPair[0].name)}" style="height:30px; image-rendering:pixelated; margin-right:-5px;" onerror="imgFallback(this, '${myPair[0].id}')">
+            <img src="${getSafeSprite(myPair[1].id, myPair[1].name)}" style="height:30px; image-rendering:pixelated;" onerror="imgFallback(this, '${myPair[1].id}')">
+        </th>`;
+        oppPairs.forEach(oppPair => {
+            let score = get1v1Score(myPair[0], oppPair[0]) + get1v1Score(myPair[0], oppPair[1]) + get1v1Score(myPair[1], oppPair[0]) + get1v1Score(myPair[1], oppPair[1]);
+            let color = "#333"; let text = "Neutral";
+            if (score >= 2) { color = "rgba(76, 175, 80, 0.4)"; text = "Favorable"; } 
+            else if (score <= -2) { color = "rgba(244, 67, 54, 0.4)"; text = "Poor"; }
+            else if (score > 0) { color = "rgba(129, 199, 132, 0.3)"; text = "Adv"; } 
+            else if (score < 0) { color = "rgba(229, 115, 115, 0.3)"; text = "Dis"; }
+            html += `<td style="background:${color}; border: 1px solid #444; padding:8px; font-weight:bold;">${text}</td>`;
+        });
+        html += '</tr>';
     });
-    html += `</div>`;
+    html += '</table></div>'; 
+    matrixDiv.innerHTML = html;
+    matrixDiv.style.display = 'block';
+    document.getElementById('sim-analysis-results').style.display = 'none';
+}
 
-    document.getElementById('sim-matrix-results').innerHTML = html;
-    document.getElementById('sim-matrix-results').style.display = 'block';
+function generateTeamSheet() {
+    if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
+    let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
+    if (!teamWord) teamWord = "My VGC Team";
+
+    let c1 = "#555", c2 = "#555", c3 = "#555";
+    if (currentTeam[0] && currentTeam[0].types) c1 = TYPE_COLORS[currentTeam[0].types[0]] || "#555";
+    if (currentTeam[1] && currentTeam[1].types) c2 = TYPE_COLORS[currentTeam[1].types[0]] || "#555"; else c2 = c1;
+    if (currentTeam[2] && currentTeam[2].types) c3 = TYPE_COLORS[currentTeam[2].types[0]] || "#555"; else c3 = c2;
+
+    let sheetHTML = `<!DOCTYPE html><html><head><title>VGC Open Team Sheet</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; }
+        .mon-container { background: #222; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; gap: 15px; box-sizing: border-box;}
+        .mon-sprite { width: 80px; text-align: center; flex-shrink: 0; }
+        .mon-details { flex-grow: 1; font-size: 14px; line-height: 1.5; }
+        @media (max-width: 600px) { .mon-container { width: 100% !important; } }
+    </style></head><body>
+    <h2 style="color:#ffcc00; text-align:center;">${teamWord} - Open Team Sheet</h2>
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
+    `;
+
+    currentTeam.forEach(mon => {
+        let strictId = mon.id;
+        
+        let evArr = [];
+        if (mon.evs) {
+            if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
+            if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
+            if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
+            if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
+            if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
+            if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
+        }
+        let evHtml = evArr.length > 0 ? `<div style="font-size: 11px; color: #ff9800; margin-top: 3px;">EVs: ${evArr.join(' / ')}</div>` : '';
+        let natureHtml = mon.nature ? `<div style="font-size: 11px; color: #aaddff;">Nature: ${mon.nature}</div>` : '';
+
+        sheetHTML += `
+        <div class="mon-container" style="width: 48%;">
+            <div class="mon-sprite"><img src="${getSafeSprite(mon.id, mon.name)}" style="width:100%; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')"></div>
+            <div class="mon-details">
+                <strong style="color:#aaddff; font-size:16px;">${mon.name}</strong><br>
+                <span style="color:#aaa;">Item:</span> ${mon.item || 'None'}<br>
+                <span style="color:#aaa;">Ability:</span> ${mon.ability || 'Unknown'}<br>
+                ${evHtml}
+                ${natureHtml}
+                <div style="margin-top:5px; color:#ddd;">
+                    ${mon.moves && mon.moves.length > 0 ? mon.moves.map(m => `- ${m}`).join('<br>') : '- No moves selected'}
+                </div>
+            </div>
+        </div>`;
+    });
+
+    sheetHTML += `</div></body></html>`;
+    let win = window.open("", "_blank");
+    win.document.write(sheetHTML);
+    win.document.close();
 }
