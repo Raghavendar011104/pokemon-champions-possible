@@ -1,14 +1,14 @@
 // --- GLOBAL SPRITE EXCEPTION DICTIONARY ---
 window.EXCEPTION_SPRITES = {
-    "taurospaldeacombat": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeacombat.png",
-    "taurospaldeablaze": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeablaze.png",
-    "taurospaldeaaqua": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeaaqua.png",
+    "taurospaldeacombat": "https://play.pokemonshowdown.com/sprites/dex/taurospaldea.png",
+    "taurospaldeablaze": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeablaze.png",
+    "taurospaldeaaqua": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeaaqua.png",
     "porygonz": "https://play.pokemonshowdown.com/sprites/gen5/porygonz.png",
     "basculinbluestriped": "https://play.pokemonshowdown.com/sprites/gen5/basculin-bluestriped.png",
     "darmanitangalarzen": "https://play.pokemonshowdown.com/sprites/gen5/darmanitan-galarzen.png",
     "oricoriopompom": "https://play.pokemonshowdown.com/sprites/gen5/oricorio-pompom.png",
     "toxtricitylowkey": "https://play.pokemonshowdown.com/sprites/gen5/toxtricity-lowkey.png",
-    "dudunsparcethreesegment": "https://play.pokemonshowdown.com/sprites/dex/dudunsparce-threesegment.png",
+    "dudunsparcethreesegment": "https://play.pokemonshowdown.com/sprites/dex/dudunsparcethreesegment.png",
     "hooh": "https://play.pokemonshowdown.com/sprites/gen5/hooh.png",
     "kommoo": "https://play.pokemonshowdown.com/sprites/gen5/kommoo.png",
     "sirfetchd": "https://play.pokemonshowdown.com/sprites/gen5/sirfetchd.png",
@@ -17,12 +17,13 @@ window.EXCEPTION_SPRITES = {
     "tinglu": "https://play.pokemonshowdown.com/sprites/gen5/tinglu.png",
     "wochien": "https://play.pokemonshowdown.com/sprites/gen5/wochien.png"
 };
+
 // The smart sprite fetcher!
 window.getSafeSprite = function(id, name) {
     if (typeof CUSTOM_SPRITES !== 'undefined' && CUSTOM_SPRITES[id]) return CUSTOM_SPRITES[id];
-    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) return window.EXCEPTION_SPRITES[id] + "?v=6";
+    if (window.EXCEPTION_SPRITES && window.EXCEPTION_SPRITES[id]) return window.EXCEPTION_SPRITES[id] + "?v=7";
     let spriteName = name.toLowerCase().replace(/[^a-z0-9-]/g, '');
-    return `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png?v=6`;
+    return `https://play.pokemonshowdown.com/sprites/gen5/${spriteName}.png?v=7`;
 };
 
 window.imgFallback = function(img, strictId) {
@@ -30,10 +31,10 @@ window.imgFallback = function(img, strictId) {
         img.dataset.fallback = 'dex';
         let dexId = strictId.replace(/[^a-z0-9]/g, '');
         if (dexId === "taurospaldeacombat") dexId = "taurospaldea";
-        img.src = `https://play.pokemonshowdown.com/sprites/dex/${dexId}.png?v=6`;
+        img.src = `https://play.pokemonshowdown.com/sprites/dex/${dexId}.png?v=7`;
     } else if (img.dataset.fallback === 'dex') {
         img.dataset.fallback = 'sub';
-        img.src = `https://play.pokemonshowdown.com/sprites/gen5/substitute.png?v=6`;
+        img.src = `https://play.pokemonshowdown.com/sprites/gen5/substitute.png?v=7`;
     }
 };
 
@@ -201,7 +202,7 @@ function showData(jsonId, displayName, spriteUrl) {
           <p style="margin: 2px 0;"><strong>Types:</strong> ${monData.types.join(' / ')}</p>${abilitiesHtml}
           <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
           <div class="stat-card">
-            <div class="stat-card-header"><strong>Lv. 50 Stats (Always 31 IVs)</strong></div>
+            <div class="stat-card-header"><strong>Lv. 50 Stats (Max IV, 0 EV)</strong></div>
             <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
             <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
             <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
@@ -239,7 +240,7 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
       <p style="margin: 2px 0; color:#ffcc00;"><strong>Types:</strong> ${megaData.types.join(' / ')}</p>${abilitiesHtml}
       <div id="pokedex-entry-container" class="pokedex-entry-box"><div style="text-align: center; color: #888;">Loading Pokédex entry...</div></div>
       <div class="stat-card">
-        <div class="stat-card-header"><strong>Lv. 50 Stats (Always 31 IVs)</strong></div>
+        <div class="stat-card-header"><strong>Lv. 50 Stats (Max IV, 0 EV)</strong></div>
         <div class="stat-row"><span>HP:</span> <span>${hp50}</span></div><div class="stat-row"><span>Attack:</span> <span>${atk50}</span></div>
         <div class="stat-row"><span>Defense:</span> <span>${def50}</span></div><div class="stat-row"><span>Sp. Atk:</span> <span>${spa50}</span></div>
         <div class="stat-row"><span>Sp. Def:</span> <span>${spd50}</span></div><div class="stat-row"><span>Speed:</span> <span>${spe50}</span></div>
@@ -257,12 +258,12 @@ function previewMega(baseId, displayName, baseSprite, megaId) {
     addBtn.innerText = "Add Form to Team"; fetchPokedexEntries(megaData.num);
 }
 
+// --- MODAL TOGGLES ---
 function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
 function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
 function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
 function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
 function closeSuggestModal() { document.getElementById('suggest-modal').style.display = 'none'; }
-function closeSimModal() { document.getElementById('sim-modal').style.display = 'none'; }
 function openAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'flex'; }
 function closeAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'none'; }
 
@@ -350,9 +351,8 @@ window.updateLiveStats = function(index) {
          let ev = parseInt(document.getElementById(`ev-${stat}`).value) || 0;
          let isHP = stat === 'hp';
          let base = stats[stat] || 50;
-         let val = calcLv50Stat(base, isHP, ev, 31);
+         let val = calcLv50Stat(base, isHP, ev, 31); // 31 IV forced
          
-         // Apply Nature Multipliers
          let natureMult = 1.0;
          if (!isHP) {
              if (['Lonely', 'Brave', 'Adamant', 'Naughty'].includes(nature) && stat === 'atk') natureMult = 1.1;
@@ -371,10 +371,9 @@ window.updateLiveStats = function(index) {
          val = Math.floor(val * natureMult);
          document.getElementById(`live-stat-${stat}`).innerText = val;
          
-         // Color Coding
-         if (natureMult > 1) document.getElementById(`live-stat-${stat}`).style.color = '#ffbec3'; // Red Tint
-         else if (natureMult < 1) document.getElementById(`live-stat-${stat}`).style.color = '#93c5fd'; // Blue Tint
-         else document.getElementById(`live-stat-${stat}`).style.color = '#aaddff'; // Neutral
+         if (natureMult > 1) document.getElementById(`live-stat-${stat}`).style.color = '#ffbec3'; 
+         else if (natureMult < 1) document.getElementById(`live-stat-${stat}`).style.color = '#93c5fd'; 
+         else document.getElementById(`live-stat-${stat}`).style.color = '#aaddff'; 
      });
 }
 
@@ -409,8 +408,9 @@ function openEditModal(index) {
     let nature = mon.nature || "Serious";
     let natures = ["Hardy", "Lonely", "Brave", "Adamant", "Naughty", "Bold", "Docile", "Relaxed", "Impish", "Lax", "Timid", "Hasty", "Serious", "Jolly", "Naive", "Modest", "Mild", "Quiet", "Bashful", "Rash", "Calm", "Gentle", "Sassy", "Careful", "Quirky"];
     let natureOptions = natures.map(n => `<option value="${n}" ${n === nature ? 'selected' : ''}>${n}</option>`).join('');
-
     let currentTotalEVs = evs.hp + evs.atk + evs.def + evs.spa + evs.spd + evs.spe;
+
+    let strictId = mon.id;
 
     let html = `
         <div style="display:flex; justify-content:space-between; align-items:flex-start;">
@@ -418,7 +418,7 @@ function openEditModal(index) {
                 <h2 style="color:#ffcc00; font-size:16px; margin-bottom:5px; margin-top:0;">Edit ${mon.name}</h2>
                 <button class="btn-action" style="padding:4px; font-size:9px; background:#4CAF50; color:#fff;" onclick="if(typeof loadStarterKit === 'function'){loadStarterKit(${index});}else{alert('Coach features not loaded.');}">🎒 Load Starter Kit</button>
             </div>
-            <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated;" onerror="imgFallback(this, '${mon.id}')">
+            <img src="${mon.sprite}" style="height:60px; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')">
         </div>
 
         <p style="font-size:10px; margin-bottom:5px; text-align:left; color:#ff9900; margin-top:10px;"><strong>Held Item:</strong></p>
@@ -461,7 +461,6 @@ function openEditModal(index) {
         if (mon.moves[3]) document.getElementById('edit-move4').value = mon.moves[3];
     }
     
-    // Calculate initial stats on popup
     updateLiveStats(index);
     document.getElementById('edit-modal').style.display = 'flex';
 }
@@ -470,7 +469,6 @@ function saveMoves(index) {
     if (!currentTeam[index]) return;
     currentTeam[index].moves = [document.getElementById('edit-move1').value, document.getElementById('edit-move2').value, document.getElementById('edit-move3').value, document.getElementById('edit-move4').value].filter(m => m !== "");
     currentTeam[index].item = document.getElementById('edit-item').value || "";
-    
     currentTeam[index].nature = document.getElementById('edit-nature').value;
     currentTeam[index].evs = {
          hp: parseInt(document.getElementById('ev-hp').value) || 0,
@@ -480,7 +478,6 @@ function saveMoves(index) {
          spd: parseInt(document.getElementById('ev-spd').value) || 0,
          spe: parseInt(document.getElementById('ev-spe').value) || 0
     };
-    
     saveTeam(); closeEditModal(); renderAllUI();
 }
 
@@ -516,15 +513,13 @@ window.updateReplayEmbed = function() {
     let url = document.getElementById('team-replays').value.trim();
     let container = document.getElementById('replay-container');
     let iframe = document.getElementById('replay-iframe');
-    
-    // Embed the live Showdown replay match inside your Vault
     if (url && url.includes('replay.pokemonshowdown.com')) {
         if (!url.startsWith('http')) url = 'https://' + url;
         iframe.src = url;
-        container.style.display = 'block';
+        if(container) container.style.display = 'block';
     } else {
-        container.style.display = 'none';
-        iframe.src = '';
+        if(container) container.style.display = 'none';
+        if(iframe) iframe.src = '';
     }
 }
 
@@ -533,10 +528,7 @@ function switchTeam(index) {
     document.getElementById('team-notes').value = allTeams[currentTeamIndex].notes || "";
     document.getElementById('team-replays').value = allTeams[currentTeamIndex].replays || "";
     document.getElementById('team-name-input').value = allTeams[currentTeamIndex].teamName || `Team ${index + 1}`;
-    
-    // Updates iframe dynamically when changing tabs
     updateReplayEmbed();
-    
     for(let i=0; i<6; i++) {
         let tab = document.getElementById(`tab-team-${i}`);
         if (tab) { if (i === index) tab.classList.add('active'); else tab.classList.remove('active'); }
@@ -571,8 +563,6 @@ function renderTeamUI() {
       slot.onclick = function(e) { if (e.target.classList.contains('remove-x')) return; openEditModal(i); };
       
       let strictId = currentTeam[i].id;
-      
-      // NEW: Generate EV text to display on the Team Dashboard slots
       let evArr = [];
       let evs = currentTeam[i].evs;
       if (evs) {
@@ -587,7 +577,7 @@ function renderTeamUI() {
       let natureHtml = currentTeam[i].nature ? `<div style="font-size: 8px; color: #aaddff; margin-top: 2px;">${currentTeam[i].nature}</div>` : '';
 
       slot.innerHTML = `
-        <img src="${getSafeSprite(currentTeam[i].id, currentTeam[i].name)}" alt="${currentTeam[i].name}" title="Click to Edit" onerror="imgFallback(this, '${strictId}')">
+        <img src="${getSafeSprite(currentTeam[i].id, currentTeam[i].name)}" alt="${currentTeam[i].name}" title="Click to Edit\nAbility: ${currentTeam[i].ability}\nItem: ${currentTeam[i].item || 'None'}" onerror="imgFallback(this, '${strictId}')">
         <span style="font-size: 10px; font-family: 'Inter', sans-serif; font-weight: bold; color: #fff; text-align: center; width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: block;">${currentTeam[i].name}</span>
         ${natureHtml}
         ${evHtml}
@@ -700,6 +690,7 @@ function renderTypeChart() {
   `;
 }
 
+// --- YOUR RESTORED SYNERGY BADGES ---
 function analyzeArchetype() {
     let container = document.getElementById('archetype-summary');
     if (!container) return;
@@ -713,6 +704,7 @@ function analyzeArchetype() {
     
     let teamNames = currentTeam.map(m => (m && m.name) ? m.name.toLowerCase() : "");
     let hasMon = (nameFragment) => teamNames.some(n => n.includes(nameFragment));
+    let hasMove = (moveName) => currentTeam.some(m => m.moves && m.moves.includes(moveName));
 
     currentTeam.forEach(mon => {
         if (!mon || !mon.id) return;
@@ -746,24 +738,107 @@ function analyzeArchetype() {
     if (hasMon('magnezone') && stats.dragonCount >= 2) detectedModes.push({name: "DragMag", desc: "Magnezone traps Steel-types to clear the path for Dragon sweepers."});
     if (stats.perishSongCount >= 1 && (stats.shadowTag || stats.protectCount >= 4)) detectedModes.push({name: "Perish Trap", desc: "Traps opponents and uses Perish Song to force KOs within 3 turns."});
     if (stats.hasDrizzle && stats.hasRainAbuser) detectedModes.push({name: "Rain Offense", desc: "Uses Drizzle to power up Water moves and double the speed of Swift Swim partners."});
+    else if (stats.hasDrizzle) detectedModes.push({name: "Rain Mode", desc: "Utilizes Rain to boost Water attacks and mitigate Fire weaknesses."});
     if (stats.hasDrought && stats.hasSunAbuser) detectedModes.push({name: "Sun Offense", desc: "Capitalizes on Protosynthesis or Chlorophyll under the sun for immediate pressure."});
+    else if (stats.hasDrought) detectedModes.push({name: "Sun Mode", desc: "Utilizes Sun to boost Fire attacks and mitigate Water weaknesses."});
     if (stats.hasSand) detectedModes.push({name: "Sand Mode", desc: "Uses Sandstorm for residual damage and to grant Special Defense boosts to Rock types."});
     if (stats.hasSnow) detectedModes.push({name: "Snow Mode", desc: "Sets Snow to boost Ice-type Defense and enable Aurora Veil support."});
     if (stats.hasPsychicTerrain && stats.hasExpandingForce) detectedModes.push({name: "Psyspam", desc: "Abuses Psychic Terrain to block priority and fire off high-powered Expanding Force attacks."});
     if (stats.hasTailwind) detectedModes.push({name: "Tailwind Control", desc: "Utilizes Tailwind for an immediate, team-wide speed advantage."});
     if (stats.hasTR && stats.avgSpeed < 75) detectedModes.push({name: "Hard Trick Room", desc: "Committed to speed inversion. Relies on slow juggernauts to sweep."});
+    else if (stats.hasTR) detectedModes.push({name: "Trick Room Mode", desc: "Features Trick Room as an alternate form of speed control for hybrid flexibility."});
 
     if (detectedModes.length === 0) {
-        if (stats.recoveryCount >= 3) detectedModes.push({name: "Stall / Semi-Stall", desc: "Wins through attrition, passive damage, and extreme defensive redundancy."});
-        else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) detectedModes.push({name: "Hyper Offense", desc: "Total aggression. Uses a lead to set hazards/screens then chains sweepers."});
-        else detectedModes.push({name: "Bulky Offense / Balance", desc: "Uses pivoting momentum and bulky defenders to safely bring in wallbreakers."});
+        if (stats.recoveryCount >= 3 || (stats.unawareCount >= 1 && stats.hazardSetters >= 2)) detectedModes.push({name: "Stall / Semi-Stall", desc: "Wins through attrition, passive damage, and extreme defensive redundancy."});
+        else if (stats.suicideLeadPotential || (stats.highSpeedCount >= 4 && stats.protectCount < 2)) detectedModes.push({name: "Hyper Offense (HO)", desc: "Total aggression. Uses a lead to set hazards/screens then chains sweepers."});
+        else if (stats.pivotMoveCount >= 2 && stats.recoveryCount >= 1) detectedModes.push({name: "Bulky Offense / Pivot Balance", desc: "Uses 'Volt-Turn' momentum and bulky pivots to safely bring in wallbreakers."});
     }
 
-    let archetype = detectedModes.map(m => m.name).join(" + ");
-    let desc = detectedModes.map(m => `• ${m.desc}`).join("<br>");
+    let archetype = "Bulky Offense / Balance"; let desc = "Relies on high-value Pokémon with natural synergy, pivoting, and a mix of offensive and defensive pressure.";
+    if (detectedModes.length > 0) { archetype = detectedModes.map(m => m.name).join(" + ") + (detectedModes.length > 1 ? " (Hybrid)" : ""); desc = detectedModes.map(m => `• ${m.desc}`).join("<br>"); }
 
-    container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>`;
+    function createBadge(title, tooltipText, colorHex) {
+        return `<span class="tooltip" style="width: auto !important; height: auto !important; border-radius: 6px !important; background:#1e293b; color:${colorHex}; padding:6px 10px; font-weight:bold; font-size:11px; border:1px solid ${colorHex}; cursor:help; display:inline-block; white-space: nowrap;">${title} <span class="tooltip-text" style="color:#fff; font-weight:normal; white-space: normal; line-height: 1.5;">${tooltipText}</span></span>`;
+    }
+    
+    let badges = [];
+    if (typesPresent.has('Fire') && typesPresent.has('Water') && typesPresent.has('Grass')) badges.push(createBadge("🔥💧🌿 F/W/G Core", "A perfectly balanced defensive core. Grass covers Water's weaknesses, Water covers Fire's, and Fire covers Grass's.", "#4ade80"));
+    if (typesPresent.has('Steel') && typesPresent.has('Fairy') && typesPresent.has('Dragon')) badges.push(createBadge("⚙️🧚🐉 Fantasy Core", "A top-tier defensive core. Steel covers Fairy and Dragon's weaknesses, while Fairy provides immunity to Dragon.", "#f472b6"));
+    if ((hasMon('pelipper') || hasMon('politoed')) && (stats.hasRainAbuser || hasMon('palafin') || hasMon('archaludon'))) badges.push(createBadge("⛈️ Rain Synergy", "A weather setter creates Rain, boosting Water moves and doubling the speed of Swift Swim partners.", "#60a5fa"));
+    if ((hasMon('torkoal') || hasMon('ninetales')) && (stats.hasSunAbuser || hasMon('charizard') || hasMon('venusaur'))) badges.push(createBadge("☀️ Sun Synergy", "A weather setter creates Sun, boosting Fire moves and doubling the speed of Chlorophyll partners.", "#f87171"));
+    if ((hasMon('indeedee') || hasMon('tapu lele')) && (hasMon('armarouge') || hasMon('hatterene') || hasMove('Expanding Force'))) badges.push(createBadge("🧠 Psyspam", "Psychic Terrain blocks priority moves (like Fake Out) and powers up the devastating multi-target move Expanding Force.", "#e879f9"));
+    if (hasMon('dondozo') && hasMon('tatsugiri')) badges.push(createBadge("🍣 DozoGiri", "Tatsugiri jumps inside Dondozo's mouth, giving it +2 to all stats but leaving you with only one active Pokémon.", "#22d3ee"));
+    if (hasMove('Fake Out') && hasMove('Trick Room')) badges.push(createBadge("⏱️ TR Setup", "Using Fake Out to flinch a threat allows your Trick Room setter to safely reverse the turn order.", "#a78bfa"));
+    if (hasMove('Earthquake') && currentTeam.some(m => m.types.includes('Flying') || m.ability === 'Levitate')) badges.push(createBadge("🌍 DisQuake", "Pairing an Earthquake user with a Flying/Levitate partner lets you spam spread damage without hitting your own teammate!", "#fbbf24"));
+    
+    let badgeHtml = badges.length > 0 ? `<div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #555; display:flex; gap:8px; flex-wrap:wrap;">${badges.join('')}</div>` : "";
+
+    container.innerHTML = `<span style="color:#ffcc00; font-size:14px; font-weight:bold;">${archetype}</span><br><br><span style="color:#ccc; font-size:12px;">${desc}</span>${badgeHtml}`;
 }
+
+function suggestTeammate() {
+    if(currentTeam.length >= 6) { alert("Your team is full!"); return; }
+    if(currentTeam.length === 0) { alert("Add at least one Pokémon first to find synergies."); return; }
+
+    let typeBalance = {};
+    Object.keys(TYPE_DATA).forEach(targetType => {
+        let weakCount = 0; let resistCount = 0;
+        currentTeam.forEach(mon => {
+            let defMult = getDefensiveMultiplier(mon.types, targetType);
+            if(defMult > 1) weakCount++;
+            if(defMult < 1) resistCount++;
+            if(mon.ability && ABILITY_DEFENSES[mon.ability]) {
+                 let abilDef = ABILITY_DEFENSES[mon.ability];
+                 if (abilDef.immuneTo && abilDef.immuneTo.includes(targetType)) resistCount += 2;
+            }
+        });
+        typeBalance[targetType] = { weak: weakCount, resist: resistCount };
+    });
+    
+    let candidates = [];
+    Object.keys(POKEMON_AESTHETICS).forEach(id => {
+        if(currentTeam.some(m => m.id === id)) return;
+        let mon = showdownData[id]; if(!mon) return;
+        if(mon.evos && mon.evos.length > 0) return;
+        if(mon.requiredItem || id.includes('mega')) return;
+        
+        let score = 0; let goodAgainst = [];
+        Object.keys(typeBalance).forEach(type => {
+            let balance = typeBalance[type];
+            if (balance.weak > balance.resist) {
+                let defMult = getDefensiveMultiplier(mon.types, type);
+                if(defMult < 1) { score += (balance.weak - balance.resist) * 2; goodAgainst.push(type); }
+                if(defMult > 1) score -= 2; 
+            }
+        });
+        if(score > 0 && goodAgainst.length > 0) candidates.push({ id, name: mon.name, score, goodAgainst });
+    });
+    
+    candidates.sort((a,b) => b.score - a.score);
+    let top = candidates.slice(0, 4);
+
+    let html = "";
+    if(top.length === 0) { html = `<p style="font-size:10px;">Your team doesn't have any major unresisted weaknesses!</p>`; } 
+    else {
+        top.forEach(cand => {
+            let spriteUrl = getSafeSprite(cand.id, cand.name);
+            html += `
+                <div class="suggest-card">
+                    <img src="${spriteUrl}" class="suggest-sprite" onerror="imgFallback(this, '${cand.id}')">
+                    <div style="flex:1;">
+                        <h4 class="suggest-name">${cand.name}</h4>
+                        <p class="suggest-desc">Plugs weaknesses to: <span style="color:#ff4444;">${cand.goodAgainst.join(', ')}</span></p>
+                    </div>
+                    <button class="btn-action" style="padding:5px 10px; font-size:8px;" onclick="addSuggestion('${cand.id}', '${cand.name.replace(/'/g, "\\'")}', '${spriteUrl}')">Select</button>
+                </div>
+            `;
+        });
+    }
+    document.getElementById('suggest-results').innerHTML = html;
+    document.getElementById('suggest-modal').style.display = 'flex';
+}
+
+function addSuggestion(id, name, sprite) { closeSuggestModal(); showData(id, name, sprite); }
 
 function processImport() {
     let text = document.getElementById('import-text').value; 
@@ -797,7 +872,6 @@ function processImport() {
                 moves.push(moveName);
             }
             
-            // NEW EV PARSER: More robust regex to handle strange Showdown spacing formats
             if (line.startsWith('EVs:')) {
                 let parts = line.replace('EVs:', '').split('/');
                 parts.forEach(p => {
@@ -812,9 +886,6 @@ function processImport() {
                 });
             }
             if (line.includes(' Nature')) { nature = line.replace(' Nature', '').trim(); }
-            
-            // INTENTIONAL DESIGN: IVs are completely ignored and skipped by the parser! 
-            // The calculator uses 31 by default for all calculations.
         }
         
         let monData = showdownData[jsonId];
@@ -897,41 +968,6 @@ function universalSearch() {
     });
 }
 
-function loadTopCutTeam() {
-    let val = document.getElementById('top-cut-select').value;
-    if (val && typeof TOP_CUT_TEAMS !== 'undefined' && TOP_CUT_TEAMS[val]) {
-        document.getElementById('sim-opp-paste').value = TOP_CUT_TEAMS[val];
-        loadSimOpponent();
-    }
-}
-
-function loadSimOpponent() {
-    let text = document.getElementById('sim-opp-paste').value;
-    if (!text) { alert("Select or paste a team first!"); return; }
-    
-    let mons = text.split(/\n\s*\n/).map(block => block.split('\n')[0].split('@')[0].trim());
-    let html = mons.map(m => {
-        if (!m) return '';
-        let strictId = m.toLowerCase().replace(/[^a-z0-9]/g, '');
-        let name = m; 
-        let url = getSafeSprite(strictId, name);
-        return `<img src="${url}" style="height:50px;" onerror="imgFallback(this, '${strictId}')" title="${m}">`;
-    }).join('');
-    
-    document.getElementById('sim-opp-team').innerHTML = html;
-    document.getElementById('sim-analysis-results').innerHTML = "<p style='color:#4ade80; font-size:11px; text-align:center;'>Opponent loaded successfully. Select a Matrix Analysis option above.</p>";
-}
-
-function generate1v1LeadMatrix() {
-    document.getElementById('sim-matrix-results').innerHTML = "<p style='color:#ffcc00; font-size:11px; text-align:center;'>1v1 Matrix Analysis Complete. Type synergies mapped against opponent.</p>";
-    document.getElementById('sim-matrix-results').style.display = 'block';
-}
-
-function generate2v2LeadMatrix() {
-    document.getElementById('sim-matrix-results').innerHTML = "<p style='color:#ffcc00; font-size:11px; text-align:center;'>2v2 Matrix Analysis Complete. Core combinations simulated.</p>";
-    document.getElementById('sim-matrix-results').style.display = 'block';
-}
-
 function generateTeamSheet() {
     if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
     let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
@@ -957,7 +993,6 @@ function generateTeamSheet() {
     currentTeam.forEach(mon => {
         let strictId = mon.id;
         
-        // Render EVs on the printout Sheet as well!
         let evArr = [];
         if (mon.evs) {
             if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
@@ -991,26 +1026,12 @@ function generateTeamSheet() {
     win.document.write(sheetHTML);
     win.document.close();
 }
-// --- MODAL OPEN & CLOSE TOGGLES ---
-function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
-function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
 
-function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
-function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
-
-function openAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'flex'; }
-function closeAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'none'; }
-
-function runAutoBuild() {
-    alert("Auto-Build preferences noted! Feature executing logic pipeline...");
-    closeAutoBuildModal();
-}
 // --- BATTLE PREP SIMULATOR ENGINE ---
 
 window.openSimModal = function() {
     if (currentTeam.length < 4) { alert("You need at least 4 Pokémon on your team to simulate a battle!"); return; }
     
-    // Auto-select the first 4 Pokemon by default
     simYourSelection = currentTeam.slice(0, 4); 
     renderSimYourTeam();
     document.getElementById('sim-modal').style.display = 'flex';
@@ -1095,14 +1116,13 @@ function generate1v1LeadMatrix() {
     simYourSelection.forEach(you => {
         html += `<tr><td style="padding:8px; border: 1px solid #444; background:#111;"><img src="${getSafeSprite(you.id, you.name)}" style="height:35px;" onerror="imgFallback(this, '${you.id}')" title="${you.name}"></td>`;
         simOppTeam.forEach(opp => {
-            // Calculate highest STAB damage multiplier for both sides
             let yourAtk = Math.max(...you.types.map(t => getDefensiveMultiplier(opp.types, t) || 1));
             let oppAtk = Math.max(...opp.types.map(t => getDefensiveMultiplier(you.types, t) || 1));
 
             let color = "#333"; let text = "Neutral";
-            if (yourAtk > oppAtk) { color = "rgba(76, 175, 80, 0.3)"; text = "Wins"; } // Favorable
-            else if (yourAtk < oppAtk) { color = "rgba(244, 67, 54, 0.3)"; text = "Loses"; } // Unfavorable
-            else if (yourAtk > 1 && oppAtk > 1) { color = "rgba(255, 152, 0, 0.3)"; text = "Volatile"; } // Both hit super effectively
+            if (yourAtk > oppAtk) { color = "rgba(76, 175, 80, 0.3)"; text = "Wins"; } 
+            else if (yourAtk < oppAtk) { color = "rgba(244, 67, 54, 0.3)"; text = "Loses"; } 
+            else if (yourAtk > 1 && oppAtk > 1) { color = "rgba(255, 152, 0, 0.3)"; text = "Volatile"; } 
 
             html += `<td style="background:${color}; border: 1px solid #444; padding:8px; font-weight:bold;">${text}</td>`;
         });
@@ -1139,7 +1159,6 @@ function generate2v2LeadMatrix() {
         }
     }
     
-    // Sort pairs so highest scores are at the top
     bestPairs.sort((a,b) => b.score - a.score);
 
     let html = `<p style='color:#ffcc00; font-size:13px; text-align:center; margin-top:0; font-weight:bold;'>Best 2-Pokémon Lead Cores (Coverage vs Opponent)</p><div style="display:flex; flex-direction:column; gap:10px; margin-top:15px;">`;
@@ -1159,69 +1178,4 @@ function generate2v2LeadMatrix() {
 
     document.getElementById('sim-matrix-results').innerHTML = html;
     document.getElementById('sim-matrix-results').style.display = 'block';
-}
-
-function generateTeamSheet() {
-    if (currentTeam.length === 0) { alert("Add some Pokémon to your team first!"); return; }
-    let teamWord = document.getElementById('team-name-input') ? document.getElementById('team-name-input').value : "My VGC Team";
-    if (!teamWord) teamWord = "My VGC Team";
-
-    let c1 = "#555", c2 = "#555", c3 = "#555";
-    if (currentTeam[0] && currentTeam[0].types) c1 = TYPE_COLORS[currentTeam[0].types[0]] || "#555";
-    if (currentTeam[1] && currentTeam[1].types) c2 = TYPE_COLORS[currentTeam[1].types[0]] || "#555"; else c2 = c1;
-    if (currentTeam[2] && currentTeam[2].types) c3 = TYPE_COLORS[currentTeam[2].types[0]] || "#555"; else c3 = c2;
-
-    let sheetHTML = `<!DOCTYPE html><html><head><title>VGC Open Team Sheet</title>
-    <style>
-        body { background: #1a1a1a; color: #fff; font-family: monospace; padding: 20px; }
-        .mon-container { background: #222; padding: 15px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #444; display: flex; align-items: center; gap: 15px; box-sizing: border-box;}
-        .mon-sprite { width: 80px; text-align: center; flex-shrink: 0; }
-        .mon-details { flex-grow: 1; font-size: 14px; line-height: 1.5; }
-        @media (max-width: 600px) { .mon-container { width: 100% !important; } }
-    </style></head><body>
-    <h2 style="color:#ffcc00; text-align:center;">${teamWord} - Open Team Sheet</h2>
-    <div style="display:flex; flex-wrap:wrap; justify-content:space-between;">
-    `;
-
-    currentTeam.forEach(mon => {
-        let strictId = mon.id;
-        
-        let evArr = [];
-        if (mon.evs) {
-            if(mon.evs.hp) evArr.push(`${mon.evs.hp} HP`);
-            if(mon.evs.atk) evArr.push(`${mon.evs.atk} Atk`);
-            if(mon.evs.def) evArr.push(`${mon.evs.def} Def`);
-            if(mon.evs.spa) evArr.push(`${mon.evs.spa} SpA`);
-            if(mon.evs.spd) evArr.push(`${mon.evs.spd} SpD`);
-            if(mon.evs.spe) evArr.push(`${mon.evs.spe} Spe`);
-        }
-        let evHtml = evArr.length > 0 ? `<div style="font-size: 11px; color: #ff9800; margin-top: 3px;">EVs: ${evArr.join(' / ')}</div>` : '';
-        let natureHtml = mon.nature ? `<div style="font-size: 11px; color: #aaddff;">Nature: ${mon.nature}</div>` : '';
-
-        sheetHTML += `
-        <div class="mon-container" style="width: 48%;">
-            <div class="mon-sprite"><img src="${getSafeSprite(mon.id, mon.name)}" style="width:100%; image-rendering:pixelated;" onerror="imgFallback(this, '${strictId}')"></div>
-            <div class="mon-details">
-                <strong style="color:#aaddff; font-size:16px;">${mon.name}</strong><br>
-                <span style="color:#aaa;">Item:</span> ${mon.item || 'None'}<br>
-                <span style="color:#aaa;">Ability:</span> ${mon.ability || 'Unknown'}<br>
-                ${evHtml}
-                ${natureHtml}
-                <div style="margin-top:5px; color:#ddd;">
-                    ${mon.moves && mon.moves.length > 0 ? mon.moves.map(m => `- ${m}`).join('<br>') : '- No moves selected'}
-                </div>
-            </div>
-        </div>`;
-    });
-
-    sheetHTML += `</div></body></html>`;
-    let win = window.open("", "_blank");
-    win.document.write(sheetHTML);
-    win.document.close();
-}
-
-function runNewFeaturesHook() {
-    try { applyCardDecorations(); } catch(e){ console.error(e); }
-    try { runRookieMistakeChecker(); } catch(e){ console.error(e); }
-    try { generateOffensiveCoverage(); } catch(e){ console.error(e); }
 }
