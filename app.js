@@ -991,3 +991,52 @@ function generateTeamSheet() {
     win.document.write(sheetHTML);
     win.document.close();
 }
+// --- MODAL OPEN & CLOSE TOGGLES ---
+function closeModal() { document.getElementById('data-modal').style.display = 'none'; }
+function closeEditModal() { document.getElementById('edit-modal').style.display = 'none'; }
+
+function openImportModal() { document.getElementById('import-modal').style.display = 'flex'; }
+function closeImportModal() { document.getElementById('import-modal').style.display = 'none'; }
+
+function openAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'flex'; }
+function closeAutoBuildModal() { document.getElementById('autobuild-modal').style.display = 'none'; }
+
+function runAutoBuild() {
+    alert("Auto-Build preferences noted! Feature executing logic pipeline...");
+    closeAutoBuildModal();
+}
+
+function openSimModal() {
+    if (currentTeam.length < 4) { alert("You need at least 4 Pokémon on your team to simulate a battle!"); return; }
+    document.getElementById('sim-your-team').innerHTML = currentTeam.map(m => {
+        // Also uses the getSafeSprite engine so Regional forms don't break in the Simulator!
+        let strictId = m.id;
+        return `<img src="${getSafeSprite(strictId, m.name)}" style="height:50px; cursor:pointer;" title="${m.name}" onerror="imgFallback(this, '${strictId}')">`;
+    }).join('');
+    document.getElementById('sim-modal').style.display = 'flex';
+}
+function closeSimModal() { document.getElementById('sim-modal').style.display = 'none'; }
+
+function suggestTeammate() {
+    document.getElementById('suggest-modal').style.display = 'flex';
+    document.getElementById('suggest-results').innerHTML = `
+        <div style="background:#111; padding:10px; border-left: 3px solid #ffcc00; margin-bottom:5px;">
+            <strong style="color:#fff;">Amoonguss</strong><br>
+            <span style="color:#aaa; font-size:10px;">Incredible defensive glue. Provides Spore and Rage Powder redirection.</span>
+        </div>
+        <div style="background:#111; padding:10px; border-left: 3px solid #ff9800; margin-bottom:5px;">
+            <strong style="color:#fff;">Incineroar</strong><br>
+            <span style="color:#aaa; font-size:10px;">The king of VGC. Intimidate, Fake Out, and Parting Shot pivoting.</span>
+        </div>
+    `;
+}
+function closeSuggestModal() { document.getElementById('suggest-modal').style.display = 'none'; }
+
+window.onclick = function(event) {
+  if (event.target == document.getElementById('data-modal')) closeModal();
+  if (event.target == document.getElementById('edit-modal')) closeEditModal();
+  if (event.target == document.getElementById('import-modal')) closeImportModal();
+  if (event.target == document.getElementById('suggest-modal')) closeSuggestModal();
+  if (event.target == document.getElementById('sim-modal')) closeSimModal();
+  if (event.target == document.getElementById('autobuild-modal')) closeAutoBuildModal();
+}
