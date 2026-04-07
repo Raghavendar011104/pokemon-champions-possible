@@ -1,14 +1,14 @@
 // --- GLOBAL SPRITE EXCEPTION DICTIONARY ---
 window.EXCEPTION_SPRITES = {
-    "taurospaldeacombat": "https://play.pokemonshowdown.com/sprites/dex/taurospaldea.png",
-    "taurospaldeablaze": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeablaze.png",
-    "taurospaldeaaqua": "https://play.pokemonshowdown.com/sprites/dex/taurospaldeaaqua.png",
+    "taurospaldeacombat": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeacombat.png",
+    "taurospaldeablaze": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeablaze.png",
+    "taurospaldeaaqua": "https://play.pokemonshowdown.com/sprites/dex/tauros-paldeaaqua.png",
     "porygonz": "https://play.pokemonshowdown.com/sprites/gen5/porygonz.png",
     "basculinbluestriped": "https://play.pokemonshowdown.com/sprites/gen5/basculin-bluestriped.png",
     "darmanitangalarzen": "https://play.pokemonshowdown.com/sprites/gen5/darmanitan-galarzen.png",
     "oricoriopompom": "https://play.pokemonshowdown.com/sprites/gen5/oricorio-pompom.png",
     "toxtricitylowkey": "https://play.pokemonshowdown.com/sprites/gen5/toxtricity-lowkey.png",
-    "dudunsparcethreesegment": "https://play.pokemonshowdown.com/sprites/dex/dudunsparcethreesegment.png",
+    "dudunsparcethreesegment": "https://play.pokemonshowdown.com/sprites/dex/dudunsparce-threesegment.png",
     "hooh": "https://play.pokemonshowdown.com/sprites/gen5/hooh.png",
     "kommoo": "https://play.pokemonshowdown.com/sprites/gen5/kommoo.png",
     "sirfetchd": "https://play.pokemonshowdown.com/sprites/gen5/sirfetchd.png",
@@ -17,7 +17,6 @@ window.EXCEPTION_SPRITES = {
     "tinglu": "https://play.pokemonshowdown.com/sprites/gen5/tinglu.png",
     "wochien": "https://play.pokemonshowdown.com/sprites/gen5/wochien.png"
 };
-
 // The smart sprite fetcher!
 window.getSafeSprite = function(id, name) {
     if (typeof CUSTOM_SPRITES !== 'undefined' && CUSTOM_SPRITES[id]) return CUSTOM_SPRITES[id];
